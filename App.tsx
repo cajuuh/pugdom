@@ -1,20 +1,64 @@
-import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View } from 'react-native';
+import "react-native-gesture-handler";
+import React, { useEffect } from "react";
+import { NavigationContainer } from "@react-navigation/native";
+import { createNativeStackNavigator } from "@react-navigation/native-stack";
+import { ApplicationProvider } from "@ui-kitten/components";
+import * as eva from "@eva-design/eva";
+import ServerScreen from "./screens/ServerScreen/ServerScreen";
+import WebViewScreen from "./screens/WebViewScreen/WebViewScreen";
+import { config } from "./config";
+import * as Linking from "expo-linking";
+import { RootStackParamList } from "./screens/types";
 
-export default function App() {
+const Stack = createNativeStackNavigator<RootStackParamList>();
+
+const App = () => {
+  const linking = {
+    prefixes: ["pugdom://"],
+    config: {
+      screens: {
+        WebView: "oauthredirect",
+      },
+    },
+  };
+
+  const url = Linking.useURL();
+
+  useEffect(() => {
+    if (url) {
+      console.log("Initial URL:", url);
+    }
+
+    const handleOpenURL = ({ url }: { url: string }) => {
+      console.log("Deep link URL:", url);
+      // You can also navigate to the specific screen if needed
+    };
+
+    const subscription = Linking.addEventListener("url", handleOpenURL);
+
+    return () => {
+      subscription.remove();
+    };
+  }, [url]);
+
   return (
-    <View style={styles.container}>
-      <Text>Open up App.tsx to start working on your app!</Text>
-      <StatusBar style="auto" />
-    </View>
+    <ApplicationProvider {...eva} theme={eva.light}>
+      <NavigationContainer linking={linking}>
+        <Stack.Navigator initialRouteName="Server">
+          <Stack.Screen
+            name="Server"
+            component={ServerScreen}
+            options={{ title: "Mastodon Server" }}
+          />
+          <Stack.Screen
+            name="WebView"
+            component={WebViewScreen}
+            options={{ title: "Login" }}
+          />
+        </Stack.Navigator>
+      </NavigationContainer>
+    </ApplicationProvider>
   );
-}
+};
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});
+export default App;

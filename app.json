@@ -1,27 +1,32 @@
 {
   "expo": {
-    "name": "pugdom",
+    "name": "Pugdom",
     "slug": "pugdom",
-    "version": "1.0.0",
-    "orientation": "portrait",
-    "icon": "./assets/icon.png",
-    "userInterfaceStyle": "light",
-    "splash": {
-      "image": "./assets/splash.png",
-      "resizeMode": "contain",
-      "backgroundColor": "#ffffff"
-    },
+    "scheme": "pugdom",
+    "platforms": ["ios", "android", "web"],
     "ios": {
-      "supportsTablet": true
-    },
-    "android": {
-      "adaptiveIcon": {
-        "foregroundImage": "./assets/adaptive-icon.png",
-        "backgroundColor": "#ffffff"
+      "bundleIdentifier": "com.cajuuh.pugdom",
+      "supportsTablet": true,
+      "infoPlist": {
+        "CFBundleURLTypes": [
+          {
+            "CFBundleURLSchemes": ["pugdom"]
+          }
+        ]
       }
     },
-    "web": {
-      "favicon": "./assets/favicon.png"
+    "android": {
+      "package": "com.cajuuh.pugdom",
+      "intentFilters": [
+        {
+          "action": "VIEW",
+          "data": {
+            "scheme": "pugdom",
+            "host": "oauthredirect"
+          },
+          "category": ["BROWSABLE", "DEFAULT"]
+        }
+      ]
     }
   }
 }
