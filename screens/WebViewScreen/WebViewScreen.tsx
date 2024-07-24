@@ -10,36 +10,35 @@ import * as Linking from "expo-linking";
 
 type Props = NativeStackScreenProps<RootStackParamList, "WebView">;
 
-const WebViewScreen: React.FC<Props> = ({ route }) => {
+const WebViewScreen: React.FC<Props> = ({ route, navigation }) => {
   const { serverUrl } = route.params;
   const webViewRef = useRef<WebView>(null);
 
-  useEffect(() => {
-    const handleOpenURL = async ({ url }: { url: string }) => {
-      const parsedUrl = Linking.parse(url);
-      const { queryParams } = parsedUrl;
+  const handleOpenURL = async (url: string) => {
+    console.log("Received deep link URL:", url);
+    const parsedUrl = Linking.parse(url);
+    const { queryParams } = parsedUrl;
 
-      if (queryParams?.code) {
-        const code = Array.isArray(queryParams.code)
-          ? queryParams.code[0]
-          : queryParams.code;
-        try {
-          const accessToken = await getToken(serverUrl, code);
-          const userInfo = await getUserInfo(serverUrl, accessToken);
-          console.log("User Info:", userInfo);
-          // Handle the user info, such as updating state or navigating to another screen
-        } catch (error) {
-          console.error("Error fetching user info:", error);
+    if (queryParams?.code) {
+      const code = Array.isArray(queryParams.code)
+        ? queryParams.code[0]
+        : queryParams.code;
+      console.log("Authorization code:", code);
+      try {
+        const accessToken = await getToken(serverUrl, code);
+        console.log("Access token:", accessToken);
+        const userInfo = await getUserInfo(serverUrl, accessToken);
+        console.log("User Info:", userInfo);
+        if (userInfo && userInfo.username) {
+          navigation.navigate("Home", { username: userInfo.username });
         }
+      } catch (error) {
+        console.error("Error fetching user info:", error);
       }
-    };
-
-    const subscription = Linking.addEventListener("url", handleOpenURL);
-
-    return () => {
-      subscription.remove();
-    };
-  }, [serverUrl]);
+    } else {
+      console.log("No authorization code found in URL");
+    }
+  };
 
   return (
     <Container>
@@ -50,6 +49,9 @@ const WebViewScreen: React.FC<Props> = ({ route }) => {
         }}
         startInLoadingState={true}
         renderLoading={() => <ActivityIndicator size="large" />}
+        onNavigationStateChange={({ url }) => {
+          handleOpenURL(url);
+        }}
       />
     </Container>
   );
