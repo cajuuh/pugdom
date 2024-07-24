@@ -1,6 +1,6 @@
 import "react-native-gesture-handler";
-import React, { useEffect } from "react";
-import { NavigationContainer } from "@react-navigation/native";
+import React, { useState, useEffect } from "react";
+import { NavigationContainer, useNavigation } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { ApplicationProvider } from "@ui-kitten/components";
 import * as eva from "@eva-design/eva";
@@ -10,52 +10,70 @@ import HomeScreen from "./screens/HomeScreen/HomeScreen";
 import { config } from "./config";
 import * as Linking from "expo-linking";
 import { RootStackParamList } from "./screens/types";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { ActivityIndicator, View } from "react-native";
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
 
 const App = () => {
+  const [initialRoute, setInitialRoute] = useState<
+    keyof RootStackParamList | undefined
+  >("Home");
+  const [loading, setLoading] = useState(true);
+
   const linking = {
     prefixes: ["pugdom://"],
     config: {
       screens: {
-        Server: "callback",
+        Server: "server",
+        WebView: {
+          path: "oauthredirect",
+          parse: {
+            code: (code: string) => `${code}`,
+          },
+        },
+        Home: "home",
       },
     },
   };
 
   useEffect(() => {
-    const handleOpenURL = ({ url }: { url: string }) => {
-      console.log("Deep link URL:", url);
-    };
-
-    const getInitialURL = async () => {
-      const initialURL = await Linking.getInitialURL();
-      if (initialURL) {
-        console.log("Initial URL:", initialURL);
-        handleOpenURL({ url: initialURL });
+    const checkUserAuthentication = async () => {
+      const userInfo = await AsyncStorage.getItem("userInfo");
+      try {
+        if (userInfo) {
+          setInitialRoute("Home");
+        } else {
+          setInitialRoute("Server");
+        }
+      } catch (error) {
+        console.error("Error checking user authentication:", error);
+        setInitialRoute("Server");
+      } finally {
+        setLoading(false);
       }
     };
 
-    getInitialURL();
-
-    const subscription = Linking.addEventListener("url", handleOpenURL);
-    return () => {
-      subscription.remove();
-    };
+    checkUserAuthentication();
   }, []);
+
+  // if (loading) {
+  //   return (
+  //     <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
+  //       <ActivityIndicator size="large" color="#0000ff" />
+  //     </View>
+  //   );
+  // }
 
   return (
     <ApplicationProvider {...eva} theme={eva.light}>
-      <NavigationContainer
-        linking={linking}
-        onReady={() => {
-          console.log("NavigationContainer ready");
-        }}
-        onStateChange={(state) => {
-          console.log("Navigation state changed:", state);
-        }}
-      >
-        <Stack.Navigator initialRouteName="Server">
+      <NavigationContainer linking={linking}>
+        <Stack.Navigator initialRouteName={"Server"}>
+          <Stack.Screen
+            name="Home"
+            component={HomeScreen}
+            options={{ title: "Home" }}
+          />
           <Stack.Screen
             name="Server"
             component={ServerScreen}
@@ -65,11 +83,6 @@ const App = () => {
             name="WebView"
             component={WebViewScreen}
             options={{ title: "Login" }}
-          />
-          <Stack.Screen
-            name="Home"
-            component={HomeScreen}
-            options={{ title: "Home" }}
           />
         </Stack.Navigator>
       </NavigationContainer>
