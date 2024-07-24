@@ -16,6 +16,7 @@ const WebViewScreen: React.FC<Props> = ({ route, navigation }) => {
   const webViewRef = useRef<WebView>(null);
 
   const handleOpenURL = async (url: string) => {
+    console.log("Received deep link URL:", url);
     const parsedUrl = Linking.parse(url);
     const { queryParams } = parsedUrl;
 
@@ -23,13 +24,16 @@ const WebViewScreen: React.FC<Props> = ({ route, navigation }) => {
       const code = Array.isArray(queryParams.code)
         ? queryParams.code[0]
         : queryParams.code;
+      console.log("Authorization code:", code);
       try {
         const accessToken = await getToken(serverUrl, code);
+        console.log("Access token:", accessToken);
         const userInfo = await getUserInfo(serverUrl, accessToken);
-        // console.log("User Info:", userInfo);
+        console.log("User Info:", userInfo);
         if (userInfo && userInfo.username) {
-          await AsyncStorage.setItem("userInfo", JSON.stringify(userInfo));
-          navigation.navigate("Home", { username: userInfo.username });
+          const fullUserInfo = { ...userInfo, accessToken, serverUrl };
+          await AsyncStorage.setItem("userInfo", JSON.stringify(fullUserInfo));
+          navigation.replace("Home", { username: userInfo.username });
         }
       } catch (error) {
         console.error("Error fetching user info:", error);

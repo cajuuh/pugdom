@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Button, Text } from "@ui-kitten/components";
-import { useNavigation, NavigationProp } from "@react-navigation/native";
+import { NavigationProp } from "@react-navigation/native";
 import { Container, StyledInput } from "./styles/ServerScreen.style";
 import { RootStackParamList } from "../types";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
@@ -13,11 +13,12 @@ const ServerScreen: React.FC<Props> = ({ navigation }) => {
   const [server, setServer] = useState("");
   const [loading, setLoading] = useState(true);
 
-  const handleSave = () => {
+  const handleSave = async () => {
     let formattedServer = server.trim();
     if (!formattedServer.startsWith("https://")) {
       formattedServer = `https://${formattedServer}`;
     }
+    await AsyncStorage.setItem("serverUrl", formattedServer);
     navigation.navigate("WebView", { serverUrl: formattedServer });
   };
 
