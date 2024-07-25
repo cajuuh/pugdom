@@ -8,7 +8,8 @@ export type MediaAttachment = {
 export type Account = {
   id: string;
   username: string;
-  avatar: string; // URL to the profile picture
+  avatar: string;
+  url: string;
 };
 
 export type FeedItem = {
@@ -16,7 +17,7 @@ export type FeedItem = {
   content: string;
   account: Account;
   media_attachments: MediaAttachment[];
-  reblog?: FeedItem; // Add the reblog property
+  reblog?: FeedItem;
 };
 
 export type RootStackParamList = {

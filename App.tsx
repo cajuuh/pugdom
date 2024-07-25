@@ -57,33 +57,16 @@ const App = () => {
     checkUserAuthentication();
   }, []);
 
-  // if (loading) {
-  //   return (
-  //     <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
-  //       <ActivityIndicator size="large" color="#0000ff" />
-  //     </View>
-  //   );
-  // }
-
   return (
     <ApplicationProvider {...eva} theme={eva.light}>
       <NavigationContainer linking={linking}>
-        <Stack.Navigator initialRouteName={"Server"}>
-          <Stack.Screen
-            name="Home"
-            component={HomeScreen}
-            options={{ title: "Home" }}
-          />
-          <Stack.Screen
-            name="Server"
-            component={ServerScreen}
-            options={{ title: "Mastodon Server" }}
-          />
-          <Stack.Screen
-            name="WebView"
-            component={WebViewScreen}
-            options={{ title: "Login" }}
-          />
+        <Stack.Navigator
+          initialRouteName={"Server"}
+          screenOptions={{ headerShown: false }}
+        >
+          <Stack.Screen name="Home" component={HomeScreen} />
+          <Stack.Screen name="Server" component={ServerScreen} />
+          <Stack.Screen name="WebView" component={WebViewScreen} />
         </Stack.Navigator>
       </NavigationContainer>
     </ApplicationProvider>

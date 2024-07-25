@@ -58,7 +58,9 @@ const HomeScreen: React.FC<Props> = ({ route }) => {
             content={item.content}
             profileImageUrl={item.account.avatar}
             mediaAttachments={item.media_attachments}
-            reblog={item.reblog} // Pass reblog data
+            username={item.account.username}
+            serverUrl={item.account.url}
+            reblog={item.reblog}
           />
         )}
       />
