@@ -2,13 +2,9 @@ import React, { useEffect, useState } from "react";
 import { FlatList, View, ActivityIndicator, Text } from "react-native";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { RootStackParamList, FeedItem } from "../types";
-import {
-  Container,
-  WelcomeText,
-  FeedItemContainer,
-  FeedText,
-} from "./styles/HomeScreen.style";
+import { Container, WelcomeText } from "./styles/HomeScreen.style";
 import { getHomeFeed } from "../../services/feedService";
+import TootCard from "../../components/TootCard/TootCard";
 
 type Props = NativeStackScreenProps<RootStackParamList, "Home">;
 
@@ -58,9 +54,12 @@ const HomeScreen: React.FC<Props> = ({ route }) => {
         data={feed}
         keyExtractor={(item) => item.id}
         renderItem={({ item }) => (
-          <FeedItemContainer>
-            <FeedText>{item.content}</FeedText>
-          </FeedItemContainer>
+          <TootCard
+            content={item.content}
+            profileImageUrl={item.account.avatar}
+            mediaAttachments={item.media_attachments}
+            reblog={item.reblog} // Pass reblog data
+          />
         )}
       />
     </Container>
