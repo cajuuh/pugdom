@@ -5,6 +5,7 @@ import { RootStackParamList, FeedItem } from "../types";
 import { Container, WelcomeText } from "./styles/HomeScreen.style";
 import { getHomeFeed } from "../../services/feedService";
 import TootCard from "../../components/TootCard/TootCard";
+import TabNavigation from "../../navigation/TabNavigation/TabNavigation";
 
 type Props = NativeStackScreenProps<RootStackParamList, "Home">;
 
@@ -55,12 +56,12 @@ const HomeScreen: React.FC<Props> = ({ route }) => {
         keyExtractor={(item) => item.id}
         renderItem={({ item }) => (
           <TootCard
-            content={item.content}
-            profileImageUrl={item.account.avatar}
-            mediaAttachments={item.media_attachments}
-            username={item.account.username}
-            serverUrl={item.account.url}
-            reblog={item.reblog}
+            content={item?.content}
+            profileImageUrl={item?.account.avatar}
+            mediaAttachments={item?.media_attachments}
+            username={item?.account?.username}
+            serverUrl={item?.account?.url}
+            reblog={item?.reblog}
           />
         )}
       />

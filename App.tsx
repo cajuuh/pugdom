@@ -11,11 +11,17 @@ import { config } from "./config";
 import * as Linking from "expo-linking";
 import { RootStackParamList } from "./screens/types";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { ActivityIndicator, View } from "react-native";
+import {
+  ActivityIndicator,
+  StatusBar,
+  useColorScheme,
+  View,
+} from "react-native";
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
 
 const App = () => {
+  const isDarkMode = useColorScheme() === "dark";
   const [initialRoute, setInitialRoute] = useState<
     keyof RootStackParamList | undefined
   >("Home");
@@ -58,7 +64,8 @@ const App = () => {
   }, []);
 
   return (
-    <ApplicationProvider {...eva} theme={eva.light}>
+    <ApplicationProvider {...eva} theme={isDarkMode ? eva.dark : eva.light}>
+      <StatusBar barStyle={isDarkMode ? "light-content" : "dark-content"} />
       <NavigationContainer linking={linking}>
         <Stack.Navigator
           initialRouteName={"Server"}

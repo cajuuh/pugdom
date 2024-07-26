@@ -43,12 +43,10 @@ export const Server = styled.Text`
   color: gray;
 `;
 
-export const ContentContainer = styled.View`
-  flex: 1;
-`;
+export const ContentContainer = styled.View``;
 
 export const MediaImage = styled.Image`
-  width: 100%;
+  width: "100%";
   height: 200px;
   margin-top: 10px;
   border-radius: 8px;
@@ -59,7 +57,7 @@ export const ReblogContainer = styled.View`
   background-color: #f0f0f0;
   padding: 10px;
   border-radius: 8px;
-  width: ${width - 70};
+  width: "100%";
 `;
 
 export const ReblogText = styled.Text`

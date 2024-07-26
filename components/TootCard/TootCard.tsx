@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import {
   CardContainer,
   ProfileImage,
@@ -37,45 +37,61 @@ const TootCard: React.FC<TootCardProps> = ({
 }) => {
   const { width } = useWindowDimensions();
 
-  return (
-    <CardContainer>
-      <UserInfo>
-        <ProfileImage source={{ uri: profileImageUrl }} />
-        <UserNameContainer>
-          <Username>{username}</Username>
-          <Server>{"@" + formatServerUrl(serverUrl)}</Server>
-        </UserNameContainer>
-      </UserInfo>
-      <ContentContainer>
-        {reblog ? (
-          <ReblogContainer>
-            <View
-              style={{
-                flexDirection: "row",
-                alignItems: "center",
-                marginBottom: 5,
-              }}
-            >
-              <SourceProfileImage source={{ uri: reblog.account.avatar }} />
-              <SourceUsername>{reblog.account.username}</SourceUsername>
-            </View>
-            <ReblogText>Boosted Post:</ReblogText>
-            <HTMLView value={reblog.content} />
-            {reblog.media_attachments.map((media) => (
-              <MediaImage key={media.id} source={{ uri: media.url }} />
-            ))}
-          </ReblogContainer>
-        ) : (
-          <>
-            <HTMLView value={content} />
-            {mediaAttachments.map((media) => (
-              <MediaImage key={media.id} source={{ uri: media.url }} />
-            ))}
-          </>
-        )}
-      </ContentContainer>
-    </CardContainer>
-  );
+  const renderCard = () => {
+    if (content) {
+      return (
+        <CardContainer>
+          <UserInfo>
+            <ProfileImage source={{ uri: profileImageUrl }} />
+            <UserNameContainer>
+              <Username>{username}</Username>
+              <Server>{"@" + formatServerUrl(serverUrl)}</Server>
+            </UserNameContainer>
+          </UserInfo>
+          <ContentContainer>
+            {reblog ? (
+              <ReblogContainer>
+                <View
+                  style={{
+                    flexDirection: "row",
+                    alignItems: "center",
+                    marginBottom: 5,
+                  }}
+                >
+                  <ReblogText>
+                    Boosted from{" "}
+                    <SourceProfileImage
+                      source={{ uri: reblog.account.avatar }}
+                    />
+                    <SourceUsername>{reblog.account.username}</SourceUsername>
+                  </ReblogText>
+                </View>
+                <HTMLView value={reblog.content} />
+                {reblog?.media_attachments.map((media) => (
+                  <MediaImage key={media.id} source={{ uri: media.url }} />
+                ))}
+              </ReblogContainer>
+            ) : (
+              <>
+                <HTMLView value={content} />
+                {mediaAttachments?.map((media) => (
+                  <MediaImage key={media.id} source={{ uri: media.url }} />
+                ))}
+              </>
+            )}
+          </ContentContainer>
+        </CardContainer>
+      );
+    } else {
+      return <></>;
+    }
+  };
+
+  useEffect(() => {
+    console.log(username + ": " + content);
+  }, [content]);
+
+  return renderCard();
 };
 
 export default TootCard;

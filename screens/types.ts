@@ -20,6 +20,28 @@ export type FeedItem = {
   reblog?: FeedItem;
 };
 
+export type BottomTabParamList = {
+  Home: undefined;
+  Search: undefined;
+  Profile: undefined;
+};
+
+export type TabParams = {
+  item: {
+    route: keyof BottomTabParamList;
+    label: string;
+    type: any;
+    activeIcon: string;
+    inActiveIcon: string;
+    component: React.ComponentType<any>;
+  };
+  onPress: () => void;
+  accessibilityState: {
+    selected: boolean;
+    disabled: boolean;
+  };
+};
+
 export type RootStackParamList = {
   Server: undefined;
   WebView: { serverUrl: string };
