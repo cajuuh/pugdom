@@ -1,16 +1,14 @@
 import React, { useEffect, useState } from "react";
 import { FlatList, View, ActivityIndicator, Text } from "react-native";
-import { NativeStackScreenProps } from "@react-navigation/native-stack";
-import { RootStackParamList, FeedItem } from "../types";
+import { FeedItem } from "../types";
 import { Container, WelcomeText } from "./styles/HomeScreen.style";
 import { getHomeFeed } from "../../services/feedService";
 import TootCard from "../../components/TootCard/TootCard";
-import TabNavigation from "../../navigation/TabNavigation/TabNavigation";
+import { useAppContext } from "../../context/AppContext";
 
-type Props = NativeStackScreenProps<RootStackParamList, "Home">;
-
-const HomeScreen: React.FC<Props> = ({ route }) => {
-  const { username } = route.params;
+const HomeScreen: React.FC = () => {
+  const { appParams } = useAppContext();
+  const { username } = appParams;
   const [feed, setFeed] = useState<FeedItem[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -56,12 +54,12 @@ const HomeScreen: React.FC<Props> = ({ route }) => {
         keyExtractor={(item) => item.id}
         renderItem={({ item }) => (
           <TootCard
-            content={item?.content}
-            profileImageUrl={item?.account.avatar}
-            mediaAttachments={item?.media_attachments}
-            username={item?.account?.username}
-            serverUrl={item?.account?.url}
-            reblog={item?.reblog}
+            content={item.content}
+            profileImageUrl={item.account.avatar}
+            mediaAttachments={item.media_attachments}
+            username={item.account.username}
+            serverUrl={item.account.url}
+            reblog={item.reblog}
           />
         )}
       />

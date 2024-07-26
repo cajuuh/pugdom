@@ -13,7 +13,7 @@ import Foundation from "react-native-vector-icons/Foundation";
 import EvilIcons from "react-native-vector-icons/EvilIcons";
 import { StyleProp, ViewStyle } from "react-native";
 
-export const Icons = {
+const Icons = {
   MaterialCommunityIcons,
   MaterialIcons,
   Ionicons,
@@ -28,22 +28,31 @@ export const Icons = {
   EvilIcons,
 };
 
-export interface IconProps {
-  type: keyof typeof Icons;
+export type IconType = keyof typeof Icons;
+
+interface CustomIconProps {
+  type: IconType;
   name: string;
   color?: string;
   size?: number;
   style?: StyleProp<ViewStyle>;
 }
 
-const Icon: React.FC<IconProps> = ({ type, name, color, size = 24, style }) => {
-  const Tag: any = Icons[type];
+const CustomIcon: React.FC<CustomIconProps> = ({
+  type,
+  name,
+  color,
+  size = 20,
+  style,
+}) => {
+  const IconComponent = Icons[type];
 
-  if (!Tag || !name) {
+  if (!IconComponent) {
     return null;
   }
 
-  return <Tag name={name} size={size} color={color} style={style} />;
+  return <IconComponent name={name} size={size} color={color} style={style} />;
 };
 
-export default Icon;
+export { Icons };
+export default CustomIcon;

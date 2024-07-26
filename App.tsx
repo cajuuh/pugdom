@@ -1,15 +1,12 @@
 import "react-native-gesture-handler";
 import React, { useState, useEffect } from "react";
-import { NavigationContainer, useNavigation } from "@react-navigation/native";
+import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { ApplicationProvider } from "@ui-kitten/components";
 import * as eva from "@eva-design/eva";
 import ServerScreen from "./screens/ServerScreen/ServerScreen";
 import WebViewScreen from "./screens/WebViewScreen/WebViewScreen";
-import HomeScreen from "./screens/HomeScreen/HomeScreen";
-import { config } from "./config";
-import * as Linking from "expo-linking";
-import { RootStackParamList } from "./screens/types";
+import TabNavigation from "./navigation/TabNavigation/TabNavigation"; // Ensure correct path
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import {
   ActivityIndicator,
@@ -17,38 +14,27 @@ import {
   useColorScheme,
   View,
 } from "react-native";
+import { AppProvider, useAppContext } from "./context/AppContext";
+import { RootStackParamList } from "./screens/types";
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
 
-const App = () => {
+const AppContent = () => {
   const isDarkMode = useColorScheme() === "dark";
   const [initialRoute, setInitialRoute] = useState<
     keyof RootStackParamList | undefined
-  >("Home");
+  >(undefined);
   const [loading, setLoading] = useState(true);
 
-  const linking = {
-    prefixes: ["pugdom://"],
-    config: {
-      screens: {
-        Server: "server",
-        WebView: {
-          path: "oauthredirect",
-          parse: {
-            code: (code: string) => `${code}`,
-          },
-        },
-        Home: "home",
-      },
-    },
-  };
+  const { setAppParam } = useAppContext();
 
   useEffect(() => {
     const checkUserAuthentication = async () => {
       const userInfo = await AsyncStorage.getItem("userInfo");
       try {
         if (userInfo) {
-          setInitialRoute("Home");
+          setAppParam("username", JSON.parse(userInfo).username);
+          setInitialRoute("TabNavigation");
         } else {
           setInitialRoute("Server");
         }
@@ -61,21 +47,39 @@ const App = () => {
     };
 
     checkUserAuthentication();
-  }, []);
+  }, [setAppParam]);
+
+  if (loading) {
+    return (
+      <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
+        <ActivityIndicator size="large" color="#0000ff" />
+      </View>
+    );
+  }
+
+  return (
+    <NavigationContainer>
+      <Stack.Navigator
+        initialRouteName={initialRoute}
+        screenOptions={{ headerShown: false }}
+      >
+        <Stack.Screen name="TabNavigation" component={TabNavigation} />
+        <Stack.Screen name="Server" component={ServerScreen} />
+        <Stack.Screen name="WebView" component={WebViewScreen} />
+      </Stack.Navigator>
+    </NavigationContainer>
+  );
+};
+
+const App = () => {
+  const isDarkMode = useColorScheme() === "dark";
 
   return (
     <ApplicationProvider {...eva} theme={isDarkMode ? eva.dark : eva.light}>
       <StatusBar barStyle={isDarkMode ? "light-content" : "dark-content"} />
-      <NavigationContainer linking={linking}>
-        <Stack.Navigator
-          initialRouteName={"Server"}
-          screenOptions={{ headerShown: false }}
-        >
-          <Stack.Screen name="Home" component={HomeScreen} />
-          <Stack.Screen name="Server" component={ServerScreen} />
-          <Stack.Screen name="WebView" component={WebViewScreen} />
-        </Stack.Navigator>
-      </NavigationContainer>
+      <AppProvider>
+        <AppContent />
+      </AppProvider>
     </ApplicationProvider>
   );
 };

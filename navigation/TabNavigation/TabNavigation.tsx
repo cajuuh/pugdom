@@ -1,27 +1,21 @@
-import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
-import React, { useEffect, useRef } from "react";
 import {
-  Platform,
-  SafeAreaView,
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-  View,
-} from "react-native";
-import * as Animatable from "react-native-animatable";
-import Icon, { Icons } from "../../utils/Icons";
+  BottomTabNavigationProp,
+  createBottomTabNavigator,
+} from "@react-navigation/bottom-tabs";
+import React from "react";
+import { SafeAreaView } from "react-native";
 import HomeScreen from "../../screens/HomeScreen/HomeScreen";
 import SearchScreen from "../../screens/SearchScreen/SearchScreen";
 import ProfileScreen from "../../screens/ProfileScreen/ProfileScreen";
-import { TabParams } from "../../components/interfaces";
-import { TouchableOpacityContainer } from "./TabNavigation.style";
-import Colors from "../../constants/Colors";
+import TabButton from "../TabNavigation/components/TabButton";
 import { BottomTabParamList } from "../../screens/types";
+import { Icons } from "../../utils/Icons";
+import { useNavigation } from "@react-navigation/native";
 
 const TabArr: Array<{
   route: keyof BottomTabParamList;
   label: string;
-  type: any;
+  type: keyof typeof Icons;
   activeIcon: string;
   inActiveIcon: string;
   component: React.ComponentType<any>;
@@ -29,7 +23,7 @@ const TabArr: Array<{
   {
     route: "Home",
     label: "Home",
-    type: Icons.Ionicons,
+    type: "Ionicons",
     activeIcon: "grid",
     inActiveIcon: "grid-outline",
     component: HomeScreen,
@@ -37,56 +31,31 @@ const TabArr: Array<{
   {
     route: "Search",
     label: "Search",
-    type: Icons.MaterialCommunityIcons,
-    activeIcon: "timeline-plus",
-    inActiveIcon: "timeline-plus-outline",
+    type: "FontAwesome",
+    activeIcon: "search",
+    inActiveIcon: "search",
     component: SearchScreen,
   },
   {
     route: "Profile",
     label: "Profile",
-    type: Icons.FontAwesome,
+    type: "FontAwesome",
     activeIcon: "user-circle",
     inActiveIcon: "user-circle-o",
     component: ProfileScreen,
   },
 ];
 
-const Tab = createBottomTabNavigator();
-
-const TabButton = (props: TabParams) => {
-  const { item, onPress, accessibilityState } = props;
-  const focused = accessibilityState.selected;
-  const viewRef = useRef<Animatable.View>(null);
-
-  useEffect(() => {
-    if (focused && viewRef.current) {
-      viewRef.current.animate({
-        0: { scaleX: 0.5, transform: [{ rotate: "0deg" }] },
-        1: { scaleX: 1.5, transform: [{ rotate: "360deg" }] },
-      });
-    } else if (viewRef.current) {
-      viewRef.current.animate({
-        0: { scaleY: 0.5, transform: [{ rotate: "0deg" }] },
-        1: { scaleY: 1.5, transform: [{ rotate: "360deg" }] },
-      });
-    }
-  }, [focused]);
-
-  return (
-    <TouchableOpacityContainer onPress={onPress} activeOpacity={1}>
-      <Animatable.View ref={viewRef} duration={1000}>
-        <Icon
-          type={item.type}
-          name={focused ? item.activeIcon : item.inActiveIcon}
-          color={focused ? Colors.primary : Colors.primaryLite}
-        />
-      </Animatable.View>
-    </TouchableOpacityContainer>
-  );
-};
+const Tab = createBottomTabNavigator<BottomTabParamList>();
 
 const TabNavigation: React.FC = () => {
+  const navigation =
+    useNavigation<BottomTabNavigationProp<BottomTabParamList>>();
+
+  const handleNavigation = (route: keyof BottomTabParamList) => {
+    navigation.navigate(route);
+  };
+
   return (
     <SafeAreaView style={{ flex: 1 }}>
       <Tab.Navigator
@@ -102,26 +71,26 @@ const TabNavigation: React.FC = () => {
           },
         }}
       >
-        {TabArr.map((item, index) => {
-          return (
-            <Tab.Screen
-              key={index}
-              name={item.route}
-              component={item.component}
-              options={{
-                tabBarShowLabel: false,
-                tabBarButton: (props) => (
-                  <TabButton
-                    {...props}
-                    item={item}
-                    onPress={() => console.log("Tab button pressed")}
-                    accessibilityState={{ selected: false, disabled: false }}
-                  />
-                ),
-              }}
-            />
-          );
-        })}
+        {TabArr.map((item, index) => (
+          <Tab.Screen
+            key={index}
+            name={item.route}
+            component={item.component}
+            options={{
+              tabBarShowLabel: false,
+              tabBarButton: (props) => (
+                <TabButton
+                  {...props}
+                  item={item}
+                  onPress={() => handleNavigation(item.route)}
+                  accessibilityState={
+                    props.accessibilityState as { selected: boolean }
+                  }
+                />
+              ),
+            }}
+          />
+        ))}
       </Tab.Navigator>
     </SafeAreaView>
   );

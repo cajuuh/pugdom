@@ -87,10 +87,6 @@ const TootCard: React.FC<TootCardProps> = ({
     }
   };
 
-  useEffect(() => {
-    console.log(username + ": " + content);
-  }, [content]);
-
   return renderCard();
 };
 
