@@ -33,7 +33,7 @@ const WebViewScreen: React.FC<Props> = ({ route, navigation }) => {
         if (userInfo && userInfo.username) {
           const fullUserInfo = { ...userInfo, accessToken, serverUrl };
           await AsyncStorage.setItem("userInfo", JSON.stringify(fullUserInfo));
-          navigation.replace("Home", { username: userInfo.username });
+          navigation.navigate("Home", { username: userInfo.username });
         }
       } catch (error) {
         console.error("Error fetching user info:", error);
