@@ -1,17 +1,17 @@
+import React from "react";
 import {
   BottomTabNavigationProp,
   createBottomTabNavigator,
 } from "@react-navigation/bottom-tabs";
-import React from "react";
 import { SafeAreaView } from "react-native";
 import HomeScreen from "../../screens/HomeScreen/HomeScreen";
 import SearchScreen from "../../screens/SearchScreen/SearchScreen";
 import ProfileScreen from "../../screens/ProfileScreen/ProfileScreen";
+import NotificationsScreen from "../../screens/NotificationsScreen/NotificationsScreen";
 import TabButton from "../TabNavigation/components/TabButton";
 import { BottomTabParamList } from "../../screens/types";
 import { Icons } from "../../utils/Icons";
 import { useNavigation } from "@react-navigation/native";
-import NotificationsScreen from "../../screens/NotificationsScreen/NotificationsScreen";
 
 const TabArr: Array<{
   route: keyof BottomTabParamList;

@@ -24,3 +24,20 @@ export interface TabParams {
 export interface TabNavigationParams {
   id: undefined;
 }
+
+export interface NotificationItem {
+  id: string;
+  type: string;
+  title: string;
+  body: string;
+  date: string;
+  account: {
+    id: string;
+    username: string;
+    avatar: string;
+  };
+  status?: {
+    id: string;
+    content: string;
+  };
+}
