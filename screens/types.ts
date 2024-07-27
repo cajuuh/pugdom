@@ -24,6 +24,7 @@ export type BottomTabParamList = {
   Home: undefined;
   Search: undefined;
   Profile: undefined;
+  Notifications: undefined;
 };
 
 export type TabParams = {

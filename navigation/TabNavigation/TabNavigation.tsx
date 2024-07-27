@@ -11,6 +11,7 @@ import TabButton from "../TabNavigation/components/TabButton";
 import { BottomTabParamList } from "../../screens/types";
 import { Icons } from "../../utils/Icons";
 import { useNavigation } from "@react-navigation/native";
+import NotificationsScreen from "../../screens/NotificationsScreen/NotificationsScreen";
 
 const TabArr: Array<{
   route: keyof BottomTabParamList;
@@ -35,6 +36,14 @@ const TabArr: Array<{
     activeIcon: "search",
     inActiveIcon: "search",
     component: SearchScreen,
+  },
+  {
+    route: "Notifications",
+    label: "Notifications",
+    type: "MaterialCommunityIcons",
+    activeIcon: "bell",
+    inActiveIcon: "bell-outline",
+    component: NotificationsScreen,
   },
   {
     route: "Profile",
