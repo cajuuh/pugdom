@@ -6,3 +6,10 @@ export const TouchableOpacityContainer = styled.TouchableOpacity`
   align-items: center;
   height: 60px;
 `;
+
+export const Circle = styled.View`
+  width: 30px;
+  height: 30px;
+  border-radius: 15px;
+  position: absolute;
+`;
