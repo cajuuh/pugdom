@@ -8,12 +8,14 @@ import { getToken, getUserInfo } from "../../services/authService";
 import { config } from "../../config";
 import * as Linking from "expo-linking";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { useAppContext } from "../../context/AppContext";
 
 type Props = NativeStackScreenProps<RootStackParamList, "WebView">;
 
 const WebViewScreen: React.FC<Props> = ({ route, navigation }) => {
   const { serverUrl } = route.params;
   const webViewRef = useRef<WebView>(null);
+  const { setAppParam } = useAppContext();
 
   const handleOpenURL = async (url: string) => {
     console.log("Received deep link URL:", url);
@@ -33,7 +35,13 @@ const WebViewScreen: React.FC<Props> = ({ route, navigation }) => {
         if (userInfo && userInfo.username) {
           const fullUserInfo = { ...userInfo, accessToken, serverUrl };
           await AsyncStorage.setItem("userInfo", JSON.stringify(fullUserInfo));
-          navigation.navigate("Home", { username: userInfo.username });
+          setAppParam("username", userInfo.username);
+          setAppParam("apiBaseUrl", serverUrl);
+          setAppParam("accessToken", accessToken);
+          navigation.navigate("TabNavigation", {
+            screen: "Home",
+            params: { username: userInfo.username },
+          });
         }
       } catch (error) {
         console.error("Error fetching user info:", error);

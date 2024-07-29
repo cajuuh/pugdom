@@ -6,7 +6,7 @@ import { ApplicationProvider } from "@ui-kitten/components";
 import * as eva from "@eva-design/eva";
 import ServerScreen from "./screens/ServerScreen/ServerScreen";
 import WebViewScreen from "./screens/WebViewScreen/WebViewScreen";
-import TabNavigation from "./navigation/TabNavigation/TabNavigation"; // Ensure correct path
+import TabNavigation from "./navigation/TabNavigation/TabNavigation";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import {
   ActivityIndicator,
@@ -33,7 +33,10 @@ const AppContent = () => {
       const userInfo = await AsyncStorage.getItem("userInfo");
       try {
         if (userInfo) {
-          setAppParam("username", JSON.parse(userInfo).username);
+          const parsedUserInfo = JSON.parse(userInfo);
+          setAppParam("username", parsedUserInfo.username);
+          setAppParam("apiBaseUrl", parsedUserInfo.serverUrl);
+          setAppParam("accessToken", parsedUserInfo.accessToken);
           setInitialRoute("TabNavigation");
         } else {
           setInitialRoute("Server");
