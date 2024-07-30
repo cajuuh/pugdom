@@ -17,10 +17,11 @@ const HomeScreen: React.FC = () => {
   const { username } = appParams;
   const [feed, setFeed] = useState<FeedItem[]>([]);
   const [loading, setLoading] = useState(true);
-  const [refreshing, setRefreshing] = useState(false); // Add refreshing state
+  const [refreshing, setRefreshing] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
   const fetchHomeFeed = useCallback(async () => {
+    setLoading(true); // Ensures the loader appears while fetching
     try {
       const feedData = await getHomeFeed();
       setFeed(feedData);
@@ -29,7 +30,7 @@ const HomeScreen: React.FC = () => {
       console.error("Error fetching home feed:", error);
     } finally {
       setLoading(false);
-      setRefreshing(false); // Ensure refreshing state is reset
+      setRefreshing(false);
     }
   }, []);
 
@@ -42,7 +43,7 @@ const HomeScreen: React.FC = () => {
     fetchHomeFeed();
   }, [fetchHomeFeed]);
 
-  if (loading) {
+  if (loading && !refreshing) {
     return (
       <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
         <ActivityIndicator size="large" color="#0000ff" />

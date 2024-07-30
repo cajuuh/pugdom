@@ -46,6 +46,8 @@ export type TabParams = {
 export type RootStackParamList = {
   Server: undefined;
   WebView: { serverUrl: string };
-  Home: { username: string };
-  TabNavigation: undefined;
+  TabNavigation: {
+    screen: keyof BottomTabParamList;
+    params?: { username: string };
+  };
 };

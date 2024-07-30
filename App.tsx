@@ -16,6 +16,26 @@ import {
 } from "react-native";
 import { AppProvider, useAppContext } from "./context/AppContext";
 import { RootStackParamList } from "./screens/types";
+import * as Linking from "expo-linking";
+
+const linking = {
+  prefixes: ["pugdom://", "https://yourwebsite.com"],
+  config: {
+    screens: {
+      Server: "server",
+      WebView: "webview",
+      TabNavigation: {
+        path: "tabs",
+        screens: {
+          Home: "home",
+          Search: "search",
+          Profile: "profile",
+          Notifications: "notifications",
+        },
+      },
+    },
+  },
+};
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
 
@@ -50,7 +70,7 @@ const AppContent = () => {
     };
 
     checkUserAuthentication();
-  }, [setAppParam]);
+  }, [loading]);
 
   if (loading) {
     return (
@@ -61,7 +81,7 @@ const AppContent = () => {
   }
 
   return (
-    <NavigationContainer>
+    <NavigationContainer linking={linking}>
       <Stack.Navigator
         initialRouteName={initialRoute}
         screenOptions={{ headerShown: false }}
