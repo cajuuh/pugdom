@@ -1,23 +1,28 @@
 import styled from "styled-components/native";
+import { useTheme } from "@ui-kitten/components";
 
-export const Container = styled.View`
+const Container = styled.View`
   flex: 1;
   padding: 16px;
-  background-color: #fff;
+  background-color: ${(props) => props.theme["background-basic-color-1"]};
 `;
 
-export const WelcomeText = styled.Text`
+const WelcomeText = styled.Text`
   font-size: 24px;
   font-weight: bold;
   margin-bottom: 20px;
+  color: ${(props) => props.theme["text-basic-color"]};
 `;
 
-export const FeedItemContainer = styled.View`
+const FeedItemContainer = styled.View`
   padding: 10px;
   border-bottom-width: 1px;
-  border-bottom-color: #ccc;
+  border-bottom-color: ${(props) => props.theme["border-basic-color-3"]};
 `;
 
-export const FeedText = styled.Text`
+const FeedText = styled.Text`
   font-size: 16px;
+  color: ${(props) => props.theme["text-basic-color"]};
 `;
+
+export { Container, WelcomeText, FeedItemContainer, FeedText };

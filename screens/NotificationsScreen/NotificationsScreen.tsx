@@ -55,7 +55,7 @@ const NotificationsScreen: React.FC = () => {
   }
 
   return (
-    <View style={{ flex: 1 }}>
+    <View style={{ flex: 1, padding: 16 }}>
       <FlatList
         data={notifications}
         keyExtractor={(item) => item.id}

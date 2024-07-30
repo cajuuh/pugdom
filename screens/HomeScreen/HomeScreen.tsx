@@ -11,8 +11,10 @@ import { Container, WelcomeText } from "./styles/HomeScreen.style";
 import { getHomeFeed } from "../../services/feedService";
 import TootCard from "../../components/TootCard/TootCard";
 import { useAppContext } from "../../context/AppContext";
+import { useTheme } from "@ui-kitten/components";
 
 const HomeScreen: React.FC = () => {
+  const theme = useTheme();
   const { appParams } = useAppContext();
   const { username } = appParams;
   const [feed, setFeed] = useState<FeedItem[]>([]);
@@ -61,8 +63,8 @@ const HomeScreen: React.FC = () => {
   }
 
   return (
-    <Container>
-      <WelcomeText>Welcome, {username}!</WelcomeText>
+    <Container theme={theme}>
+      <WelcomeText theme={theme}>Welcome, {username}!</WelcomeText>
       <FlatList
         data={feed}
         keyExtractor={(item) => item.id}

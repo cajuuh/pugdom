@@ -40,7 +40,6 @@ const linking = {
 const Stack = createNativeStackNavigator<RootStackParamList>();
 
 const AppContent = () => {
-  const isDarkMode = useColorScheme() === "dark";
   const [initialRoute, setInitialRoute] = useState<
     keyof RootStackParamList | undefined
   >(undefined);

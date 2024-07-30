@@ -1,9 +1,16 @@
 import React, { useEffect, useRef } from "react";
-import { TouchableOpacity, View, Text } from "react-native";
+import { View } from "react-native";
 import * as Animatable from "react-native-animatable";
 import CustomIcon, { IconType } from "../../../utils/Icons";
-import Colors from "../../../constants/Colors";
 import { TabParams } from "../../../components/interfaces";
+import {
+  TouchableContainer,
+  AnimatedContainer,
+  IconWrapper,
+  AnimatedCircle,
+  Label,
+} from "./TabButton.style";
+import Colors from "../../../constants/Colors";
 
 const TabButton: React.FC<TabParams> = ({
   item,
@@ -15,23 +22,23 @@ const TabButton: React.FC<TabParams> = ({
   const circleRef = useRef<Animatable.View & View>(null);
 
   const animate1 = {
-    from: { transform: [{ scaleX: 1 }, { scaleY: 1 }] },
-    to: { transform: [{ scaleX: 1.2 }, { scaleY: 1.2 }] },
+    from: { transform: [{ scaleX: 0.7 }, { scaleY: 0.7 }] },
+    to: { transform: [{ scaleX: 0.9 }, { scaleY: 0.9 }] },
   };
 
   const animate2 = {
-    from: { transform: [{ scaleX: 1.2 }, { scaleY: 1.2 }] },
-    to: { transform: [{ scaleX: 1 }, { scaleY: 1 }] },
+    from: { transform: [{ scaleX: 0.9 }, { scaleY: 0.9 }] },
+    to: { transform: [{ scaleX: 0.7 }, { scaleY: 0.7 }] },
   };
 
   const circle1 = {
-    from: { transform: [{ scaleX: 0.2 }, { scaleY: 0.2 }], opacity: 0.2 },
-    to: { transform: [{ scaleX: 1 }, { scaleY: 1 }], opacity: 1 },
+    from: { transform: [{ scaleX: 0.2 }, { scaleY: 0.2 }], opacity: 1 },
+    to: { transform: [{ scaleX: 0.7 }, { scaleY: 0.7 }], opacity: 1 },
   };
 
   const circle2 = {
-    from: { transform: [{ scaleX: 1 }, { scaleY: 1 }], opacity: 1 },
-    to: { transform: [{ scaleX: 0.2 }, { scaleY: 0.2 }], opacity: 0.2 },
+    from: { transform: [{ scaleX: 0.9 }, { scaleY: 0.9 }], opacity: 1 },
+    to: { transform: [{ scaleX: 0.7 }, { scaleY: 0.7 }], opacity: 1 },
   };
 
   useEffect(() => {
@@ -45,51 +52,22 @@ const TabButton: React.FC<TabParams> = ({
   }, [focused]);
 
   return (
-    <TouchableOpacity
-      onPress={onPress}
-      activeOpacity={1}
-      style={{ flex: 1, justifyContent: "center", alignItems: "center" }}
-    >
-      <Animatable.View
-        ref={viewRef}
-        duration={1000}
-        style={{ flex: 1, justifyContent: "center", alignItems: "center" }}
-      >
-        <View
-          style={{
-            borderWidth: 1,
-            borderRadius: 25,
-            padding: 10,
-            borderColor: focused ? Colors.primary : Colors.primaryLite,
-            backgroundColor: focused ? Colors.primary : "transparent",
-          }}
-        >
-          <Animatable.View
-            ref={circleRef}
-            style={{
-              width: 30,
-              height: 30,
-              borderRadius: 15,
-              backgroundColor: focused ? Colors.primaryLite : "transparent",
-              position: "absolute",
-            }}
-          />
+    <TouchableContainer onPress={onPress} activeOpacity={1}>
+      <AnimatedContainer ref={viewRef} duration={500}>
+        <IconWrapper focused={focused}>
+          <AnimatedCircle focused={focused} ref={circleRef} />
           <CustomIcon
             type={item.type as IconType}
             name={focused ? item.activeIcon : item.inActiveIcon}
             color={focused ? Colors.white : Colors.primaryLite}
-            size={20}
+            size={22}
           />
-        </View>
-      </Animatable.View>
-      <Text
-        style={{
-          color: focused ? Colors.primary : Colors.primaryLite,
-        }}
-      >
+        </IconWrapper>
+      </AnimatedContainer>
+      <Label focused={focused} category="label">
         {item.label}
-      </Text>
-    </TouchableOpacity>
+      </Label>
+    </TouchableContainer>
   );
 };
 
