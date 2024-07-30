@@ -59,7 +59,7 @@ const WebViewScreen: React.FC<Props> = ({ route, navigation }) => {
 
   useEffect(() => {
     if (request) {
-      promptAsync();
+      promptAsync({ showInRecents: true });
     }
   }, [request, response]);
 
