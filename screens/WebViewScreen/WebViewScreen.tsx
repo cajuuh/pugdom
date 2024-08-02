@@ -7,6 +7,7 @@ import { RootStackParamList } from "../types";
 import { getToken, getUserInfo } from "../../services/authService";
 import { config } from "../../config";
 import { useAppContext } from "../../context/AppContext";
+import * as WebBrowser from "expo-web-browser";
 
 type Props = NativeStackScreenProps<RootStackParamList, "WebView">;
 
@@ -14,11 +15,15 @@ const WebViewScreen: React.FC<Props> = ({ route, navigation }) => {
   const { serverUrl } = route.params;
   const { setAppParam } = useAppContext();
 
+  WebBrowser.maybeCompleteAuthSession();
+
   const [request, response, promptAsync] = AuthSession.useAuthRequest(
     {
       clientId: config.CLIENT_ID,
-      redirectUri: AuthSession.makeRedirectUri({ scheme: "pugdom" }),
-      scopes: ["read", "write"],
+      redirectUri: AuthSession.makeRedirectUri({
+        scheme: "pugdom",
+      }),
+      scopes: ["read", "write", "follow"],
       usePKCE: false,
       responseType: AuthSession.ResponseType.Code,
     },
@@ -26,6 +31,14 @@ const WebViewScreen: React.FC<Props> = ({ route, navigation }) => {
   );
 
   useEffect(() => {
+    console.log(
+      "redirectUri",
+      AuthSession.makeRedirectUri({
+        scheme: "pugdom",
+      })
+    );
+    console.log("request =>", request);
+    console.log("response =>", response);
     if (response?.type === "success" && response.params.code) {
       const code = response.params.code;
       (async () => {
@@ -55,12 +68,11 @@ const WebViewScreen: React.FC<Props> = ({ route, navigation }) => {
     } else if (response?.type === "error") {
       console.error("Error during auth request:", response.error);
     }
-  }, [request, response]);
+  }, [response, response, promptAsync]);
 
   useEffect(() => {
-    if (request) {
+    console.log("response from promptAsync useEffect =>", response),
       promptAsync({ showInRecents: true });
-    }
   }, [request, response]);
 
   return (

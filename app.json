@@ -5,7 +5,7 @@
     "scheme": "pugdom",
     "platforms": ["ios", "android", "web"],
     "ios": {
-      "bundleIdentifier": "com.cajuuh.pugdom",
+      "bundleIdentifier": "com.pugdom.pugdom",
       "supportsTablet": true,
       "infoPlist": {
         "CFBundleURLTypes": [
@@ -16,7 +16,7 @@
       }
     },
     "android": {
-      "package": "com.cajuuh.pugdom",
+      "package": "com.pugdom.pugdom",
       "intentFilters": [
         {
           "action": "VIEW",

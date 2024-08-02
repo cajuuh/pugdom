@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import { Button, Text } from "@ui-kitten/components";
 import { NavigationProp } from "@react-navigation/native";
 import { Container, StyledInput } from "./styles/ServerScreen.style";
@@ -6,21 +6,40 @@ import { RootStackParamList } from "../types";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { ActivityIndicator, View } from "react-native";
+import * as AuthSession from "expo-auth-session";
+import { config } from "../../config";
 
 type Props = NativeStackScreenProps<RootStackParamList, "Server">;
 
 const ServerScreen: React.FC<Props> = ({ navigation }) => {
   const [server, setServer] = useState("");
   const [loading, setLoading] = useState(true);
+  const [authEndpoint, setAuthEndpoint] = useState("");
 
-  const handleSave = async () => {
-    let formattedServer = server.trim();
-    if (!formattedServer.startsWith("https://")) {
-      formattedServer = `https://${formattedServer}`;
+  const handleSave = useCallback(async () => {
+    let tempServer = server.trim();
+    if (
+      !tempServer.startsWith("http://") &&
+      !tempServer.startsWith("https://")
+    ) {
+      tempServer = `https://${tempServer}`;
     }
-    await AsyncStorage.setItem("serverUrl", formattedServer);
-    navigation.navigate("WebView", { serverUrl: formattedServer });
-  };
+    await AsyncStorage.setItem("serverUrl", tempServer);
+    setAuthEndpoint(`${tempServer}/oauth/authorize`);
+  }, [server]);
+
+  const [request, response, promptAsync] = AuthSession.useAuthRequest(
+    {
+      clientId: config.CLIENT_ID,
+      redirectUri: AuthSession.makeRedirectUri({
+        scheme: "pugdom",
+      }),
+      scopes: ["read", "write", "follow"],
+      usePKCE: false,
+      responseType: AuthSession.ResponseType.Code,
+    },
+    { authorizationEndpoint: authEndpoint }
+  );
 
   useEffect(() => {
     const checkUserAuthentication = async () => {
@@ -41,6 +60,10 @@ const ServerScreen: React.FC<Props> = ({ navigation }) => {
     checkUserAuthentication();
   }, [navigation]);
 
+  useEffect(() => {
+    console.log("Response: ", response);
+  }, [response]);
+
   if (loading) {
     return (
       <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
@@ -57,7 +80,14 @@ const ServerScreen: React.FC<Props> = ({ navigation }) => {
         value={server}
         onChangeText={setServer}
       />
-      <Button onPress={handleSave}>Sign In</Button>
+      <Button
+        onPress={async () => {
+          await handleSave();
+          promptAsync({ showInRecents: true });
+        }}
+      >
+        Sign In
+      </Button>
     </Container>
   );
 };

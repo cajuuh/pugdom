@@ -12,6 +12,8 @@ import { getHomeFeed } from "../../services/feedService";
 import TootCard from "../../components/TootCard/TootCard";
 import { useAppContext } from "../../context/AppContext";
 import { useTheme } from "@ui-kitten/components";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { Button } from "@ui-kitten/components";
 
 const HomeScreen: React.FC = () => {
   const theme = useTheme();
@@ -21,8 +23,10 @@ const HomeScreen: React.FC = () => {
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  let accessToken;
 
   const fetchHomeFeed = useCallback(async () => {
+    accessToken = await AsyncStorage.getItem("accessToken");
     setLoading(true); // Ensures the loader appears while fetching
     try {
       const feedData = await getHomeFeed();
@@ -64,7 +68,9 @@ const HomeScreen: React.FC = () => {
 
   return (
     <Container theme={theme}>
-      <WelcomeText theme={theme}>Welcome, {username}!</WelcomeText>
+      <View style={{ flexDirection: "row" }}>
+        <WelcomeText theme={theme}>Welcome, {username}!</WelcomeText>
+      </View>
       <FlatList
         data={feed}
         keyExtractor={(item) => item.id}
