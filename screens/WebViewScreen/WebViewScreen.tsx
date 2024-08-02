@@ -22,6 +22,11 @@ const WebViewScreen: React.FC<Props> = ({ route, navigation }) => {
       clientId: config.CLIENT_ID,
       redirectUri: AuthSession.makeRedirectUri({
         scheme: "pugdom",
+        path: "redirect",
+      }),
+      scopes: ["read", "write"],
+      redirectUri: AuthSession.makeRedirectUri({
+        scheme: "pugdom",
       }),
       scopes: ["read", "write", "follow"],
       usePKCE: false,
@@ -31,6 +36,8 @@ const WebViewScreen: React.FC<Props> = ({ route, navigation }) => {
   );
 
   useEffect(() => {
+    console.log(request);
+    console.log(response);
     console.log(
       "redirectUri",
       AuthSession.makeRedirectUri({
@@ -73,6 +80,8 @@ const WebViewScreen: React.FC<Props> = ({ route, navigation }) => {
   useEffect(() => {
     console.log("response from promptAsync useEffect =>", response),
       promptAsync({ showInRecents: true });
+    }
+  }, [request]);
   }, [request, response]);
 
   return (

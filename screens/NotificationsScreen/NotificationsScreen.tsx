@@ -3,12 +3,12 @@ import {
   FlatList,
   View,
   ActivityIndicator,
-  Text,
   RefreshControl,
 } from "react-native";
 import { NotificationItem } from "../../components/interfaces";
 import { getNotifications } from "../../services/notificationService";
-import NotificationCard from "./components/NotificationCard/NotificationCard"; // Assuming you have a NotificationCard component
+import NotificationCard from "./components/NotificationCard/NotificationCard";
+import { Text } from "@ui-kitten/components";
 
 const NotificationsScreen: React.FC = () => {
   const [notifications, setNotifications] = useState<NotificationItem[]>([]);
@@ -31,7 +31,7 @@ const NotificationsScreen: React.FC = () => {
 
   useEffect(() => {
     fetchNotifications();
-  }, []);
+  }, [refreshing]);
 
   const onRefresh = () => {
     setRefreshing(true);
@@ -56,22 +56,28 @@ const NotificationsScreen: React.FC = () => {
 
   return (
     <View style={{ flex: 1, padding: 16 }}>
-      <FlatList
-        data={notifications}
-        keyExtractor={(item) => item.id}
-        renderItem={({ item }) => (
-          <NotificationCard
-            title={item.title}
-            body={item.body}
-            date={item.date}
-            avatar={item.account.avatar}
-            username={item.account.username}
-          />
-        )}
-        refreshControl={
-          <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
-        }
-      />
+      {notifications ? (
+        <FlatList
+          data={notifications}
+          keyExtractor={(item) => item.id}
+          renderItem={({ item }) => (
+            <View>
+              <NotificationCard
+                title={item.title}
+                body={item.body}
+                date={item.date}
+                avatar={item.account.avatar}
+                username={item.account.username}
+              />
+            </View>
+          )}
+          refreshControl={
+            <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+          }
+        />
+      ) : (
+        <Text>No notifications</Text>
+      )}
     </View>
   );
 };
