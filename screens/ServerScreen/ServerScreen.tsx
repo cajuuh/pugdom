@@ -8,6 +8,8 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { ActivityIndicator, View } from "react-native";
 import * as AuthSession from "expo-auth-session";
 import { config } from "../../config";
+import { getToken, getUserInfo } from "../../services/authService";
+import { useAppContext } from "../../context/AppContext";
 
 type Props = NativeStackScreenProps<RootStackParamList, "Server">;
 
@@ -15,6 +17,7 @@ const ServerScreen: React.FC<Props> = ({ navigation }) => {
   const [server, setServer] = useState("");
   const [loading, setLoading] = useState(true);
   const [authEndpoint, setAuthEndpoint] = useState("");
+  const { setAppParam } = useAppContext();
 
   const handleSave = useCallback(async () => {
     let tempServer = server.trim();
@@ -26,6 +29,7 @@ const ServerScreen: React.FC<Props> = ({ navigation }) => {
     }
     await AsyncStorage.setItem("serverUrl", tempServer);
     setAuthEndpoint(`${tempServer}/oauth/authorize`);
+    console.log("AuthEnpoint: ", authEndpoint);
   }, [server]);
 
   const [request, response, promptAsync] = AuthSession.useAuthRequest(
@@ -61,7 +65,37 @@ const ServerScreen: React.FC<Props> = ({ navigation }) => {
   }, [navigation]);
 
   useEffect(() => {
-    console.log("Response: ", response);
+    let serverUrl = "https://" + server;
+    console.log(serverUrl);
+    if (response?.type === "success" && response.params.code) {
+      const code = response.params.code;
+      (async () => {
+        try {
+          const accessToken = await getToken(serverUrl, code);
+          console.log("Access token:", accessToken);
+          const userInfo = await getUserInfo(serverUrl, accessToken);
+          console.log("User Info:", userInfo);
+          if (userInfo && userInfo.username) {
+            const fullUserInfo = { ...userInfo, accessToken, serverUrl };
+            await AsyncStorage.setItem(
+              "userInfo",
+              JSON.stringify(fullUserInfo)
+            );
+            setAppParam("username", userInfo.username);
+            setAppParam("apiBaseUrl", serverUrl);
+            setAppParam("accessToken", accessToken);
+            navigation.navigate("TabNavigation", {
+              screen: "Home",
+              params: { username: userInfo.username },
+            });
+          }
+        } catch (error) {
+          console.error("Error fetching user info:", error);
+        }
+      })();
+    } else if (response?.type === "error") {
+      console.error("Error during auth request:", response.error);
+    }
   }, [response]);
 
   if (loading) {
@@ -77,8 +111,7 @@ const ServerScreen: React.FC<Props> = ({ navigation }) => {
       <Text category="h1">Set Mastodon Server</Text>
       <StyledInput
         placeholder="Enter your Mastodon server URL"
-        value={server}
-        onChangeText={setServer}
+        onChangeText={(text) => setServer(text)}
       />
       <Button
         onPress={async () => {
