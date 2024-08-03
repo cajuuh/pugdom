@@ -1,3 +1,4 @@
+import React from "react";
 import styled from "styled-components/native";
 import { Dimensions } from "react-native";
 const { width } = Dimensions.get("window");
@@ -14,11 +15,17 @@ export const CardContainer = styled.View`
   border-color: #e6e6e6;
 `;
 
-export const ProfileImage = styled.Image`
+export const ProfileImageContainer = styled.View`
   width: 40px;
   height: 40px;
   border-radius: 20px;
   margin-right: 16px;
+  overflow: hidden;
+`;
+
+export const ProfileImage = styled.Image`
+  width: 40px;
+  height: 40px;
 `;
 
 export const UserInfo = styled.View`
@@ -46,7 +53,7 @@ export const Server = styled.Text`
 export const ContentContainer = styled.View``;
 
 export const MediaImage = styled.Image`
-  width: "100%";
+  width: ${width - 90}px;
   height: 200px;
   margin-top: 10px;
   border-radius: 8px;
@@ -56,27 +63,47 @@ export const MediaImage = styled.Image`
 export const ReblogContainer = styled.View`
   background-color: #f0f0f0;
   padding: 10px;
-  border-radius: 8px;
-  width: "100%";
+  border-radius: 10px;
+  width: ${width - 70}px;
 `;
 
 export const ReblogText = styled.Text`
   font-size: 14px;
   font-weight: bold;
   margin-bottom: 5px;
+  margin-left: 5px;
+`;
+
+export const SourceContainer = styled.View`
+  flex-direction: row;
+  align-items: center;
+  margin-bottom: 5px;
+`;
+
+export const SourceUserContainer = styled.View`
+  flex-direction: row;
+  align-items: center;
+  margin-top: 3px;
+`;
+
+export const SourceProfileImageContainer = styled.View`
+  width: 20px;
+  height: 20px;
+  border-radius: 25px;
+  margin-right: 5px;
+  margin-left: 5px;
+  margin-bottom: 5px;
+  overflow: hidden;
 `;
 
 export const SourceProfileImage = styled.Image`
   width: 20px;
   height: 20px;
-  border-radius: 10px;
-  margin-right: 5px;
-  margin-left: 5px;
-  margin-bottom: 5px;
 `;
 
 export const SourceUsername = styled.Text`
   font-size: 14px;
   font-weight: bold;
   margin-bottom: 5px;
+  margin-left: 5px;
 `;

@@ -12,11 +12,17 @@ import {
   Username,
   Server,
   UserNameContainer,
+  SourceContainer,
+  SourceUserContainer,
+  ProfileImageContainer,
+  SourceProfileImageContainer,
 } from "./styles/TootCard.style";
 import { useWindowDimensions, View } from "react-native";
 import HTMLView from "react-native-htmlview";
 import { FeedItem, MediaAttachment } from "../../screens/types";
 import { formatServerUrl } from "../../utils/utils";
+import CustomIcon from "../../utils/Icons";
+import Colors from "../../constants/Colors";
 
 type TootCardProps = {
   content: string;
@@ -48,11 +54,20 @@ const TootCard: React.FC<TootCardProps> = ({
               marginBottom: 5,
             }}
           >
-            <ReblogText>
-              Boosted from{" "}
-              <SourceProfileImage source={{ uri: reblog.account.avatar }} />
-              <SourceUsername>{reblog.account.username}</SourceUsername>
-            </ReblogText>
+            <SourceContainer>
+              <CustomIcon
+                type="AntDesign"
+                name="retweet"
+                color={Colors.green}
+              />
+              <SourceUserContainer>
+                <ReblogText>Boosted from </ReblogText>
+                <SourceProfileImageContainer>
+                  <SourceProfileImage source={{ uri: reblog.account.avatar }} />
+                </SourceProfileImageContainer>
+                <SourceUsername>{reblog.account.username}</SourceUsername>
+              </SourceUserContainer>
+            </SourceContainer>
           </View>
           <HTMLView value={reblog.content} />
           {reblog.media_attachments.map((media) => (
@@ -79,7 +94,9 @@ const TootCard: React.FC<TootCardProps> = ({
   return (
     <CardContainer>
       <UserInfo>
-        <ProfileImage source={{ uri: profileImageUrl }} />
+        <ProfileImageContainer>
+          <ProfileImage source={{ uri: profileImageUrl }} />
+        </ProfileImageContainer>
         <UserNameContainer>
           <Username>{username}</Username>
           <Server>{"@" + formatServerUrl(serverUrl)}</Server>
