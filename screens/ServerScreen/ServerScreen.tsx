@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useCallback } from "react";
+import React, { useEffect, useState, useCallback, useRef } from "react";
 import { Button, Text } from "@ui-kitten/components";
 import { NavigationProp } from "@react-navigation/native";
 import { Container, StyledInput } from "./styles/ServerScreen.style";
@@ -15,22 +15,12 @@ type Props = NativeStackScreenProps<RootStackParamList, "Server">;
 
 const ServerScreen: React.FC<Props> = ({ navigation }) => {
   const [server, setServer] = useState("");
+  const [serverUrl, setServerUrl] = useState("");
   const [loading, setLoading] = useState(true);
   const [authEndpoint, setAuthEndpoint] = useState("");
+  const authEndpointRef = useRef(authEndpoint);
   const { setAppParam } = useAppContext();
-
-  const handleSave = useCallback(async () => {
-    let tempServer = server.trim();
-    if (
-      !tempServer.startsWith("http://") &&
-      !tempServer.startsWith("https://")
-    ) {
-      tempServer = `https://${tempServer}`;
-    }
-    await AsyncStorage.setItem("serverUrl", tempServer);
-    setAuthEndpoint(`${tempServer}/oauth/authorize`);
-    console.log("AuthEnpoint: ", authEndpoint);
-  }, [server]);
+  const [isAuthEndpointSet, setIsAuthEndpointSet] = useState(false);
 
   const [request, response, promptAsync] = AuthSession.useAuthRequest(
     {
@@ -42,8 +32,32 @@ const ServerScreen: React.FC<Props> = ({ navigation }) => {
       usePKCE: false,
       responseType: AuthSession.ResponseType.Code,
     },
-    { authorizationEndpoint: authEndpoint }
+    {
+      authorizationEndpoint:
+        !server.startsWith("http://") && !server.startsWith("https://")
+          ? "https://" + server + "/oauth/authorize"
+          : server + "/oauth/authorize",
+    }
   );
+
+  const handleSave = useCallback(async () => {
+    let tempServer = server.trim();
+    if (
+      !tempServer.startsWith("http://") &&
+      !tempServer.startsWith("https://")
+    ) {
+      tempServer = `https://${tempServer}`;
+    }
+    setServerUrl(tempServer);
+    const newAuthEndpoint = `${tempServer}/oauth/authorize`;
+    setAuthEndpoint(newAuthEndpoint);
+    setIsAuthEndpointSet(true);
+    authEndpointRef.current = newAuthEndpoint;
+
+    await AsyncStorage.setItem("serverUrl", tempServer);
+
+    return isAuthEndpointSet;
+  }, [server]);
 
   useEffect(() => {
     const checkUserAuthentication = async () => {
@@ -65,9 +79,7 @@ const ServerScreen: React.FC<Props> = ({ navigation }) => {
   }, [navigation]);
 
   useEffect(() => {
-    let serverUrl = "https://" + server;
-    console.log(serverUrl);
-    if (response?.type === "success" && response.params.code) {
+    if (serverUrl && response?.type === "success" && response.params.code) {
       const code = response.params.code;
       (async () => {
         try {
@@ -96,7 +108,7 @@ const ServerScreen: React.FC<Props> = ({ navigation }) => {
     } else if (response?.type === "error") {
       console.error("Error during auth request:", response.error);
     }
-  }, [response]);
+  }, [response, authEndpoint]);
 
   if (loading) {
     return (
@@ -110,13 +122,17 @@ const ServerScreen: React.FC<Props> = ({ navigation }) => {
     <Container>
       <Text category="h1">Set Mastodon Server</Text>
       <StyledInput
+        value={server}
         placeholder="Enter your Mastodon server URL"
         onChangeText={(text) => setServer(text)}
       />
       <Button
         onPress={async () => {
-          await handleSave();
-          promptAsync({ showInRecents: true });
+          await handleSave().then((data) => {
+            if (data) {
+              promptAsync({ showInRecents: true });
+            }
+          });
         }}
       >
         Sign In
