@@ -16,6 +16,7 @@ import {
 } from "react-native";
 import { AppProvider, useAppContext } from "./context/AppContext";
 import { RootStackParamList } from "./screens/types";
+import { ThemeProvider } from "styled-components/native";
 import * as Linking from "expo-linking";
 
 const linking = {
@@ -99,9 +100,11 @@ const App = () => {
   return (
     <ApplicationProvider {...eva} theme={isDarkMode ? eva.dark : eva.light}>
       <StatusBar barStyle={isDarkMode ? "light-content" : "dark-content"} />
-      <AppProvider>
-        <AppContent />
-      </AppProvider>
+      <ThemeProvider theme={isDarkMode ? eva.dark : eva.light}>
+        <AppProvider>
+          <AppContent />
+        </AppProvider>
+      </ThemeProvider>
     </ApplicationProvider>
   );
 };

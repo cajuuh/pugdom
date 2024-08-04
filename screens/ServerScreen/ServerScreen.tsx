@@ -131,6 +131,8 @@ const ServerScreen: React.FC<Props> = ({ navigation }) => {
           await handleSave().then((data) => {
             if (data) {
               promptAsync({ showInRecents: true });
+            } else {
+              console.error("Error on server URL");
             }
           });
         }}
