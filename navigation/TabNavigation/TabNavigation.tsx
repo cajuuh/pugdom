@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useRef } from "react";
 import {
   BottomTabNavigationProp,
   createBottomTabNavigator,
@@ -12,6 +12,8 @@ import TabButton from "../TabNavigation/components/TabButton";
 import { BottomTabParamList } from "../../screens/types";
 import { Icons } from "../../utils/Icons";
 import { useNavigation } from "@react-navigation/native";
+import { useRoute } from "@react-navigation/native";
+import { HomeScreenRef } from "../../components/interfaces";
 
 const TabArr: Array<{
   route: keyof BottomTabParamList;
@@ -58,11 +60,22 @@ const TabArr: Array<{
 const Tab = createBottomTabNavigator<BottomTabParamList>();
 
 const TabNavigation: React.FC = () => {
+  const [currentRoute, setCurrentRoute] = useState("");
   const navigation =
     useNavigation<BottomTabNavigationProp<BottomTabParamList>>();
+  const homeScreenRef = useRef<HomeScreenRef>(null);
 
   const handleNavigation = (route: keyof BottomTabParamList) => {
-    navigation.navigate(route);
+    setCurrentRoute(route);
+    if (route === "Home") {
+      if (currentRoute === "Home") {
+        homeScreenRef.current?.scrollToTop();
+      } else {
+        navigation.navigate(route);
+      }
+    } else {
+      navigation.navigate(route);
+    }
   };
 
   return (
@@ -84,7 +97,11 @@ const TabNavigation: React.FC = () => {
           <Tab.Screen
             key={index}
             name={item.route}
-            component={item.component}
+            component={
+              item.route === "Home"
+                ? (props: any) => <HomeScreen ref={homeScreenRef} {...props} />
+                : item.component
+            }
             options={{
               tabBarShowLabel: false,
               tabBarButton: (props) => (

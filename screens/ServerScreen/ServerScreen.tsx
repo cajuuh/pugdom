@@ -49,6 +49,7 @@ const ServerScreen: React.FC<Props> = ({ navigation }) => {
       tempServer = `https://${tempServer}`;
     }
     setServerUrl(tempServer);
+    console.log("set server url", serverUrl);
     const newAuthEndpoint = `${tempServer}/oauth/authorize`;
     setAuthEndpoint(newAuthEndpoint);
     setIsAuthEndpointSet(true);
@@ -129,7 +130,7 @@ const ServerScreen: React.FC<Props> = ({ navigation }) => {
       <Button
         onPress={async () => {
           await handleSave().then((data) => {
-            if (data) {
+            if (server || data) {
               promptAsync({ showInRecents: true });
             } else {
               console.error("Error on server URL");

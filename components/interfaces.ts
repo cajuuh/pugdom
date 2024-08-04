@@ -41,3 +41,7 @@ export interface NotificationItem {
     content: string;
   };
 }
+
+export interface HomeScreenRef {
+  scrollToTop: () => void;
+}

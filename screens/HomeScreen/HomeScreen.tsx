@@ -1,4 +1,11 @@
-import React, { useEffect, useState, useCallback } from "react";
+import React, {
+  useEffect,
+  useState,
+  useCallback,
+  useRef,
+  useImperativeHandle,
+  ForwardRefRenderFunction,
+} from "react";
 import {
   FlatList,
   View,
@@ -13,8 +20,12 @@ import TootCard from "../../components/TootCard/TootCard";
 import { useAppContext } from "../../context/AppContext";
 import { useTheme } from "@ui-kitten/components";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { HomeScreenRef } from "../../components/interfaces";
 
-const HomeScreen: React.FC = () => {
+const HomeScreen: ForwardRefRenderFunction<HomeScreenRef, {}> = (
+  props,
+  ref
+) => {
   const theme = useTheme();
   const { appParams } = useAppContext();
   const { username } = appParams;
@@ -22,11 +33,12 @@ const HomeScreen: React.FC = () => {
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const flatListRef = useRef<FlatList>(null);
   let accessToken;
 
   const fetchHomeFeed = useCallback(async () => {
     accessToken = await AsyncStorage.getItem("accessToken");
-    setLoading(true); // Ensures the loader appears while fetching
+    setLoading(true);
     try {
       const feedData = await getHomeFeed();
       setFeed(feedData);
@@ -47,6 +59,13 @@ const HomeScreen: React.FC = () => {
     setRefreshing(true);
     fetchHomeFeed();
   }, [fetchHomeFeed]);
+
+  useImperativeHandle(ref, () => ({
+    scrollToTop: () => {
+      flatListRef.current?.scrollToOffset({ animated: true, offset: 0 });
+      onRefresh();
+    },
+  }));
 
   if (loading && !refreshing) {
     return (
@@ -71,6 +90,7 @@ const HomeScreen: React.FC = () => {
         <WelcomeText theme={theme}>Welcome, {username}!</WelcomeText>
       </View>
       <FlatList
+        ref={flatListRef}
         data={feed}
         keyExtractor={(item) => item.id}
         renderItem={({ item }) => (
@@ -91,4 +111,4 @@ const HomeScreen: React.FC = () => {
   );
 };
 
-export default HomeScreen;
+export default React.forwardRef(HomeScreen);
