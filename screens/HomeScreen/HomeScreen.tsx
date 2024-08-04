@@ -13,7 +13,6 @@ import TootCard from "../../components/TootCard/TootCard";
 import { useAppContext } from "../../context/AppContext";
 import { useTheme } from "@ui-kitten/components";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { Button } from "@ui-kitten/components";
 
 const HomeScreen: React.FC = () => {
   const theme = useTheme();
