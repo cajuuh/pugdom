@@ -12,7 +12,6 @@ import TabButton from "../TabNavigation/components/TabButton";
 import { BottomTabParamList } from "../../screens/types";
 import { Icons } from "../../utils/Icons";
 import { useNavigation } from "@react-navigation/native";
-import { useRoute } from "@react-navigation/native";
 import { HomeScreenRef } from "../../components/interfaces";
 
 const TabArr: Array<{
@@ -65,14 +64,10 @@ const TabNavigation: React.FC = () => {
     useNavigation<BottomTabNavigationProp<BottomTabParamList>>();
   const homeScreenRef = useRef<HomeScreenRef>(null);
 
-  const handleNavigation = (route: keyof BottomTabParamList) => {
+  const handleNavigation = async (route: keyof BottomTabParamList) => {
     setCurrentRoute(route);
     if (route === "Home") {
-      if (currentRoute === "Home") {
-        homeScreenRef.current?.scrollToTop();
-      } else {
-        navigation.navigate(route);
-      }
+      navigation.navigate(route);
     } else {
       navigation.navigate(route);
     }
