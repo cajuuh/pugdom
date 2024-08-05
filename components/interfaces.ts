@@ -44,4 +44,5 @@ export interface NotificationItem {
 
 export interface HomeScreenRef {
   scrollToTop: () => void;
+  checkForNewContent: () => Promise<boolean>;
 }
