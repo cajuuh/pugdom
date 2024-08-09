@@ -9,7 +9,6 @@ export const getNotifications = async () => {
     }
 
     const { accessToken, serverUrl } = JSON.parse(userInfo);
-    console.log("Retrieved userInfo:", { accessToken, serverUrl });
     if (!accessToken || !serverUrl) {
       throw new Error("Access token or server URL is missing");
     }
