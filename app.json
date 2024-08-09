@@ -3,20 +3,27 @@
     "name": "Pugdom",
     "slug": "pugdom",
     "scheme": "pugdom",
-    "platforms": ["ios", "android", "web"],
+    "platforms": [
+      "ios",
+      "android",
+      "web"
+    ],
     "ios": {
-      "bundleIdentifier": "com.pugdom.pugdom",
+      "bundleIdentifier": "com.cajuuh.pugdom",
       "supportsTablet": true,
       "infoPlist": {
         "CFBundleURLTypes": [
           {
-            "CFBundleURLSchemes": ["pugdom"]
+            "CFBundleURLSchemes": [
+              "pugdom"
+            ]
           }
         ]
       }
     },
     "android": {
-      "package": "com.pugdom.pugdom",
+      "package": "com.cajuuh.pugdom",
+      "googleServicesFile": "./google-services.json",
       "intentFilters": [
         {
           "action": "VIEW",
@@ -24,9 +31,18 @@
             "scheme": "pugdom",
             "host": "oauthredirect"
           },
-          "category": ["BROWSABLE", "DEFAULT"]
+          "category": [
+            "BROWSABLE",
+            "DEFAULT"
+          ]
         }
       ]
-    }
+    },
+    "extra": {
+      "eas": {
+        "projectId": "1ad346a0-237e-46f2-8717-bcab015012f5"
+      }
+    },
+    "owner": "cajuuh1337"
   }
 }

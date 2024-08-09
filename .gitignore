@@ -36,4 +36,5 @@ yarn-error.*
 
 # other ignored files
 config.ts
+eas.json
 
