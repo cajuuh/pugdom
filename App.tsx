@@ -18,6 +18,7 @@ import { AppProvider, useAppContext } from "./context/AppContext";
 import { RootStackParamList } from "./screens/types";
 import { ThemeProvider } from "styled-components/native";
 import * as Linking from "expo-linking";
+import { FeedProvider } from "./context/FeedContext"; // Import FeedProvider
 
 const linking = {
   prefixes: ["pugdom://", "https://yourwebsite.com"],
@@ -45,7 +46,6 @@ const AppContent = () => {
     keyof RootStackParamList | undefined
   >(undefined);
   const [loading, setLoading] = useState(true);
-
   const { setAppParam } = useAppContext();
 
   useEffect(() => {
@@ -102,7 +102,9 @@ const App = () => {
       <StatusBar barStyle={isDarkMode ? "light-content" : "dark-content"} />
       <ThemeProvider theme={isDarkMode ? eva.dark : eva.light}>
         <AppProvider>
-          <AppContent />
+          <FeedProvider>
+            <AppContent />
+          </FeedProvider>
         </AppProvider>
       </ThemeProvider>
     </ApplicationProvider>

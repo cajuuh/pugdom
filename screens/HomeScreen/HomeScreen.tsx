@@ -1,94 +1,75 @@
 import React, {
   useEffect,
-  useState,
-  useCallback,
   useRef,
   useImperativeHandle,
   ForwardRefRenderFunction,
+  useState,
 } from "react";
 import {
   FlatList,
   View,
-  ActivityIndicator,
   Text,
   RefreshControl,
+  Alert,
+  ActivityIndicator,
 } from "react-native";
-import { FeedItem } from "../types";
 import { Container, WelcomeText } from "./styles/HomeScreen.style";
-import { getHomeFeed } from "../../services/feedService";
 import TootCard from "../../components/TootCard/TootCard";
 import { useAppContext } from "../../context/AppContext";
 import { useTheme } from "@ui-kitten/components";
-import AsyncStorage from "@react-native-async-storage/async-storage";
 import { HomeScreenRef } from "../../components/interfaces";
+import { useFeed } from "../../context/FeedContext";
+import { useIsFocused } from "@react-navigation/native";
 
 const HomeScreen: ForwardRefRenderFunction<HomeScreenRef, {}> = (
   props,
   ref
 ) => {
+  const isFocused = useIsFocused();
   const theme = useTheme();
   const { appParams } = useAppContext();
   const { username } = appParams;
-  const [feed, setFeed] = useState<FeedItem[]>([]);
-  const [loading, setLoading] = useState(true);
+  const { feed, fetchFeed, checkForNewContent } = useFeed();
   const [refreshing, setRefreshing] = useState(false);
-  const [error, setError] = useState<string | null>(null);
   const flatListRef = useRef<FlatList>(null);
-  let accessToken;
-
-  const fetchHomeFeed = useCallback(async () => {
-    accessToken = await AsyncStorage.getItem("accessToken");
-    setLoading(true);
-    try {
-      const feedData = await getHomeFeed();
-      setFeed(feedData);
-    } catch (error) {
-      setError("Error fetching home feed. Please try again.");
-      console.error("Error fetching home feed:", error);
-    } finally {
-      setLoading(false);
-      setRefreshing(false);
-    }
-  }, []);
 
   useEffect(() => {
-    fetchHomeFeed();
-  }, [fetchHomeFeed]);
+    const intervalId = setInterval(() => {
+      if (isFocused) {
+        checkForNewContent().then((hasNewContent) => {
+          if (hasNewContent) {
+            Alert.alert(
+              "New Content Available",
+              "Would you like to refresh the feed now?",
+              [
+                { text: "Not Now", style: "cancel" },
+                { text: "Refresh", onPress: () => onRefresh() },
+              ]
+            );
+          }
+        });
+      }
+    }, 120000);
 
-  const onRefresh = useCallback(() => {
+    return () => clearInterval(intervalId);
+  }, [checkForNewContent, isFocused]);
+
+  const onRefresh = () => {
     setRefreshing(true);
-    fetchHomeFeed();
-  }, [fetchHomeFeed]);
+    fetchFeed().finally(() => setRefreshing(false));
+  };
 
   useImperativeHandle(ref, () => ({
     scrollToTop: () => {
       flatListRef.current?.scrollToOffset({ animated: true, offset: 0 });
       onRefresh();
     },
+    checkForNewContent,
   }));
-
-  if (loading && !refreshing) {
-    return (
-      <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
-        <ActivityIndicator size="large" color="#0000ff" />
-      </View>
-    );
-  }
-
-  if (error) {
-    return (
-      <Container>
-        <WelcomeText>Welcome, {username}!</WelcomeText>
-        <Text style={{ color: "red" }}>{error}</Text>
-      </Container>
-    );
-  }
 
   return (
     <Container theme={theme}>
-      <View style={{ flexDirection: "row" }}>
-        <WelcomeText theme={theme}>Welcome, {username}!</WelcomeText>
-      </View>
+      <WelcomeText theme={theme}>Welcome, {username}!</WelcomeText>
       <FlatList
         ref={flatListRef}
         data={feed}
@@ -103,6 +84,14 @@ const HomeScreen: ForwardRefRenderFunction<HomeScreenRef, {}> = (
             reblog={item.reblog}
           />
         )}
+        ListFooterComponent={
+          refreshing ? (
+            <ActivityIndicator
+              size="large"
+              color={theme["color-primary-500"]}
+            />
+          ) : null
+        }
         refreshControl={
           <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
         }
