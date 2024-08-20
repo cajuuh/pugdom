@@ -1,31 +1,19 @@
-// src/screens/HomeScreen.tsx
-
-import React, {
-  useEffect,
-  useRef,
-  useImperativeHandle,
-  ForwardRefRenderFunction,
-  useState,
-} from "react";
+import React, { useEffect, useRef, useState, forwardRef } from "react";
 import { FlatList, RefreshControl, ActivityIndicator } from "react-native";
 import { Container, WelcomeText } from "./styles/HomeScreen.style";
 import TootCard from "../../components/TootCard/TootCard";
 import { useAppContext } from "../../context/AppContext";
 import { useTheme } from "@ui-kitten/components";
-import { HomeScreenRef } from "../../components/interfaces";
 import { useFeed } from "../../context/FeedContext";
 import { useIsFocused } from "@react-navigation/native";
-import Banner, { BannerRef } from "../../components/Banner/Banner"; // Import Banner and BannerRef
+import Banner, { BannerRef } from "../../components/Banner/Banner";
 
-const HomeScreen: ForwardRefRenderFunction<HomeScreenRef, {}> = (
-  props,
-  ref
-) => {
+const HomeScreen = forwardRef((props, ref) => {
   const isFocused = useIsFocused();
   const theme = useTheme();
   const { appParams } = useAppContext();
   const { username } = appParams;
-  const { feed, fetchFeed, checkForNewContent } = useFeed();
+  const { feed, fetchFeed, hasNewContent, setHasNewContent } = useFeed();
   const [refreshing, setRefreshing] = useState(false);
   const flatListRef = useRef<FlatList>(null);
   const bannerRef = useRef<BannerRef>(null);
@@ -34,39 +22,26 @@ const HomeScreen: ForwardRefRenderFunction<HomeScreenRef, {}> = (
     fetchFeed();
   }, []);
 
-  useEffect(() => {
-    const intervalId = setInterval(() => {
-      if (isFocused) {
-        checkForNewContent().then((hasNewContent) => {
-          if (hasNewContent) {
-            bannerRef.current?.showBanner();
-          }
-        });
-      }
-    }, 120000);
-
-    return () => clearInterval(intervalId);
-  }, [checkForNewContent, isFocused]);
-
-  const onRefresh = () => {
+  const onRefresh = async () => {
     setRefreshing(true);
-    fetchFeed().finally(() => setRefreshing(false));
+    await fetchFeed();
+    setRefreshing(false);
+    setHasNewContent(false);
+    bannerRef.current?.hideBanner();
   };
 
-  useImperativeHandle(ref, () => ({
-    scrollToTop: () => {
-      flatListRef.current?.scrollToOffset({ animated: true, offset: 0 });
-      onRefresh();
-    },
-    checkForNewContent,
-  }));
+  useEffect(() => {
+    if (hasNewContent) {
+      console.log("New content detected, showing banner...");
+      bannerRef.current?.showBanner();
+    }
+  }, [hasNewContent]);
 
   return (
     <Container theme={theme}>
       <WelcomeText theme={theme}>Welcome, {username}!</WelcomeText>
 
-      {/* The Banner component */}
-      <Banner ref={bannerRef} onRefresh={onRefresh} />
+      {isFocused && <Banner ref={bannerRef} onRefresh={onRefresh} />}
 
       <FlatList
         ref={flatListRef}
@@ -96,6 +71,6 @@ const HomeScreen: ForwardRefRenderFunction<HomeScreenRef, {}> = (
       />
     </Container>
   );
-};
+});
 
-export default React.forwardRef(HomeScreen);
+export default HomeScreen;

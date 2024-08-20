@@ -1,112 +1,103 @@
-// src/components/Banner.tsx
-
 import React, {
-  useState,
-  useEffect,
-  useRef,
   forwardRef,
   useImperativeHandle,
+  useState,
+  useRef,
 } from "react";
 import {
   Animated,
-  Text,
-  TouchableOpacity,
-  View,
+  PanResponder,
   StyleSheet,
+  TouchableOpacity,
+  Text,
 } from "react-native";
+import LottieView from "lottie-react-native";
 
 export interface BannerRef {
   showBanner: () => void;
   hideBanner: () => void;
 }
 
-interface BannerProps {
-  onRefresh: () => void;
-}
+const Banner = forwardRef<BannerRef, { onRefresh: () => void }>(
+  ({ onRefresh }, ref) => {
+    const [visible, setVisible] = useState(false);
+    const position = useRef(new Animated.Value(0)).current;
 
-const Banner: React.ForwardRefRenderFunction<BannerRef, BannerProps> = (
-  { onRefresh },
-  ref
-) => {
-  const [visible, setVisible] = useState(false);
-  const animation = useRef(new Animated.Value(0)).current;
+    useImperativeHandle(ref, () => ({
+      showBanner: () => {
+        setVisible(true);
+        Animated.timing(position, {
+          toValue: 1,
+          duration: 300,
+          useNativeDriver: true,
+        }).start();
+      },
+      hideBanner: () => {
+        Animated.timing(position, {
+          toValue: 0,
+          duration: 300,
+          useNativeDriver: true,
+        }).start(() => setVisible(false));
+      },
+    }));
 
-  useImperativeHandle(ref, () => ({
-    showBanner: () => setVisible(true),
-    hideBanner: () => setVisible(false),
-  }));
+    if (!visible) return null;
 
-  useEffect(() => {
-    if (visible) {
-      Animated.timing(animation, {
-        toValue: 1,
-        duration: 300,
-        useNativeDriver: true,
-      }).start();
-    } else {
-      Animated.timing(animation, {
-        toValue: 0,
-        duration: 300,
-        useNativeDriver: true,
-      }).start();
-    }
-  }, [visible, animation]);
-
-  return (
-    visible && (
+    return (
       <Animated.View
         style={[
-          styles.banner,
+          styles.bannerContainer,
           {
+            opacity: position,
             transform: [
               {
-                translateY: animation.interpolate({
+                translateY: position.interpolate({
                   inputRange: [0, 1],
-                  outputRange: [-50, 0],
+                  outputRange: [-30, 0],
                 }),
               },
             ],
           },
         ]}
       >
-        <Text style={styles.bannerText}>New content available</Text>
-        <TouchableOpacity onPress={onRefresh}>
-          <Text style={styles.refreshText}>Refresh</Text>
-        </TouchableOpacity>
-        <TouchableOpacity onPress={() => setVisible(false)}>
-          <Text style={styles.dismissText}>Dismiss</Text>
+        <TouchableOpacity onPress={onRefresh} style={styles.button}>
+          <LottieView
+            source={require("../../assets/animations/arrow-up-update-circle.json")}
+            autoPlay
+            loop
+            style={styles.lottie}
+          />
+          <Text style={styles.text}>New posts</Text>
         </TouchableOpacity>
       </Animated.View>
-    )
-  );
-};
+    );
+  }
+);
 
 const styles = StyleSheet.create({
-  banner: {
+  bannerContainer: {
     position: "absolute",
-    top: 0,
-    left: 0,
-    right: 0,
-    padding: 10,
-    backgroundColor: "#4caf50",
+    top: 10,
+    alignSelf: "center",
+    zIndex: 1000,
+  },
+  button: {
     flexDirection: "row",
-    justifyContent: "space-between",
     alignItems: "center",
-    zIndex: 1000, // Ensures it's always above other components
+    paddingVertical: 8,
+    paddingHorizontal: 16,
+    backgroundColor: "#4caf50",
+    borderRadius: 20,
   },
-  bannerText: {
-    color: "#fff",
-    flex: 1,
+  lottie: {
+    width: 30,
+    height: 30,
+    marginRight: 8,
   },
-  refreshText: {
+  text: {
     color: "#fff",
     fontWeight: "bold",
-    marginHorizontal: 10,
-  },
-  dismissText: {
-    color: "#fff",
-    marginHorizontal: 10,
   },
 });
 
-export default forwardRef(Banner);
+export default Banner;
