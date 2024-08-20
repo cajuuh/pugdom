@@ -15,9 +15,13 @@ export type Account = {
 export type FeedItem = {
   id: string;
   content: string;
-  account: Account;
-  media_attachments: MediaAttachment[];
-  reblog?: FeedItem;
+  account: {
+    username: string;
+    avatar: string;
+    url: string;
+  };
+  media_attachments: any[];
+  reblog?: any;
 };
 
 export type BottomTabParamList = {
