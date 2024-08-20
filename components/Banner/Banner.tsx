@@ -12,6 +12,7 @@ import {
   Text,
 } from "react-native";
 import LottieView from "lottie-react-native";
+import LinearGradient from "react-native-linear-gradient";
 
 export interface BannerRef {
   showBanner: () => void;
@@ -61,13 +62,20 @@ const Banner = forwardRef<BannerRef, { onRefresh: () => void }>(
         ]}
       >
         <TouchableOpacity onPress={onRefresh} style={styles.button}>
-          <LottieView
-            source={require("../../assets/animations/arrow-up-update-circle.json")}
-            autoPlay
-            loop
-            style={styles.lottie}
-          />
-          <Text style={styles.text}>New posts</Text>
+          <LinearGradient
+            colors={["#00F5A0", "#00D9F5"]}
+            start={{ x: 1, y: 0 }}
+            end={{ x: 0, y: 1 }}
+            style={styles.button}
+          >
+            <LottieView
+              source={require("../../assets/animations/arrow-up-update-circle.json")}
+              autoPlay
+              loop
+              style={styles.lottie}
+            />
+            <Text style={styles.text}>New toots</Text>
+          </LinearGradient>
         </TouchableOpacity>
       </Animated.View>
     );
@@ -84,9 +92,8 @@ const styles = StyleSheet.create({
   button: {
     flexDirection: "row",
     alignItems: "center",
-    paddingVertical: 8,
-    paddingHorizontal: 16,
-    backgroundColor: "#4caf50",
+    paddingVertical: 6,
+    paddingHorizontal: 12,
     borderRadius: 20,
   },
   lottie: {
