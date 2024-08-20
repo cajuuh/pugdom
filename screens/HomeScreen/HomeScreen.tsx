@@ -1,3 +1,5 @@
+// src/screens/HomeScreen.tsx
+
 import React, {
   useEffect,
   useRef,
@@ -5,14 +7,7 @@ import React, {
   ForwardRefRenderFunction,
   useState,
 } from "react";
-import {
-  FlatList,
-  View,
-  Text,
-  RefreshControl,
-  Alert,
-  ActivityIndicator,
-} from "react-native";
+import { FlatList, RefreshControl, ActivityIndicator } from "react-native";
 import { Container, WelcomeText } from "./styles/HomeScreen.style";
 import TootCard from "../../components/TootCard/TootCard";
 import { useAppContext } from "../../context/AppContext";
@@ -20,6 +15,7 @@ import { useTheme } from "@ui-kitten/components";
 import { HomeScreenRef } from "../../components/interfaces";
 import { useFeed } from "../../context/FeedContext";
 import { useIsFocused } from "@react-navigation/native";
+import Banner, { BannerRef } from "../../components/Banner/Banner"; // Import Banner and BannerRef
 
 const HomeScreen: ForwardRefRenderFunction<HomeScreenRef, {}> = (
   props,
@@ -32,20 +28,18 @@ const HomeScreen: ForwardRefRenderFunction<HomeScreenRef, {}> = (
   const { feed, fetchFeed, checkForNewContent } = useFeed();
   const [refreshing, setRefreshing] = useState(false);
   const flatListRef = useRef<FlatList>(null);
+  const bannerRef = useRef<BannerRef>(null);
+
+  useEffect(() => {
+    fetchFeed();
+  }, []);
 
   useEffect(() => {
     const intervalId = setInterval(() => {
       if (isFocused) {
         checkForNewContent().then((hasNewContent) => {
           if (hasNewContent) {
-            Alert.alert(
-              "New Content Available",
-              "Would you like to refresh the feed now?",
-              [
-                { text: "Not Now", style: "cancel" },
-                { text: "Refresh", onPress: () => onRefresh() },
-              ]
-            );
+            bannerRef.current?.showBanner();
           }
         });
       }
@@ -70,6 +64,10 @@ const HomeScreen: ForwardRefRenderFunction<HomeScreenRef, {}> = (
   return (
     <Container theme={theme}>
       <WelcomeText theme={theme}>Welcome, {username}!</WelcomeText>
+
+      {/* The Banner component */}
+      <Banner ref={bannerRef} onRefresh={onRefresh} />
+
       <FlatList
         ref={flatListRef}
         data={feed}
