@@ -16,21 +16,15 @@ export const AnimatedContainer = styled(Animatable.View)`
 `;
 
 export const IconWrapper = styled.View<{ focused: boolean }>`
-  border-width: 1px;
+  border-width: 0px;
   border-radius: 25px;
   padding: 5px;
-  border-color: ${({ focused }) =>
-    focused ? Colors.primary : Colors.primaryLite};
-  background-color: ${({ focused }) =>
-    focused ? Colors.primary : "transparent"};
 `;
 
 export const AnimatedCircle = styled(Animatable.View)<{ focused: boolean }>`
   width: 30px;
   height: 30px;
   border-radius: 15px;
-  background-color: ${({ focused }) =>
-    focused ? Colors.primaryLite : "transparent"};
   position: absolute;
 `;
 

@@ -1,6 +1,7 @@
 import React, { useEffect, useRef } from "react";
 import { View } from "react-native";
 import * as Animatable from "react-native-animatable";
+import LinearGradient from "react-native-linear-gradient";
 import CustomIcon, { IconType } from "../../../utils/Icons";
 import { TabParams } from "../../../components/interfaces";
 import {
@@ -54,15 +55,22 @@ const TabButton: React.FC<TabParams> = ({
   return (
     <TouchableContainer onPress={onPress} activeOpacity={1}>
       <AnimatedContainer ref={viewRef} duration={500}>
-        <IconWrapper focused={focused}>
-          <AnimatedCircle focused={focused} ref={circleRef} />
-          <CustomIcon
-            type={item.type as IconType}
-            name={focused ? item.activeIcon : item.inActiveIcon}
-            color={focused ? Colors.white : Colors.primaryLite}
-            size={22}
-          />
-        </IconWrapper>
+        <LinearGradient
+          colors={focused ? ["#2F80ED", "#2D9EE0"] : ["#ffffff", "#ffffff"]}
+          start={{ x: 1, y: 0 }}
+          end={{ x: 0, y: 1 }}
+          style={{ borderRadius: 50, padding: 5 }}
+        >
+          <IconWrapper focused={focused}>
+            <AnimatedCircle focused={focused} ref={circleRef} />
+            <CustomIcon
+              type={item.type as IconType}
+              name={focused ? item.activeIcon : item.inActiveIcon}
+              color={focused ? Colors.white : Colors.primaryLite}
+              size={22}
+            />
+          </IconWrapper>
+        </LinearGradient>
       </AnimatedContainer>
       <Label focused={focused} category="label">
         {item.label}
