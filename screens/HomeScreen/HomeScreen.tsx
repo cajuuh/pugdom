@@ -55,6 +55,7 @@ const HomeScreen = forwardRef((props, ref) => {
             username={item.account.username}
             serverUrl={item.account.url}
             reblog={item.reblog}
+            statusId={item.id}
           />
         )}
         ListFooterComponent={
