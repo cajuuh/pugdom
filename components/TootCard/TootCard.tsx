@@ -23,6 +23,8 @@ import { FeedItem, MediaAttachment } from "../../screens/types";
 import { formatServerUrl } from "../../utils/utils";
 import CustomIcon from "../../utils/Icons";
 import Colors from "../../constants/Colors";
+import StatusActionBar from "../StatusActionBar/StatusActionBar";
+import { Text } from "@ui-kitten/components";
 
 type TootCardProps = {
   content: string;
@@ -31,6 +33,7 @@ type TootCardProps = {
   username: string;
   serverUrl: string;
   reblog?: FeedItem;
+  statusId: string;
 };
 
 const TootCard: React.FC<TootCardProps> = ({
@@ -40,6 +43,7 @@ const TootCard: React.FC<TootCardProps> = ({
   username,
   serverUrl,
   reblog,
+  statusId, // Receive the statusId prop
 }) => {
   const { width } = useWindowDimensions();
 
@@ -88,7 +92,7 @@ const TootCard: React.FC<TootCardProps> = ({
   };
 
   if (!content && !reblog) {
-    return null; // or a placeholder component if necessary
+    return <Text status="warning">No Toots Found!</Text>;
   }
 
   return (
@@ -103,6 +107,7 @@ const TootCard: React.FC<TootCardProps> = ({
         </UserNameContainer>
       </UserInfo>
       <ContentContainer>{renderCardContent()}</ContentContainer>
+      <StatusActionBar statusId={statusId} />
     </CardContainer>
   );
 };

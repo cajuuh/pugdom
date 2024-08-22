@@ -46,3 +46,7 @@ export interface HomeScreenRef {
   scrollToTop: () => void;
   checkForNewContent: () => Promise<boolean>;
 }
+
+export interface StatusActionBarProps {
+  statusId: string;
+}
