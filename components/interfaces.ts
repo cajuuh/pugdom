@@ -42,6 +42,14 @@ export interface NotificationItem {
   };
 }
 
+export interface NotificationCardProps {
+  title: string;
+  body: string;
+  date: string;
+  avatar: string;
+  username: string;
+}
+
 export interface HomeScreenRef {
   scrollToTop: () => void;
   checkForNewContent: () => Promise<boolean>;
