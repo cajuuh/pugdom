@@ -40,6 +40,7 @@ export interface NotificationItem {
     id: string;
     content: string;
   };
+  mediaAttachments?: string[];
 }
 
 export interface NotificationCardProps {
@@ -48,6 +49,7 @@ export interface NotificationCardProps {
   date: string;
   avatar: string;
   username: string;
+  mediaAttachments?: string[];
 }
 
 export interface HomeScreenRef {

@@ -68,6 +68,7 @@ const NotificationsScreen: React.FC = () => {
                 date={item.date}
                 avatar={item.account.avatar}
                 username={item.account.username}
+                mediaAttachments={item.mediaAttachments}
               />
             </View>
           )}
