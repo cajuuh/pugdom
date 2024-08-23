@@ -19,23 +19,31 @@ export const getNotifications = async () => {
       },
     });
 
-    return response.data.map((notification: any) => ({
-      id: notification.id,
-      title: notification.type,
-      body: notification.status ? notification.status.content : "",
-      date: notification.created_at,
-      account: {
-        id: notification.account.id,
-        username: notification.account.username,
-        avatar: notification.account.avatar,
-      },
-      status: notification.status
-        ? {
-            id: notification.status.id,
-            content: notification.status.content,
-          }
-        : undefined,
-    }));
+    return response.data.map((notification: any) => {
+      const mediaAttachments =
+        notification.status?.media_attachments?.map(
+          (attachment: any) => attachment.url
+        ) || []; // Extract media attachment URLs
+
+      return {
+        id: notification.id,
+        title: notification.type,
+        body: notification.status ? notification.status.content : "",
+        date: notification.created_at,
+        account: {
+          id: notification.account.id,
+          username: notification.account.username,
+          avatar: notification.account.avatar,
+        },
+        status: notification.status
+          ? {
+              id: notification.status.id,
+              content: notification.status.content,
+            }
+          : undefined,
+        mediaAttachments,
+      };
+    });
   } catch (error) {
     console.error("Error fetching notifications:", error);
     throw error;
