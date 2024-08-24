@@ -18,13 +18,13 @@ const NotificationCard: React.FC<NotificationCardProps> = ({
   const renderIcon = () => {
     switch (title) {
       case "follow":
-        return <CustomIcon name="UserPlus" size={20} color="#2D9EE0" />;
+        return <CustomIcon name="UserPlusIcon" size={20} color="#2D9EE0" />;
       case "favourite":
-        return <CustomIcon name="Heart" size={20} color="#2D9EE0" />;
+        return <CustomIcon name="HeartIcon" size={20} color="#2D9EE0" />;
       case "reblog":
-        return <CustomIcon name="RefreshCw" size={20} color="#2D9EE0" />;
+        return <CustomIcon name="ArrowPathIcon" size={20} color="#2D9EE0" />;
       case "mention":
-        return <CustomIcon name="AtSign" size={20} color="#2D9EE0" />;
+        return <CustomIcon name="AtSymbolIcon" size={20} color="#2D9EE0" />;
       default:
         return null;
     }

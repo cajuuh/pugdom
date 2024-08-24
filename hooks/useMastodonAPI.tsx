@@ -46,6 +46,13 @@ export const useMastodonAPI = () => {
         ? `${apiBaseUrl}/api/v1/statuses/${statusId}/unreblog`
         : `${apiBaseUrl}/api/v1/statuses/${statusId}/reblog`;
       const response = await axios.post(endpoint, {}, { headers });
+      if (response.status === 200) {
+        // Persist the reblogged state locally
+        await AsyncStorage.setItem(
+          `reblogged_${statusId}`,
+          JSON.stringify(!isReblogged)
+        );
+      }
       setLoading(false);
       return response.status === 200;
     } catch (err) {
