@@ -31,32 +31,28 @@ const StatusActionBar: React.FC<StatusActionBarProps> = ({ statusId }) => {
     <View style={styles.container}>
       <TouchableOpacity onPress={handleFavorite}>
         <CustomIcon
-          type="FontAwesome"
-          name={isFavorited ? "heart" : "heart-o"}
+          name={isFavorited ? "Heart" : "Heart"} // Lucide uses the same icon for filled and outlined heart
           size={22}
           color={isFavorited ? "#E0245E" : "#aaa"}
         />
       </TouchableOpacity>
       <TouchableOpacity onPress={handleReblog}>
         <CustomIcon
-          type="Ionicons"
-          name={isReblogged ? "rocket" : "rocket-outline"}
+          name={isReblogged ? "RefreshCw" : "RefreshCw"} // Lucide doesn't have a "rocket" icon, so using "RefreshCw"
           size={22}
           color={isReblogged ? "#1DA1F2" : "#aaa"}
         />
       </TouchableOpacity>
       <TouchableOpacity onPress={handleBookmark}>
         <CustomIcon
-          type="FontAwesome"
-          name={isBookmarked ? "bookmark" : "bookmark-o"}
+          name={isBookmarked ? "Bookmark" : "Bookmark"}
           size={22}
           color={isBookmarked ? "#1DA1F2" : "#aaa"}
         />
       </TouchableOpacity>
       <TouchableOpacity onPress={() => console.log("More options pressed")}>
         <CustomIcon
-          type="FontAwesome"
-          name="ellipsis-h"
+          name="MoreHorizontal" // Lucide icon for "ellipsis-h"
           size={22}
           color="#aaa"
         />
@@ -69,9 +65,8 @@ const styles = StyleSheet.create({
   container: {
     width: "100%",
     flexDirection: "row",
-    justifyContent: "space-between",
-    gap: 8,
-    paddingVertical: 8,
+    justifyContent: "space-around",
+    marginTop: "5%",
   },
 });
 
