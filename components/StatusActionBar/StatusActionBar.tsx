@@ -31,7 +31,7 @@ const StatusActionBar: React.FC<StatusActionBarProps> = ({ statusId }) => {
     <View style={styles.container}>
       <TouchableOpacity onPress={handleFavorite}>
         <CustomIcon
-          name="Heart"
+          name="HeartIcon"
           solid={isFavorited}
           size={22}
           color={isFavorited ? "#E0245E" : "#aaa"}
@@ -39,7 +39,7 @@ const StatusActionBar: React.FC<StatusActionBarProps> = ({ statusId }) => {
       </TouchableOpacity>
       <TouchableOpacity onPress={handleReblog}>
         <CustomIcon
-          name={isReblogged ? "RefreshCw" : "RefreshCw"}
+          name={isReblogged ? "ArrowPathIcon" : "ArrowPathIcon"}
           solid={isReblogged}
           size={22}
           color={isReblogged ? "#1DA1F2" : "#aaa"}
@@ -47,14 +47,14 @@ const StatusActionBar: React.FC<StatusActionBarProps> = ({ statusId }) => {
       </TouchableOpacity>
       <TouchableOpacity onPress={handleBookmark}>
         <CustomIcon
-          name={isBookmarked ? "Bookmark" : "Bookmark"}
+          name={isBookmarked ? "BookmarkIcon" : "BookmarkIcon"}
           solid={isBookmarked}
           size={22}
           color={isBookmarked ? "#1DA1F2" : "#aaa"}
         />
       </TouchableOpacity>
       <TouchableOpacity onPress={() => console.log("More options pressed")}>
-        <CustomIcon name="MoreHorizontal" size={22} color="#aaa" />
+        <CustomIcon name="EllipsisHorizontalIcon" size={22} color="#aaa" />
       </TouchableOpacity>
     </View>
   );

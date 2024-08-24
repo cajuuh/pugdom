@@ -23,25 +23,25 @@ const TabArr: Array<{
   {
     route: "Home",
     label: "Home",
-    icon: "House",
+    icon: "HomeIcon",
     component: HomeScreen,
   },
   {
     route: "Search",
     label: "Search",
-    icon: "Search",
+    icon: "MagnifyingGlassIcon",
     component: SearchScreen,
   },
   {
     route: "Notifications",
     label: "Notifications",
-    icon: "Bell",
+    icon: "BellIcon",
     component: NotificationsScreen,
   },
   {
     route: "Profile",
     label: "Profile",
-    icon: "User",
+    icon: "UserCircleIcon",
     component: ProfileScreen,
   },
 ];
