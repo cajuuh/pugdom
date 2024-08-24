@@ -10,48 +10,38 @@ import ProfileScreen from "../../screens/ProfileScreen/ProfileScreen";
 import NotificationsScreen from "../../screens/NotificationsScreen/NotificationsScreen";
 import TabButton from "../TabNavigation/components/TabButton";
 import { BottomTabParamList } from "../../screens/types";
-import { Icons } from "../../utils/Icons";
 import { useNavigation } from "@react-navigation/native";
 import { HomeScreenRef } from "../../components/interfaces";
+import { IconName } from "../../utils/Icons";
 
 const TabArr: Array<{
   route: keyof BottomTabParamList;
   label: string;
-  type: keyof typeof Icons;
-  activeIcon: string;
-  inActiveIcon: string;
+  icon: IconName;
   component: React.ComponentType<any>;
 }> = [
   {
     route: "Home",
     label: "Home",
-    type: "Ionicons",
-    activeIcon: "grid",
-    inActiveIcon: "grid-outline",
+    icon: "House",
     component: HomeScreen,
   },
   {
     route: "Search",
     label: "Search",
-    type: "FontAwesome",
-    activeIcon: "search",
-    inActiveIcon: "search",
+    icon: "Search",
     component: SearchScreen,
   },
   {
     route: "Notifications",
     label: "Notifications",
-    type: "MaterialCommunityIcons",
-    activeIcon: "bell",
-    inActiveIcon: "bell-outline",
+    icon: "Bell",
     component: NotificationsScreen,
   },
   {
     route: "Profile",
     label: "Profile",
-    type: "FontAwesome",
-    activeIcon: "user-circle",
-    inActiveIcon: "user-circle-o",
+    icon: "User",
     component: ProfileScreen,
   },
 ];
@@ -66,11 +56,7 @@ const TabNavigation: React.FC = () => {
 
   const handleNavigation = async (route: keyof BottomTabParamList) => {
     setCurrentRoute(route);
-    if (route === "Home") {
-      navigation.navigate(route);
-    } else {
-      navigation.navigate(route);
-    }
+    navigation.navigate(route);
   };
 
   return (
