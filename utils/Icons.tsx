@@ -1,14 +1,13 @@
 import React from "react";
 import { SvgProps } from "react-native-svg";
 import { StyleProp, ViewStyle } from "react-native";
-import * as LucideIcons from "lucide-react-native";
-// Importing specific solid icons
-import { Heart as SolidHeart } from "lucide-solid"; // Import the specific solid icon you need
+import * as OutlineIcons from "react-native-heroicons/outline";
+import * as SolidIcons from "react-native-heroicons/solid";
 
-type OutlineIconName = keyof typeof LucideIcons;
+export type IconName = keyof typeof OutlineIcons | keyof typeof SolidIcons;
 
 interface CustomIconProps {
-  name: OutlineIconName | "Heart"; // Specify solid icons manually
+  name: IconName;
   solid?: boolean;
   color?: string;
   size?: number;
@@ -22,13 +21,9 @@ const CustomIcon: React.FC<CustomIconProps> = ({
   size = 24,
   style,
 }) => {
-  let IconComponent;
-
-  if (solid && name === "Heart") {
-    IconComponent = SolidHeart as React.FC<SvgProps>;
-  } else {
-    IconComponent = LucideIcons[name as OutlineIconName] as React.FC<SvgProps>;
-  }
+  const IconComponent = solid
+    ? (SolidIcons[name] as React.FC<SvgProps>)
+    : (OutlineIcons[name] as React.FC<SvgProps>);
 
   if (!IconComponent) {
     return null;
