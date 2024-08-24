@@ -31,14 +31,16 @@ const StatusActionBar: React.FC<StatusActionBarProps> = ({ statusId }) => {
     <View style={styles.container}>
       <TouchableOpacity onPress={handleFavorite}>
         <CustomIcon
-          name={isFavorited ? "Heart" : "Heart"} // Lucide uses the same icon for filled and outlined heart
+          name="Heart"
+          solid={isFavorited}
           size={22}
           color={isFavorited ? "#E0245E" : "#aaa"}
         />
       </TouchableOpacity>
       <TouchableOpacity onPress={handleReblog}>
         <CustomIcon
-          name={isReblogged ? "RefreshCw" : "RefreshCw"} // Lucide doesn't have a "rocket" icon, so using "RefreshCw"
+          name={isReblogged ? "RefreshCw" : "RefreshCw"}
+          solid={isReblogged}
           size={22}
           color={isReblogged ? "#1DA1F2" : "#aaa"}
         />
@@ -46,16 +48,13 @@ const StatusActionBar: React.FC<StatusActionBarProps> = ({ statusId }) => {
       <TouchableOpacity onPress={handleBookmark}>
         <CustomIcon
           name={isBookmarked ? "Bookmark" : "Bookmark"}
+          solid={isBookmarked}
           size={22}
           color={isBookmarked ? "#1DA1F2" : "#aaa"}
         />
       </TouchableOpacity>
       <TouchableOpacity onPress={() => console.log("More options pressed")}>
-        <CustomIcon
-          name="MoreHorizontal" // Lucide icon for "ellipsis-h"
-          size={22}
-          color="#aaa"
-        />
+        <CustomIcon name="MoreHorizontal" size={22} color="#aaa" />
       </TouchableOpacity>
     </View>
   );
