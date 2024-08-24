@@ -1,14 +1,9 @@
 import React from "react";
 import { View, Text, Image, StyleSheet } from "react-native";
 import HTMLView from "react-native-htmlview";
-
-interface NotificationCardProps {
-  title: string;
-  body: string;
-  date: string;
-  avatar: string;
-  username: string;
-}
+import { NotificationCardProps } from "../../../../components/interfaces";
+import { getTimeDifference } from "../../../../utils/utils";
+import CustomIcon from "../../../../utils/Icons";
 
 const NotificationCard: React.FC<NotificationCardProps> = ({
   title,
@@ -17,46 +12,70 @@ const NotificationCard: React.FC<NotificationCardProps> = ({
   avatar,
   username,
 }) => {
-  const getTimeDifference = (notificationDate: string): string | number => {
-    try {
-      const now = new Date();
-      const notificationTime = new Date(notificationDate);
+  const timeDifference = getTimeDifference(date);
 
-      if (isNaN(notificationTime.getTime())) {
-        console.error("Invalid date format:", notificationDate);
-        return "Invalid date";
-      }
-
-      const diffInMs = now.getTime() - notificationTime.getTime();
-      const diffInHours = Math.floor(diffInMs / (1000 * 60 * 60));
-      return diffInHours;
-    } catch (error) {
-      console.error("Error calculating time difference:", error);
-      return "Error";
+  const renderIcon = () => {
+    switch (title) {
+      case "follow":
+        return (
+          <CustomIcon
+            type="Octicons"
+            name="person-add"
+            size={24}
+            color="#2D9EE0"
+          />
+        );
+      case "favourite":
+        return (
+          <CustomIcon
+            type="MaterialCommunityIcons"
+            name="heart-outline"
+            size={24}
+            color="#2D9EE0"
+          />
+        );
+      case "reblog":
+        return (
+          <CustomIcon
+            type="MaterialCommunityIcons"
+            name="autorenew"
+            size={24}
+            color="#2D9EE0"
+          />
+        );
+      case "mention":
+        return (
+          <CustomIcon
+            type="Ionicons"
+            name="at-outline"
+            size={24}
+            color="#2D9EE0"
+          />
+        );
+      default:
+        return null;
     }
   };
 
-  const timeDifference = getTimeDifference(date);
-
   return (
-    <View style={styles.card}>
-      <View style={styles.content}>
-        <View style={styles.userContainer}>
-          <Image source={{ uri: avatar }} style={styles.avatar} />
-          <View style={styles.userNameAndDateContainer}>
-            <Text style={styles.username}>{username}</Text>
-            <Text style={styles.date}>
-              {typeof timeDifference === "number"
-                ? `${timeDifference} hours ago`
-                : timeDifference}
-            </Text>
+    <View style={styles.container}>
+      <View style={styles.iconContainer}>{renderIcon()}</View>
+      <View style={styles.card}>
+        <View style={styles.content}>
+          <View style={styles.userContainer}>
+            <Image source={{ uri: avatar }} style={styles.avatar} />
+            <View style={styles.userNameAndDateContainer}>
+              <Text style={styles.username}>{username}</Text>
+              <Text style={styles.date}>
+                {typeof timeDifference === "number"
+                  ? `${timeDifference} hours ago`
+                  : timeDifference}
+              </Text>
+            </View>
           </View>
-        </View>
-        <Text style={styles.title}>{title}</Text>
-        <View style={styles.body}>
-          <Text>
+          <View style={styles.body}>
             <HTMLView value={body} stylesheet={htmlStyles} />
-          </Text>
+          </View>
         </View>
       </View>
     </View>
@@ -64,12 +83,24 @@ const NotificationCard: React.FC<NotificationCardProps> = ({
 };
 
 const styles = StyleSheet.create({
+  container: {
+    width: "100%",
+    flexDirection: "row",
+    alignItems: "flex-start",
+    paddingVertical: 8,
+  },
+  iconContainer: {
+    alignItems: "center",
+    justifyContent: "center",
+    marginRight: 8,
+    marginTop: 10,
+  },
   card: {
     backgroundColor: "#fff",
-    padding: 16,
-    marginVertical: 8,
+    padding: 12,
+    flex: 1,
     borderRadius: 8,
-    borderWidth: 2,
+    borderWidth: 1,
     borderColor: "#e6e6e6",
     shadowColor: "#000",
     shadowOffset: { width: 0, height: 2 },
@@ -77,7 +108,6 @@ const styles = StyleSheet.create({
     shadowRadius: 4,
   },
   content: {
-    marginLeft: 10,
     flex: 1,
   },
   avatar: {
@@ -91,22 +121,19 @@ const styles = StyleSheet.create({
     marginBottom: 5,
   },
   userNameAndDateContainer: {
-    flexDirection: "column",
-    marginLeft: 5,
+    marginLeft: 8,
   },
   username: {
     fontWeight: "bold",
   },
   date: {
     color: "#888",
-    marginTop: 5,
-  },
-  title: {
-    fontWeight: "bold",
+    marginTop: 3,
+    fontSize: 12,
   },
   body: {
     marginTop: 5,
-    width: 150,
+    maxWidth: "95%",
   },
 });
 
@@ -114,7 +141,6 @@ const htmlStyles = StyleSheet.create({
   p: {
     color: "#000",
     flexWrap: "wrap",
-    maxWidth: 350,
   },
 });
 
