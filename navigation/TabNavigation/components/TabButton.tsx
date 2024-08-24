@@ -2,7 +2,7 @@ import React, { useEffect, useRef } from "react";
 import { View } from "react-native";
 import * as Animatable from "react-native-animatable";
 import LinearGradient from "react-native-linear-gradient";
-import CustomIcon, { IconType } from "../../../utils/Icons";
+import CustomIcon from "../../../utils/Icons";
 import { TabParams } from "../../../components/interfaces";
 import {
   TouchableContainer,
@@ -24,11 +24,11 @@ const TabButton: React.FC<TabParams> = ({
 
   const animate1 = {
     from: { transform: [{ scaleX: 0.7 }, { scaleY: 0.7 }] },
-    to: { transform: [{ scaleX: 0.9 }, { scaleY: 0.9 }] },
+    to: { transform: [{ scaleX: 0.7 }, { scaleY: 0.7 }] },
   };
 
   const animate2 = {
-    from: { transform: [{ scaleX: 0.9 }, { scaleY: 0.9 }] },
+    from: { transform: [{ scaleX: 0.7 }, { scaleY: 0.7 }] },
     to: { transform: [{ scaleX: 0.7 }, { scaleY: 0.7 }] },
   };
 
@@ -64,10 +64,9 @@ const TabButton: React.FC<TabParams> = ({
           <IconWrapper focused={focused}>
             <AnimatedCircle focused={focused} ref={circleRef} />
             <CustomIcon
-              type={item.type as IconType}
-              name={focused ? item.activeIcon : item.inActiveIcon}
+              name={item.icon} // Use the updated icon directly
               color={focused ? Colors.white : Colors.primaryLite}
-              size={22}
+              size={32}
             />
           </IconWrapper>
         </LinearGradient>

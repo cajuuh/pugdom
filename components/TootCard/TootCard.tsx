@@ -43,7 +43,7 @@ const TootCard: React.FC<TootCardProps> = ({
   username,
   serverUrl,
   reblog,
-  statusId, // Receive the statusId prop
+  statusId,
 }) => {
   const { width } = useWindowDimensions();
 
@@ -60,9 +60,9 @@ const TootCard: React.FC<TootCardProps> = ({
           >
             <SourceContainer>
               <CustomIcon
-                type="AntDesign"
-                name="retweet"
+                name="RefreshCw" // Lucide icon for retweet/boost
                 color={Colors.green}
+                size={20}
               />
               <SourceUserContainer>
                 <ReblogText>Boosted from </ReblogText>
