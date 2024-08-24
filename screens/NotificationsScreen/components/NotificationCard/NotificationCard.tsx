@@ -1,5 +1,5 @@
 import React from "react";
-import { View, Text, Image, StyleSheet } from "react-native";
+import { View, Text, Image, StyleSheet, FlatList } from "react-native";
 import HTMLView from "react-native-htmlview";
 import { NotificationCardProps } from "../../../../components/interfaces";
 import { getTimeDifference } from "../../../../utils/utils";
@@ -11,6 +11,7 @@ const NotificationCard: React.FC<NotificationCardProps> = ({
   date,
   avatar,
   username,
+  mediaAttachments = [],
 }) => {
   const timeDifference = getTimeDifference(date);
 
@@ -57,6 +58,22 @@ const NotificationCard: React.FC<NotificationCardProps> = ({
     }
   };
 
+  const renderMediaAttachments = () => {
+    if (mediaAttachments.length > 0) {
+      return (
+        <FlatList
+          horizontal
+          data={mediaAttachments}
+          keyExtractor={(item, index) => index.toString()}
+          renderItem={({ item }) => (
+            <Image source={{ uri: item }} style={styles.mediaImage} />
+          )}
+        />
+      );
+    }
+    return null;
+  };
+
   return (
     <View style={styles.container}>
       <View style={styles.iconContainer}>{renderIcon()}</View>
@@ -76,6 +93,7 @@ const NotificationCard: React.FC<NotificationCardProps> = ({
           <View style={styles.body}>
             <HTMLView value={body} stylesheet={htmlStyles} />
           </View>
+          {renderMediaAttachments()}
         </View>
       </View>
     </View>
@@ -134,6 +152,12 @@ const styles = StyleSheet.create({
   body: {
     marginTop: 5,
     maxWidth: "95%",
+  },
+  mediaImage: {
+    width: 100,
+    height: 100,
+    borderRadius: 8,
+    marginRight: 8,
   },
 });
 
