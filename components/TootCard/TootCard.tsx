@@ -17,14 +17,19 @@ import {
   ProfileImageContainer,
   SourceProfileImageContainer,
 } from "./styles/TootCard.style";
-import { useWindowDimensions, View } from "react-native";
+import { ActivityIndicator, StyleSheet, View } from "react-native";
 import HTMLView from "react-native-htmlview";
 import { FeedItem, MediaAttachment } from "../../screens/types";
 import { formatServerUrl } from "../../utils/utils";
 import CustomIcon from "../../utils/Icons";
 import Colors from "../../constants/Colors";
 import StatusActionBar from "../StatusActionBar/StatusActionBar";
-import { Text } from "@ui-kitten/components";
+import { Text } from "../../components/Text/Text";
+import {
+  useFonts,
+  PTSans_400Regular,
+  PTSans_700Bold,
+} from "@expo-google-fonts/pt-sans";
 
 type TootCardProps = {
   content: string;
@@ -45,7 +50,14 @@ const TootCard: React.FC<TootCardProps> = ({
   reblog,
   statusId,
 }) => {
-  const { width } = useWindowDimensions();
+  const [fontsLoaded] = useFonts({
+    PTSans_400Regular,
+    PTSans_700Bold,
+  });
+
+  if (!fontsLoaded) {
+    return <ActivityIndicator size="large" color="#0000ff" />;
+  }
 
   const renderCardContent = () => {
     if (reblog) {
@@ -59,12 +71,12 @@ const TootCard: React.FC<TootCardProps> = ({
             }}
           >
             <SourceContainer>
-              <CustomIcon
-                name="RefreshCw" // Lucide icon for retweet/boost
-                color={Colors.green}
-                size={20}
-              />
               <SourceUserContainer>
+                <CustomIcon
+                  name="ArrowPathIcon"
+                  color={Colors.green}
+                  size={20}
+                />
                 <ReblogText>Boosted from </ReblogText>
                 <SourceProfileImageContainer>
                   <SourceProfileImage source={{ uri: reblog.account.avatar }} />
@@ -73,7 +85,7 @@ const TootCard: React.FC<TootCardProps> = ({
               </SourceUserContainer>
             </SourceContainer>
           </View>
-          <HTMLView value={reblog.content} />
+          <HTMLView value={reblog.content} stylesheet={htmlStyles} />
           {reblog.media_attachments.map((media) => (
             <MediaImage key={media.id} source={{ uri: media.url }} />
           ))}
@@ -82,7 +94,7 @@ const TootCard: React.FC<TootCardProps> = ({
     } else {
       return (
         <>
-          <HTMLView value={content} />
+          <HTMLView value={content} stylesheet={htmlStyles} />
           {mediaAttachments.map((media) => (
             <MediaImage key={media.id} source={{ uri: media.url }} />
           ))}
@@ -92,7 +104,7 @@ const TootCard: React.FC<TootCardProps> = ({
   };
 
   if (!content && !reblog) {
-    return <Text status="warning">No Toots Found!</Text>;
+    return <Text>No Toots Found!</Text>;
   }
 
   return (
@@ -102,8 +114,10 @@ const TootCard: React.FC<TootCardProps> = ({
           <ProfileImage source={{ uri: profileImageUrl }} />
         </ProfileImageContainer>
         <UserNameContainer>
-          <Username>{username}</Username>
-          <Server>{"@" + formatServerUrl(serverUrl)}</Server>
+          <Username style={styles.username}>{username}</Username>
+          <Server style={styles.server}>
+            {"@" + formatServerUrl(serverUrl)}
+          </Server>
         </UserNameContainer>
       </UserInfo>
       <ContentContainer>{renderCardContent()}</ContentContainer>
@@ -111,5 +125,28 @@ const TootCard: React.FC<TootCardProps> = ({
     </CardContainer>
   );
 };
+
+// Styles for the HTML content
+const htmlStyles = StyleSheet.create({
+  p: {
+    fontFamily: "PTSans_400Regular",
+    fontSize: 16,
+    color: "#000",
+  },
+  h1: {
+    fontFamily: "PTSans_700Bold",
+    fontSize: 24,
+  },
+});
+
+// General styles
+const styles = StyleSheet.create({
+  username: {
+    fontFamily: "PTSans_700Bold",
+  },
+  server: {
+    fontFamily: "PTSans_400Regular",
+  },
+});
 
 export default TootCard;

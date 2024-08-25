@@ -17,8 +17,13 @@ import {
 import { AppProvider, useAppContext } from "./context/AppContext";
 import { RootStackParamList } from "./screens/types";
 import { ThemeProvider } from "styled-components/native";
-import * as Linking from "expo-linking";
-import { FeedProvider } from "./context/FeedContext"; // Import FeedProvider
+import {
+  useFonts,
+  PTSans_400Regular,
+  PTSans_700Bold,
+} from "@expo-google-fonts/pt-sans";
+import { FeedProvider } from "./context/FeedContext";
+import { Text, TextInput } from "./components/Text/Text";
 
 const linking = {
   prefixes: ["pugdom://", "https://yourwebsite.com"],
@@ -96,6 +101,25 @@ const AppContent = () => {
 
 const App = () => {
   const isDarkMode = useColorScheme() === "dark";
+
+  const [fontsLoaded] = useFonts({
+    PTSans_400Regular,
+    PTSans_700Bold,
+  });
+
+  if (!fontsLoaded) {
+    return (
+      <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
+        <ActivityIndicator size="large" color="#0000ff" />
+      </View>
+    );
+  }
+
+  Text.defaultProps = Text.defaultProps || {};
+  Text.defaultProps.style = { fontFamily: "PTSans_400Regular" };
+
+  TextInput.defaultProps = TextInput.defaultProps || {};
+  TextInput.defaultProps.style = { fontFamily: "PTSans_400Regular" };
 
   return (
     <ApplicationProvider {...eva} theme={isDarkMode ? eva.dark : eva.light}>
