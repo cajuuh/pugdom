@@ -114,9 +114,11 @@ const styles = StyleSheet.create({
     marginLeft: 8,
   },
   username: {
-    fontWeight: "bold",
+    fontFamily: "PTSans_700Bold",
+    fontSize: 16,
   },
   date: {
+    fontFamily: "PTSans_400Regular",
     color: "#888",
     marginTop: 3,
     fontSize: 12,
@@ -135,8 +137,14 @@ const styles = StyleSheet.create({
 
 const htmlStyles = StyleSheet.create({
   p: {
+    fontFamily: "PTSans_400Regular",
+    fontSize: 16,
     color: "#000",
     flexWrap: "wrap",
+  },
+  h1: {
+    fontFamily: "PTSans_700Bold",
+    fontSize: 24,
   },
 });
 
