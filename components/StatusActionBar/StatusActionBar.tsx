@@ -13,7 +13,6 @@ const StatusActionBar: React.FC<StatusActionBarProps> = ({ statusId }) => {
 
   const handleFavorite = async () => {
     const result = await favoriteStatus(statusId, isFavorited);
-    console.log(result);
     if (result) setIsFavorited(!isFavorited);
   };
 
@@ -28,44 +27,53 @@ const StatusActionBar: React.FC<StatusActionBarProps> = ({ statusId }) => {
   };
 
   return (
-    <View style={styles.container}>
-      <TouchableOpacity onPress={handleFavorite}>
-        <CustomIcon
-          name="HeartIcon"
-          solid={isFavorited}
-          size={22}
-          color={isFavorited ? "#E0245E" : "#aaa"}
-        />
-      </TouchableOpacity>
-      <TouchableOpacity onPress={handleReblog}>
-        <CustomIcon
-          name={isReblogged ? "ArrowPathIcon" : "ArrowPathIcon"}
-          solid={isReblogged}
-          size={22}
-          color={isReblogged ? "#1DA1F2" : "#aaa"}
-        />
-      </TouchableOpacity>
-      <TouchableOpacity onPress={handleBookmark}>
-        <CustomIcon
-          name={isBookmarked ? "BookmarkIcon" : "BookmarkIcon"}
-          solid={isBookmarked}
-          size={22}
-          color={isBookmarked ? "#1DA1F2" : "#aaa"}
-        />
-      </TouchableOpacity>
-      <TouchableOpacity onPress={() => console.log("More options pressed")}>
-        <CustomIcon name="EllipsisHorizontalIcon" size={22} color="#aaa" />
-      </TouchableOpacity>
+    <View>
+      <View style={styles.container}>
+        <View style={styles.actions}>
+          <TouchableOpacity onPress={handleFavorite}>
+            <CustomIcon
+              name="HeartIcon"
+              solid={isFavorited}
+              size={22}
+              color={isFavorited ? "#E0245E" : "#aaa"}
+            />
+          </TouchableOpacity>
+          <TouchableOpacity onPress={handleReblog}>
+            <CustomIcon
+              name={isReblogged ? "ArrowPathIcon" : "ArrowPathIcon"}
+              solid={isReblogged}
+              size={22}
+              color={isReblogged ? "#1DA1F2" : "#aaa"}
+            />
+          </TouchableOpacity>
+          <TouchableOpacity onPress={handleBookmark}>
+            <CustomIcon
+              name={isBookmarked ? "BookmarkIcon" : "BookmarkIcon"}
+              solid={isBookmarked}
+              size={22}
+              color={isBookmarked ? "#1DA1F2" : "#aaa"}
+            />
+          </TouchableOpacity>
+        </View>
+        <TouchableOpacity onPress={() => console.log("More options pressed")}>
+          <CustomIcon name="EllipsisHorizontalIcon" size={22} color="#aaa" />
+        </TouchableOpacity>
+      </View>
     </View>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
-    width: "100%",
+    width: "95%",
     flexDirection: "row",
-    justifyContent: "space-around",
+    justifyContent: "space-between",
+    alignItems: "center",
     marginTop: "5%",
+  },
+  actions: {
+    flexDirection: "row",
+    gap: 10,
   },
 });
 
