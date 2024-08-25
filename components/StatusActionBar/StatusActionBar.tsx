@@ -30,7 +30,15 @@ const StatusActionBar: React.FC<StatusActionBarProps> = ({ statusId }) => {
     <View>
       <View style={styles.container}>
         <View style={styles.actions}>
-          <TouchableOpacity onPress={handleFavorite}>
+          <TouchableOpacity onPress={handleFavorite} style={styles.icon}>
+            <CustomIcon
+              name="ChatBubbleOvalLeftIcon"
+              solid={isFavorited}
+              size={22}
+              color={isFavorited ? "#E0245E" : "#aaa"}
+            />
+          </TouchableOpacity>
+          <TouchableOpacity onPress={handleFavorite} style={styles.icon}>
             <CustomIcon
               name="HeartIcon"
               solid={isFavorited}
@@ -38,7 +46,7 @@ const StatusActionBar: React.FC<StatusActionBarProps> = ({ statusId }) => {
               color={isFavorited ? "#E0245E" : "#aaa"}
             />
           </TouchableOpacity>
-          <TouchableOpacity onPress={handleReblog}>
+          <TouchableOpacity onPress={handleReblog} style={styles.icon}>
             <CustomIcon
               name={isReblogged ? "ArrowPathIcon" : "ArrowPathIcon"}
               solid={isReblogged}
@@ -65,7 +73,7 @@ const StatusActionBar: React.FC<StatusActionBarProps> = ({ statusId }) => {
 
 const styles = StyleSheet.create({
   container: {
-    width: "95%",
+    width: "100%",
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
@@ -74,6 +82,9 @@ const styles = StyleSheet.create({
   actions: {
     flexDirection: "row",
     gap: 10,
+  },
+  icon: {
+    marginRight: 15,
   },
 });
 
