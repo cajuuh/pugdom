@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "@eva-design/eva": "^2.2.0",
+    "@expo-google-fonts/pt-sans": "^0.2.3",
     "@expo/metro-runtime": "~3.2.1",
     "@react-native-async-storage/async-storage": "1.23.1",
     "@react-native-community/masked-view": "^0.1.11",
@@ -29,6 +30,7 @@
     "expo-crypto": "~13.0.2",
     "expo-dev-client": "~4.0.21",
     "expo-device": "~6.0.2",
+    "expo-font": "~12.0.9",
     "expo-linking": "~6.3.1",
     "expo-notifications": "~0.28.15",
     "expo-status-bar": "~1.12.1",

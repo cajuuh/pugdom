@@ -43,6 +43,9 @@
         "projectId": "1ad346a0-237e-46f2-8717-bcab015012f5"
       }
     },
-    "owner": "cajuuh1337"
+    "owner": "cajuuh1337",
+    "plugins": [
+      "expo-font"
+    ]
   }
 }
