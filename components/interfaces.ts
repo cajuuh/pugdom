@@ -58,3 +58,7 @@ export interface HomeScreenRef {
 export interface StatusActionBarProps {
   statusId: string;
 }
+
+interface TouchableOpacityContainerProps {
+  isSelected: boolean;
+}
