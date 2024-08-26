@@ -23,13 +23,13 @@ const TabButton: React.FC<TabParams> = ({
   const circleRef = useRef<Animatable.View & View>(null);
 
   const animate1 = {
-    from: { transform: [{ scaleX: 0.7 }, { scaleY: 0.7 }] },
-    to: { transform: [{ scaleX: 0.9 }, { scaleY: 0.9 }] },
+    from: { transform: [{ scaleX: 0.8 }, { scaleY: 0.8 }] },
+    to: { transform: [{ scaleX: 1 }, { scaleY: 1 }] },
   };
 
   const animate2 = {
-    from: { transform: [{ scaleX: 0.9 }, { scaleY: 0.9 }] },
-    to: { transform: [{ scaleX: 0.7 }, { scaleY: 0.7 }] },
+    from: { transform: [{ scaleX: 1 }, { scaleY: 1 }] },
+    to: { transform: [{ scaleX: 0.8 }, { scaleY: 0.8 }] },
   };
 
   const circle1 = {
@@ -59,7 +59,7 @@ const TabButton: React.FC<TabParams> = ({
           colors={focused ? ["#2F80ED", "#2D9EE0"] : ["#ffffff", "#ffffff"]}
           start={{ x: 1, y: 0 }}
           end={{ x: 0, y: 1 }}
-          style={{ borderRadius: 50, padding: 5 }}
+          style={{ borderRadius: 50 }}
         >
           <IconWrapper focused={focused}>
             <AnimatedCircle focused={focused} ref={circleRef} />
