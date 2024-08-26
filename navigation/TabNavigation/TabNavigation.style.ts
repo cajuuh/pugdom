@@ -5,11 +5,15 @@ export const TouchableOpacityContainer = styled.TouchableOpacity`
   justify-content: center;
   align-items: center;
   height: 60px;
+  padding: 0px;
+  margin: 0px; // Ensure no unexpected margins
 `;
 
 export const Circle = styled.View`
-  width: 30px;
-  height: 30px;
-  border-radius: 15px;
+  width: 28px;
+  height: 28px;
+  border-radius: 14px;
   position: absolute;
+  top: 16px;
+  left: 16px;
 `;

@@ -16,16 +16,21 @@ export const AnimatedContainer = styled(Animatable.View)`
 `;
 
 export const IconWrapper = styled.View<{ focused: boolean }>`
-  border-width: 0px;
+  width: 44px;
+  height: 44px;
+  justify-content: center;
+  align-items: center;
   border-radius: 25px;
-  padding: 5px;
+  padding: 0;
 `;
 
 export const AnimatedCircle = styled(Animatable.View)<{ focused: boolean }>`
-  width: 30px;
-  height: 30px;
-  border-radius: 15px;
+  width: 28px;
+  height: 28px;
+  border-radius: 14px;
   position: absolute;
+  top: 3px;
+  left: 3px;
 `;
 
 export const Label = styled(Text)<{ focused: boolean }>`

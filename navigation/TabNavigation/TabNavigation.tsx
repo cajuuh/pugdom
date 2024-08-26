@@ -66,9 +66,12 @@ const TabNavigation: React.FC = () => {
           headerShown: false,
           tabBarStyle: {
             height: 60,
-            position: "absolute",
-            margin: 16,
+            position: "absolute", // This is fine but might cause layout issues if not handled properly
+            marginHorizontal: 16, // Change to marginHorizontal instead of margin to avoid top/bottom issues
+            bottom: 20, // Explicitly set the bottom position to control the tab bar's location
+            paddingBottom: 0, // Remove paddingBottom if it’s not necessary
             borderRadius: 16,
+            backgroundColor: "#ffffff", // Ensure the background color is consistent
             justifyContent: "center",
             alignItems: "center",
           },
