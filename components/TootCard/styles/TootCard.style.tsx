@@ -1,6 +1,7 @@
-import React from "react";
-import styled from "styled-components/native";
+import { Image as ExpoImage } from 'expo-image';
 import { Dimensions } from "react-native";
+import styled from "styled-components/native";
+
 const { width } = Dimensions.get("window");
 
 export const CardContainer = styled.View`
@@ -21,9 +22,14 @@ export const ProfileImageContainer = styled.View`
   overflow: hidden;
 `;
 
-export const ProfileImage = styled.Image`
+export const ProfileImage = styled(ExpoImage).attrs(() => ({
+  onError: (error: any) => {
+    console.error('Image load error:', error);
+  },
+}))`
   width: 40px;
   height: 40px;
+  border-radius: 20px;
 `;
 
 export const UserInfo = styled.View`
@@ -50,12 +56,13 @@ export const Server = styled.Text`
 
 export const ContentContainer = styled.View``;
 
-export const MediaImage = styled.Image`
+export const MediaImage = styled(ExpoImage)`
   width: ${width - 90}px;
   height: 200px;
   margin-top: 10px;
   border-radius: 8px;
-  resize-mode: cover;
+  content-fit: cover;
+  cache-policy: memory-disk;
 `;
 
 export const ReblogContainer = styled.View`
@@ -95,9 +102,11 @@ export const SourceProfileImageContainer = styled.View`
   overflow: hidden;
 `;
 
-export const SourceProfileImage = styled.Image`
+export const SourceProfileImage = styled(ExpoImage)`
   width: 20px;
   height: 20px;
+  border-radius: 25px;
+  cache-policy: memory-disk;
 `;
 
 export const SourceUsername = styled.Text`
