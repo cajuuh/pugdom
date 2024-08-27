@@ -1,18 +1,22 @@
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import React, {
   createContext,
-  useState,
-  useContext,
   ReactNode,
+  useContext,
   useEffect,
-  useRef,
+  useState,
 } from "react";
 import { FeedItem } from "../screens/types";
 import { getHomeFeed } from "../services/feedService";
-import AsyncStorage from "@react-native-async-storage/async-storage";
-import Banner, { BannerRef } from "../components/Banner/Banner";
+
+interface Emoji {
+  shortcode: string;
+  url: string;
+}
 
 interface FeedContextProps {
   feed: FeedItem[];
+  customEmojis: Emoji[];
   setFeed: (feed: FeedItem[]) => void;
   fetchFeed: () => Promise<FeedItem[]>;
   checkForNewContent: () => Promise<boolean>;
@@ -30,6 +34,7 @@ interface FeedProviderProps {
 
 export const FeedProvider: React.FC<FeedProviderProps> = ({ children }) => {
   const [feed, setFeed] = useState<FeedItem[]>([]);
+  const [customEmojis, setCustomEmojis] = useState<Emoji[]>([]);
   const [autoUpdate, setAutoUpdate] = useState<boolean>(false);
   const [hasNewContent, setHasNewContent] = useState<boolean>(false);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -50,9 +55,10 @@ export const FeedProvider: React.FC<FeedProviderProps> = ({ children }) => {
   const fetchFeed = async () => {
     await handleSignIn();
     try {
-      const feedData = await getHomeFeed();
-      setFeed(feedData);
-      return feedData;
+      const { feedItems, customEmojis } = await getHomeFeed();
+      setFeed(feedItems);
+      setCustomEmojis(customEmojis); // Store the custom emojis for use in the UI
+      return feedItems;
     } catch (error) {
       console.error("Error fetching home feed:", error);
       throw error;
@@ -133,6 +139,7 @@ export const FeedProvider: React.FC<FeedProviderProps> = ({ children }) => {
     <FeedContext.Provider
       value={{
         feed,
+        customEmojis,
         setFeed,
         fetchFeed,
         checkForNewContent,

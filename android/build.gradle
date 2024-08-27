@@ -18,6 +18,8 @@ buildscript {
         classpath('com.android.tools.build:gradle')
         classpath('com.facebook.react:react-native-gradle-plugin')
         classpath('org.jetbrains.kotlin:kotlin-gradle-plugin')
+        classpath('com.github.bumptech.glide:glide:4.8.0')
+        classpath('com.github.bumptech.glide:compiler:4.8.0')
     }
 }
 

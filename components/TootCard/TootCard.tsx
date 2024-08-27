@@ -1,35 +1,39 @@
+import {
+  PTSans_400Regular,
+  PTSans_700Bold,
+  useFonts,
+} from "@expo-google-fonts/pt-sans";
 import React from "react";
+import { ActivityIndicator, Image, StyleSheet, View } from "react-native";
+import HTMLView from "react-native-htmlview";
+import { Text } from "../../components/Text/Text";
+import Colors from "../../constants/Colors";
+import { FeedItem, MediaAttachment } from "../../screens/types";
+import CustomIcon from "../../utils/Icons";
+import { formatServerUrl } from "../../utils/utils";
+import StatusActionBar from "../StatusActionBar/StatusActionBar";
 import {
   CardContainer,
-  ProfileImage,
   ContentContainer,
   MediaImage,
+  ProfileImage,
+  ProfileImageContainer,
   ReblogContainer,
-  ReblogText,
+  Server,
+  SourceContainer,
   SourceProfileImage,
+  SourceProfileImageContainer,
+  SourceUserContainer,
   SourceUsername,
   UserInfo,
   Username,
-  Server,
-  UserNameContainer,
-  SourceContainer,
-  SourceUserContainer,
-  ProfileImageContainer,
-  SourceProfileImageContainer,
+  UserNameContainer
 } from "./styles/TootCard.style";
-import { ActivityIndicator, StyleSheet, View } from "react-native";
-import HTMLView from "react-native-htmlview";
-import { FeedItem, MediaAttachment } from "../../screens/types";
-import { formatServerUrl } from "../../utils/utils";
-import CustomIcon from "../../utils/Icons";
-import Colors from "../../constants/Colors";
-import StatusActionBar from "../StatusActionBar/StatusActionBar";
-import { Text } from "../../components/Text/Text";
-import {
-  useFonts,
-  PTSans_400Regular,
-  PTSans_700Bold,
-} from "@expo-google-fonts/pt-sans";
+
+type Emoji = {
+  shortcode: string;
+  url: string;
+};
 
 type TootCardProps = {
   content: string;
@@ -39,16 +43,18 @@ type TootCardProps = {
   serverUrl: string;
   reblog?: FeedItem;
   statusId: string;
+  customEmojis: Emoji[];
 };
 
 const TootCard: React.FC<TootCardProps> = ({
   content = "",
   profileImageUrl = "",
   mediaAttachments = [],
-  username,
-  serverUrl,
+  username = "",
+  serverUrl = "",
   reblog,
-  statusId,
+  statusId = "",
+  customEmojis = [],
 }) => {
   const [fontsLoaded] = useFonts({
     PTSans_400Regular,
@@ -59,33 +65,77 @@ const TootCard: React.FC<TootCardProps> = ({
     return <ActivityIndicator size="large" color="#0000ff" />;
   }
 
+  const replaceEmojis = (text: string, emojis: Emoji[]) => {
+    console.log("Available emojis:", emojis);
+    console.log("Custom emojis:", customEmojis);
+
+    return text.replace(/:([a-zA-Z0-9_]+):/g, (match, shortcode) => {
+      console.log("Processing shortcode:", shortcode);
+
+      const emoji = emojis.find((e) => e.shortcode === shortcode);
+
+      if (!emoji) {
+        const globalEmoji = customEmojis.find((e) => e.shortcode === shortcode);
+        if (globalEmoji) {
+          console.log("Found global emoji:", globalEmoji.url);
+          return `<img key=${statusId} src="${globalEmoji.url}" alt="${shortcode}" style="width: 20px; height: 20px;" />`;
+        }
+        return match;
+      }
+
+      console.log("Found post-specific emoji:", emoji.url);
+      return `<img key=${statusId} src="${emoji.url}" alt="${shortcode}" style="width: 20px; height: 20px;" />`;
+    });
+  };
+
+  const renderReblogPill = () => (
+    <View
+      style={{
+        flexDirection: "row",
+        alignItems: "center",
+        marginBottom: 15,
+      }}
+    >
+      <SourceContainer>
+        <SourceUserContainer>
+          <CustomIcon
+            name="ArrowPathIcon"
+            color={Colors.green}
+            size={20}
+          />
+          <SourceProfileImageContainer>
+            <SourceProfileImage source={{ uri: profileImageUrl }} />
+          </SourceProfileImageContainer>
+          <SourceUsername>{username}</SourceUsername>
+        </SourceUserContainer>
+      </SourceContainer>
+    </View>
+  );
+
   const renderCardContent = () => {
+    const relevantEmojis = reblog ? reblog.emojis : customEmojis;
+    const processedContent = replaceEmojis(content, relevantEmojis);
+    console.log("Final HTML content:", processedContent);
+
     if (reblog) {
       return (
         <ReblogContainer>
-          <View
-            style={{
-              flexDirection: "row",
-              alignItems: "center",
-              marginBottom: 5,
+          <HTMLView
+            value={replaceEmojis(reblog.content, relevantEmojis)}
+            stylesheet={htmlStyles}
+            renderNode={(node, index, siblings, parent, defaultRenderer) => {
+              if (node.name === 'img') {
+                return (
+                  <Image
+                    source={{ uri: node.attribs.src }}
+                    style={{ width: 20, height: 20 }}
+                    resizeMode="contain"
+                  />
+                );
+              }
+              return undefined;
             }}
-          >
-            <SourceContainer>
-              <SourceUserContainer>
-                <CustomIcon
-                  name="ArrowPathIcon"
-                  color={Colors.green}
-                  size={20}
-                />
-                <ReblogText>Boosted from </ReblogText>
-                <SourceProfileImageContainer>
-                  <SourceProfileImage source={{ uri: reblog.account.avatar }} />
-                </SourceProfileImageContainer>
-                <SourceUsername>{reblog.account.username}</SourceUsername>
-              </SourceUserContainer>
-            </SourceContainer>
-          </View>
-          <HTMLView value={reblog.content} stylesheet={htmlStyles} />
+          />
           {reblog.media_attachments.map((media) => (
             <MediaImage key={media.id} source={{ uri: media.url }} />
           ))}
@@ -94,7 +144,22 @@ const TootCard: React.FC<TootCardProps> = ({
     } else {
       return (
         <>
-          <HTMLView value={content} stylesheet={htmlStyles} />
+          <HTMLView
+            value={processedContent}
+            stylesheet={htmlStyles}
+            renderNode={(node, index, siblings, parent, defaultRenderer) => {
+              if (node.name === 'img') {
+                return (
+                  <Image
+                    source={{ uri: node.attribs.src }}
+                    style={{ width: 20, height: 20 }}
+                    resizeMode="contain"
+                  />
+                );
+              }
+              return undefined;
+            }}
+          />
           {mediaAttachments.map((media) => (
             <MediaImage key={media.id} source={{ uri: media.url }} />
           ))}
@@ -109,12 +174,13 @@ const TootCard: React.FC<TootCardProps> = ({
 
   return (
     <CardContainer>
+      {reblog && renderReblogPill()}
       <UserInfo>
         <ProfileImageContainer>
-          <ProfileImage source={{ uri: profileImageUrl }} />
+          {reblog ? <ProfileImage source={{ uri: reblog?.account.avatar }} /> : <ProfileImage source={{ uri: profileImageUrl }} />}
         </ProfileImageContainer>
         <UserNameContainer>
-          <Username style={styles.username}>{username}</Username>
+          {reblog ? <Username style={styles.username}>{reblog?.account.username}</Username> : <Username style={styles.username}>{username}</Username>}
           <Server style={styles.server}>
             {"@" + formatServerUrl(serverUrl)}
           </Server>
@@ -136,6 +202,11 @@ const htmlStyles = StyleSheet.create({
   h1: {
     fontFamily: "PTSans_700Bold",
     fontSize: 24,
+  },
+  img: {
+    width: 20,
+    height: 20,
+    resizeMode: 'contain',
   },
 });
 
