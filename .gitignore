@@ -38,3 +38,6 @@ yarn-error.*
 config.ts
 eas.json
 
+# native folders
+/android
+/ios
