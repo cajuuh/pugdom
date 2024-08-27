@@ -1,12 +1,12 @@
-import React, { useEffect, useRef, useState, forwardRef } from "react";
-import { FlatList, RefreshControl, ActivityIndicator } from "react-native";
-import { Container, WelcomeText } from "./styles/HomeScreen.style";
+import { useIsFocused } from "@react-navigation/native";
+import { useTheme } from "@ui-kitten/components";
+import React, { forwardRef, useEffect, useRef, useState } from "react";
+import { ActivityIndicator, FlatList, RefreshControl } from "react-native";
+import Banner, { BannerRef } from "../../components/Banner/Banner";
 import TootCard from "../../components/TootCard/TootCard";
 import { useAppContext } from "../../context/AppContext";
-import { useTheme } from "@ui-kitten/components";
 import { useFeed } from "../../context/FeedContext";
-import { useIsFocused } from "@react-navigation/native";
-import Banner, { BannerRef } from "../../components/Banner/Banner";
+import { Container, WelcomeText } from "./styles/HomeScreen.style";
 
 const HomeScreen = forwardRef((props, ref) => {
   const isFocused = useIsFocused();
@@ -56,6 +56,7 @@ const HomeScreen = forwardRef((props, ref) => {
             serverUrl={item.account.url}
             reblog={item.reblog}
             statusId={item.id}
+            customEmojis={item.emojis}
           />
         )}
         ListFooterComponent={
