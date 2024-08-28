@@ -1,6 +1,6 @@
 import {
-    BottomTabNavigationProp,
-    createBottomTabNavigator,
+  BottomTabNavigationProp,
+  createBottomTabNavigator,
 } from "@react-navigation/bottom-tabs";
 import { useNavigation } from "@react-navigation/native";
 import React, { useRef, useState } from "react";
@@ -21,31 +21,31 @@ const TabArr: Array<{
   icon: IconName;
   component: React.ComponentType<any>;
 }> = [
-  {
-    route: "Home",
-    label: "Home",
-    icon: "HomeIcon",
-    component: HomeScreen,
-  },
-  {
-    route: "Search",
-    label: "Search",
-    icon: "MagnifyingGlassIcon",
-    component: SearchScreen,
-  },
-  {
-    route: "Notifications",
-    label: "Notifications",
-    icon: "BellIcon",
-    component: NotificationsScreen,
-  },
-  {
-    route: "Profile",
-    label: "Profile",
-    icon: "UserCircleIcon",
-    component: ProfileScreen,
-  },
-];
+    {
+      route: "Home",
+      label: "Home",
+      icon: "HomeIcon",
+      component: HomeScreen,
+    },
+    {
+      route: "Search",
+      label: "Search",
+      icon: "MagnifyingGlassIcon",
+      component: SearchScreen,
+    },
+    {
+      route: "Notifications",
+      label: "Notifications",
+      icon: "BellIcon",
+      component: NotificationsScreen,
+    },
+    {
+      route: "Profile",
+      label: "Profile",
+      icon: "UserCircleIcon",
+      component: ProfileScreen,
+    },
+  ];
 
 const Tab = createBottomTabNavigator<BottomTabParamList>();
 
@@ -68,13 +68,14 @@ const TabNavigation: React.FC = () => {
         screenOptions={{
           headerShown: false,
           tabBarStyle: {
-            height: 60,
+            height: 55,
             position: "absolute",
             marginHorizontal: 16,
-            bottom: 20,
+            bottom: 15,
             paddingBottom: 0,
-            borderRadius: 16,
-            backgroundColor: theme.backgroundColor,
+            borderTopWidth: 0,
+            borderRadius: 20,
+            backgroundColor: theme.tabNavigationColor,
             justifyContent: "center",
             alignItems: "center",
           },

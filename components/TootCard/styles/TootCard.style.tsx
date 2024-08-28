@@ -1,8 +1,8 @@
+import { Image as ExpoImage } from "expo-image";
 import { Dimensions } from "react-native";
 import styled from "styled-components/native";
 import { PugText } from "../../Text/Text";
 import { ThemeType } from "../../interfaces";
-import { Image as ExpoImage } from "expo-image";
 
 const { width } = Dimensions.get("window");
 
@@ -50,7 +50,7 @@ export const UserNameContainer = styled.View`
   align-items: flex-start;
 `;
 
-export const Username = styled(PugText)<ThemeProps>`
+export const Username = styled(PugText) <ThemeProps>`
   font-size: 16px;
   font-weight: bold;
   margin-right: 8px;
@@ -77,7 +77,6 @@ export const ReblogContainer = styled.View<ThemeProps>`
   padding: 10px;
   border-radius: 10px;
   width: ${width - 70}px;
-  background-color: ${(props) => props.theme.secondaryColor};
 `;
 
 export const ReblogText = styled.Text<ThemeProps>`
@@ -101,7 +100,7 @@ export const SourceUserContainer = styled.View<ThemeProps>`
   padding-vertical: 5px;
   padding-horizontal: 5px;
   border-radius: 25px;
-  background-color: ${(props) => props.theme.primaryColor};
+  background-color: ${(props) => props.theme.reblogPillColor};
 `;
 
 export const SourceProfileImageContainer = styled.View`
