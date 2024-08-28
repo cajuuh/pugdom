@@ -14,6 +14,10 @@ const TootCardHtmlStyles = (theme: ThemeType) => {
       fontSize: 24,
       color: theme?.textColor,
     },
+    a: {
+      color: theme.primaryColor, // Use theme's primary color for links
+      textDecorationLine: 'underline', // Optional: underline the links
+    },
     img: {
       width: 20,
       height: 20,

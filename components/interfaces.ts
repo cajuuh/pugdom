@@ -62,4 +62,7 @@ export interface ThemeType {
   textColor: string;
   primaryColor: string;
   secondaryColor: string;
+  reblogPillColor: string;
+  tabNavigationColor: string;
+  tabNavigationGradient: string[];
 }

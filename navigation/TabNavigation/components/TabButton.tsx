@@ -4,6 +4,7 @@ import * as Animatable from "react-native-animatable";
 import LinearGradient from "react-native-linear-gradient";
 import { TabParams } from "../../../components/interfaces";
 import Colors from "../../../constants/Colors";
+import { useTheme } from "../../../hooks/useTheme";
 import CustomIcon from "../../../utils/Icons";
 import {
   AnimatedCircle,
@@ -21,6 +22,7 @@ const TabButton: React.FC<TabParams> = ({
   const focused = accessibilityState?.selected ?? false;
   const viewRef = useRef<Animatable.View & View>(null);
   const circleRef = useRef<Animatable.View & View>(null);
+  const theme = useTheme();
 
   const animate1 = {
     from: { transform: [{ scaleX: 0.8 }, { scaleY: 0.8 }] },
@@ -56,7 +58,7 @@ const TabButton: React.FC<TabParams> = ({
     <TouchableContainer onPress={onPress} activeOpacity={1}>
       <AnimatedContainer ref={viewRef} duration={500}>
         <LinearGradient
-          colors={focused ? ["#2F80ED", "#2D9EE0"] : ["#ffffff", "#ffffff"]}
+          colors={focused ? theme.tabNavigationGradient : ["#ffffff", "#ffffff"]}
           start={{ x: 1, y: 0 }}
           end={{ x: 0, y: 1 }}
           style={{ borderRadius: 50 }}
@@ -66,7 +68,7 @@ const TabButton: React.FC<TabParams> = ({
             <CustomIcon
               name={item.icon}
               solid={focused} // Solid icon when focused
-              color={focused ? Colors.white : Colors.primaryLite}
+              color={focused ? Colors.white : theme.primaryColor}
               size={22}
             />
           </IconWrapper>
