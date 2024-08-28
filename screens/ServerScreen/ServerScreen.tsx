@@ -1,15 +1,15 @@
-import React, { useEffect, useState, useCallback, useRef } from "react";
-import { Button, Text } from "@ui-kitten/components";
-import { NavigationProp } from "@react-navigation/native";
-import { Container, StyledInput } from "./styles/ServerScreen.style";
-import { RootStackParamList } from "../types";
-import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { ActivityIndicator, View } from "react-native";
+import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import * as AuthSession from "expo-auth-session";
+import React, { useCallback, useEffect, useRef, useState } from "react";
+import { ActivityIndicator, View } from "react-native";
+import PugButton from "../../components/Button/Button";
+import { PugText } from "../../components/Text/Text";
 import { config } from "../../config";
-import { getToken, getUserInfo } from "../../services/authService";
 import { useAppContext } from "../../context/AppContext";
+import { getToken, getUserInfo } from "../../services/authService";
+import { RootStackParamList } from "../types";
+import { Container, StyledInput } from "./styles/ServerScreen.style";
 
 type Props = NativeStackScreenProps<RootStackParamList, "Server">;
 
@@ -121,13 +121,14 @@ const ServerScreen: React.FC<Props> = ({ navigation }) => {
 
   return (
     <Container>
-      <Text category="h1">Set Mastodon Server</Text>
+      <PugText>Set Mastodon Server</PugText>
       <StyledInput
         value={server}
         placeholder="Enter your Mastodon server URL"
         onChangeText={(text) => setServer(text)}
       />
-      <Button
+      <PugButton
+        title="Sign in"
         onPress={async () => {
           await handleSave().then((data) => {
             if (server || data) {
@@ -137,9 +138,7 @@ const ServerScreen: React.FC<Props> = ({ navigation }) => {
             }
           });
         }}
-      >
-        Sign In
-      </Button>
+      />
     </Container>
   );
 };

@@ -1,11 +1,11 @@
-import { View, Text } from "react-native";
 import React from "react";
-import { useNavigation } from "@react-navigation/native";
+import { View } from "react-native";
+import { PugText } from "../../components/Text/Text";
 
 const SearchScreen: React.FC = () => {
   return (
     <View>
-      <Text>SearchScreen</Text>
+      <PugText>SearchScreen</PugText>
     </View>
   );
 };

@@ -1,6 +1,6 @@
 import styled from "styled-components/native";
-import { Layout } from "@ui-kitten/components";
+import PugLayout from "../../../components/Layout/Layout";
 
-export const Container = styled(Layout)`
+export const Container = styled(PugLayout)`
   flex: 1;
 `;

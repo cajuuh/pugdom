@@ -1,18 +1,19 @@
-import React, { useState, useRef } from "react";
 import {
-  BottomTabNavigationProp,
-  createBottomTabNavigator,
+    BottomTabNavigationProp,
+    createBottomTabNavigator,
 } from "@react-navigation/bottom-tabs";
-import { SafeAreaView } from "react-native";
-import HomeScreen from "../../screens/HomeScreen/HomeScreen";
-import SearchScreen from "../../screens/SearchScreen/SearchScreen";
-import ProfileScreen from "../../screens/ProfileScreen/ProfileScreen";
-import NotificationsScreen from "../../screens/NotificationsScreen/NotificationsScreen";
-import TabButton from "../TabNavigation/components/TabButton";
-import { BottomTabParamList } from "../../screens/types";
 import { useNavigation } from "@react-navigation/native";
+import React, { useRef, useState } from "react";
+import { SafeAreaView } from "react-native";
 import { HomeScreenRef } from "../../components/interfaces";
+import { useTheme } from "../../hooks/useTheme";
+import HomeScreen from "../../screens/HomeScreen/HomeScreen";
+import NotificationsScreen from "../../screens/NotificationsScreen/NotificationsScreen";
+import ProfileScreen from "../../screens/ProfileScreen/ProfileScreen";
+import SearchScreen from "../../screens/SearchScreen/SearchScreen";
+import { BottomTabParamList } from "../../screens/types";
 import { IconName } from "../../utils/Icons";
+import TabButton from "../TabNavigation/components/TabButton";
 
 const TabArr: Array<{
   route: keyof BottomTabParamList;
@@ -59,6 +60,8 @@ const TabNavigation: React.FC = () => {
     navigation.navigate(route);
   };
 
+  const theme = useTheme();
+
   return (
     <SafeAreaView style={{ flex: 1 }}>
       <Tab.Navigator
@@ -66,12 +69,12 @@ const TabNavigation: React.FC = () => {
           headerShown: false,
           tabBarStyle: {
             height: 60,
-            position: "absolute", // This is fine but might cause layout issues if not handled properly
-            marginHorizontal: 16, // Change to marginHorizontal instead of margin to avoid top/bottom issues
-            bottom: 20, // Explicitly set the bottom position to control the tab bar's location
-            paddingBottom: 0, // Remove paddingBottom if it’s not necessary
+            position: "absolute",
+            marginHorizontal: 16,
+            bottom: 20,
+            paddingBottom: 0,
             borderRadius: 16,
-            backgroundColor: "#ffffff", // Ensure the background color is consistent
+            backgroundColor: theme.backgroundColor,
             justifyContent: "center",
             alignItems: "center",
           },

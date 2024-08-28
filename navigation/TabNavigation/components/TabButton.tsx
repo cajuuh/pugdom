@@ -2,16 +2,16 @@ import React, { useEffect, useRef } from "react";
 import { View } from "react-native";
 import * as Animatable from "react-native-animatable";
 import LinearGradient from "react-native-linear-gradient";
-import CustomIcon, { IconName } from "../../../utils/Icons";
 import { TabParams } from "../../../components/interfaces";
+import Colors from "../../../constants/Colors";
+import CustomIcon from "../../../utils/Icons";
 import {
-  TouchableContainer,
+  AnimatedCircle,
   AnimatedContainer,
   IconWrapper,
-  AnimatedCircle,
   Label,
+  TouchableContainer,
 } from "./TabButton.style";
-import Colors from "../../../constants/Colors";
 
 const TabButton: React.FC<TabParams> = ({
   item,
@@ -72,7 +72,7 @@ const TabButton: React.FC<TabParams> = ({
           </IconWrapper>
         </LinearGradient>
       </AnimatedContainer>
-      <Label focused={focused} category="label">
+      <Label focused={focused}>
         {item.label}
       </Label>
     </TouchableContainer>

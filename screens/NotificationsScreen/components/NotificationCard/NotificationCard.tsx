@@ -1,9 +1,10 @@
 import React from "react";
-import { View, Text, Image, StyleSheet, FlatList } from "react-native";
+import { FlatList, Image, StyleSheet, View } from "react-native";
 import HTMLView from "react-native-htmlview";
+import { PugText } from "../../../../components/Text/Text";
 import { NotificationCardProps } from "../../../../components/interfaces";
-import { getTimeDifference } from "../../../../utils/utils";
 import CustomIcon from "../../../../utils/Icons";
+import { getTimeDifference } from "../../../../utils/utils";
 
 const NotificationCard: React.FC<NotificationCardProps> = ({
   title,
@@ -54,12 +55,12 @@ const NotificationCard: React.FC<NotificationCardProps> = ({
           <View style={styles.userContainer}>
             <Image source={{ uri: avatar }} style={styles.avatar} />
             <View style={styles.userNameAndDateContainer}>
-              <Text style={styles.username}>{username}</Text>
-              <Text style={styles.date}>
+              <PugText style={styles.username}>{username}</PugText>
+              <PugText style={styles.date}>
                 {typeof timeDifference === "number"
                   ? `${timeDifference} hours ago`
                   : timeDifference}
-              </Text>
+              </PugText>
             </View>
           </View>
           <View style={styles.body}>
