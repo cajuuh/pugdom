@@ -23,7 +23,7 @@ const HomeScreen = forwardRef((props, ref) => {
   }, []);
 
   useEffect(() => {
-    console.log("Theme updated:", theme);  // Debug line to check theme updates
+    console.log("Theme updated:", theme); // Debug line to check theme updates
   }, [theme]);
 
   const onRefresh = async () => {
@@ -60,6 +60,7 @@ const HomeScreen = forwardRef((props, ref) => {
             serverUrl={item.account.url}
             reblog={item.reblog}
             statusId={item.id}
+            customEmojis={item.emojis}
           />
         )}
         ListFooterComponent={
