@@ -2,6 +2,7 @@ import { Dimensions } from "react-native";
 import styled from "styled-components/native";
 import { PugText } from "../../Text/Text";
 import { ThemeType } from "../../interfaces";
+import { Image as ExpoImage } from "expo-image";
 
 const { width } = Dimensions.get("window");
 
@@ -28,9 +29,14 @@ export const ProfileImageContainer = styled.View`
   overflow: hidden;
 `;
 
-export const ProfileImage = styled.Image`
+export const ProfileImage = styled(ExpoImage).attrs(() => ({
+  onError: (error: any) => {
+    console.error("Image load error:", error);
+  },
+}))`
   width: 40px;
   height: 40px;
+  border-radius: 20px;
 `;
 
 export const UserInfo = styled.View`
@@ -44,7 +50,7 @@ export const UserNameContainer = styled.View`
   align-items: flex-start;
 `;
 
-export const Username = styled(PugText) <ThemeProps>`
+export const Username = styled(PugText)<ThemeProps>`
   font-size: 16px;
   font-weight: bold;
   margin-right: 8px;
@@ -58,12 +64,13 @@ export const Server = styled.Text<ThemeProps>`
 
 export const ContentContainer = styled.View``;
 
-export const MediaImage = styled.Image`
+export const MediaImage = styled(ExpoImage)`
   width: ${width - 90}px;
   height: 200px;
   margin-top: 10px;
   border-radius: 8px;
-  resize-mode: cover;
+  content-fit: cover;
+  cache-policy: memory-disk;
 `;
 
 export const ReblogContainer = styled.View<ThemeProps>`
@@ -105,9 +112,11 @@ export const SourceProfileImageContainer = styled.View`
   overflow: hidden;
 `;
 
-export const SourceProfileImage = styled.Image`
+export const SourceProfileImage = styled(ExpoImage)`
   width: 20px;
   height: 20px;
+  border-radius: 25px;
+  cache-policy: memory-disk;
 `;
 
 export const SourceUsername = styled.Text<ThemeProps>`
