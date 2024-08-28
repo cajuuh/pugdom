@@ -1,14 +1,14 @@
 import React, { useEffect, useState } from "react";
 import {
-  FlatList,
-  View,
   ActivityIndicator,
+  FlatList,
   RefreshControl,
+  View,
 } from "react-native";
+import { PugText } from "../../components/Text/Text";
 import { NotificationItem } from "../../components/interfaces";
 import { getNotifications } from "../../services/notificationService";
 import NotificationCard from "./components/NotificationCard/NotificationCard";
-import { Text } from "@ui-kitten/components";
 
 const NotificationsScreen: React.FC = () => {
   const [notifications, setNotifications] = useState<NotificationItem[]>([]);
@@ -49,7 +49,7 @@ const NotificationsScreen: React.FC = () => {
   if (error) {
     return (
       <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
-        <Text style={{ color: "red" }}>{error}</Text>
+        <PugText style={{ color: "red" }}>{error}</PugText>
       </View>
     );
   }
@@ -77,7 +77,7 @@ const NotificationsScreen: React.FC = () => {
           }
         />
       ) : (
-        <Text>No notifications</Text>
+        <PugText>No notifications</PugText>
       )}
     </View>
   );

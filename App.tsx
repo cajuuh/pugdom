@@ -1,107 +1,39 @@
-import "react-native-gesture-handler";
-import React, { useState, useEffect } from "react";
+import { PTSans_400Regular, PTSans_700Bold, useFonts } from "@expo-google-fonts/pt-sans";
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
-import { ApplicationProvider } from "@ui-kitten/components";
-import * as eva from "@eva-design/eva";
+import React from "react";
+import { ActivityIndicator, StatusBar, View } from "react-native";
+import { ThemeProvider } from "styled-components/native";
+import { PugText, PugTextInput } from "./components/Text/Text";
+import { AppProvider, useAppContext } from "./context/AppContext";
+import { FeedProvider } from "./context/FeedContext";
+import TabNavigation from "./navigation/TabNavigation/TabNavigation";
 import ServerScreen from "./screens/ServerScreen/ServerScreen";
 import WebViewScreen from "./screens/WebViewScreen/WebViewScreen";
-import TabNavigation from "./navigation/TabNavigation/TabNavigation";
-import AsyncStorage from "@react-native-async-storage/async-storage";
-import {
-  ActivityIndicator,
-  StatusBar,
-  useColorScheme,
-  View,
-} from "react-native";
-import { AppProvider, useAppContext } from "./context/AppContext";
 import { RootStackParamList } from "./screens/types";
-import { ThemeProvider } from "styled-components/native";
-import {
-  useFonts,
-  PTSans_400Regular,
-  PTSans_700Bold,
-} from "@expo-google-fonts/pt-sans";
-import { FeedProvider } from "./context/FeedContext";
-import { Text, TextInput } from "./components/Text/Text";
-
-const linking = {
-  prefixes: ["pugdom://", "https://yourwebsite.com"],
-  config: {
-    screens: {
-      Server: "server",
-      WebView: "webview",
-      TabNavigation: {
-        path: "tabs",
-        screens: {
-          Home: "home",
-          Search: "search",
-          Profile: "profile",
-          Notifications: "notifications",
-        },
-      },
-    },
-  },
-};
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
 
 const AppContent = () => {
-  const [initialRoute, setInitialRoute] = useState<
-    keyof RootStackParamList | undefined
-  >(undefined);
-  const [loading, setLoading] = useState(true);
-  const { setAppParam } = useAppContext();
-
-  useEffect(() => {
-    const checkUserAuthentication = async () => {
-      const userInfo = await AsyncStorage.getItem("userInfo");
-      try {
-        if (userInfo) {
-          const parsedUserInfo = JSON.parse(userInfo);
-          setAppParam("username", parsedUserInfo.username);
-          setAppParam("apiBaseUrl", parsedUserInfo.serverUrl);
-          setAppParam("accessToken", parsedUserInfo.accessToken);
-          setInitialRoute("TabNavigation");
-        } else {
-          setInitialRoute("Server");
-        }
-      } catch (error) {
-        console.error("Error checking user authentication:", error);
-        setInitialRoute("Server");
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    checkUserAuthentication();
-  }, [loading]);
-
-  if (loading) {
-    return (
-      <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
-        <ActivityIndicator size="large" color="#0000ff" />
-      </View>
-    );
-  }
+  const { theme } = useAppContext();
 
   return (
-    <NavigationContainer linking={linking}>
-      <Stack.Navigator
-        initialRouteName={initialRoute}
-        screenOptions={{ headerShown: false }}
-      >
-        <Stack.Screen name="TabNavigation" component={TabNavigation} />
-        <Stack.Screen name="Server" component={ServerScreen} />
-        <Stack.Screen name="WebView" component={WebViewScreen} />
-      </Stack.Navigator>
-    </NavigationContainer>
+    <ThemeProvider theme={theme}>
+      <StatusBar
+        barStyle={theme.backgroundColor === "#1C1C1E" ? "light-content" : "dark-content"}
+      />
+      <NavigationContainer>
+        <Stack.Navigator screenOptions={{ headerShown: false }}>
+          <Stack.Screen name="TabNavigation" component={TabNavigation} />
+          <Stack.Screen name="Server" component={ServerScreen} />
+          <Stack.Screen name="WebView" component={WebViewScreen} />
+        </Stack.Navigator>
+      </NavigationContainer>
+    </ThemeProvider>
   );
 };
 
 const App = () => {
-  const isDarkMode = useColorScheme() === "dark";
-
   const [fontsLoaded] = useFonts({
     PTSans_400Regular,
     PTSans_700Bold,
@@ -115,23 +47,18 @@ const App = () => {
     );
   }
 
-  Text.defaultProps = Text.defaultProps || {};
-  Text.defaultProps.style = { fontFamily: "PTSans_400Regular" };
+  PugText.defaultProps = PugText.defaultProps || {};
+  PugText.defaultProps.style = { fontFamily: "PTSans_400Regular" };
 
-  TextInput.defaultProps = TextInput.defaultProps || {};
-  TextInput.defaultProps.style = { fontFamily: "PTSans_400Regular" };
+  PugTextInput.defaultProps = PugTextInput.defaultProps || {};
+  PugTextInput.defaultProps.style = { fontFamily: "PTSans_400Regular" };
 
   return (
-    <ApplicationProvider {...eva} theme={isDarkMode ? eva.dark : eva.light}>
-      <StatusBar barStyle={isDarkMode ? "light-content" : "dark-content"} />
-      <ThemeProvider theme={isDarkMode ? eva.dark : eva.light}>
-        <AppProvider>
-          <FeedProvider>
-            <AppContent />
-          </FeedProvider>
-        </AppProvider>
-      </ThemeProvider>
-    </ApplicationProvider>
+    <AppProvider>
+      <FeedProvider>
+        <AppContent />
+      </FeedProvider>
+    </AppProvider>
   );
 };
 

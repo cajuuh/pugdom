@@ -1,10 +1,11 @@
-import { View, Text } from "react-native";
 import React from "react";
+import { View } from "react-native";
+import { PugText } from "../../components/Text/Text";
 
 const WebViewScreen = () => {
   return (
     <View>
-      <Text>WebViewScreen</Text>
+      <PugText>WebViewScreen</PugText>
     </View>
   );
 };

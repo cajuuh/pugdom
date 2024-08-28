@@ -1,18 +1,17 @@
+import LottieView from "lottie-react-native";
 import React, {
   forwardRef,
   useImperativeHandle,
-  useState,
   useRef,
+  useState,
 } from "react";
 import {
   Animated,
-  PanResponder,
   StyleSheet,
-  TouchableOpacity,
-  Text,
+  TouchableOpacity
 } from "react-native";
-import LottieView from "lottie-react-native";
 import LinearGradient from "react-native-linear-gradient";
+import { PugText } from "../Text/Text";
 
 export interface BannerRef {
   showBanner: () => void;
@@ -74,7 +73,7 @@ const Banner = forwardRef<BannerRef, { onRefresh: () => void }>(
               loop
               style={styles.lottie}
             />
-            <Text style={styles.text}>New toots</Text>
+            <PugText style={styles.text}>New toots</PugText>
           </LinearGradient>
         </TouchableOpacity>
       </Animated.View>

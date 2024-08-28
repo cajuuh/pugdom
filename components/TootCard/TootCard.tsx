@@ -1,35 +1,37 @@
-import React from "react";
 import {
-  CardContainer,
-  ProfileImage,
-  ContentContainer,
-  MediaImage,
-  ReblogContainer,
-  ReblogText,
-  SourceProfileImage,
-  SourceUsername,
-  UserInfo,
-  Username,
-  Server,
-  UserNameContainer,
-  SourceContainer,
-  SourceUserContainer,
-  ProfileImageContainer,
-  SourceProfileImageContainer,
-} from "./styles/TootCard.style";
-import { ActivityIndicator, StyleSheet, View } from "react-native";
-import HTMLView from "react-native-htmlview";
-import { FeedItem, MediaAttachment } from "../../screens/types";
-import { formatServerUrl } from "../../utils/utils";
-import CustomIcon from "../../utils/Icons";
-import Colors from "../../constants/Colors";
-import StatusActionBar from "../StatusActionBar/StatusActionBar";
-import { Text } from "../../components/Text/Text";
-import {
-  useFonts,
   PTSans_400Regular,
   PTSans_700Bold,
+  useFonts,
 } from "@expo-google-fonts/pt-sans";
+import React from "react";
+import { ActivityIndicator, StyleSheet, View } from "react-native";
+import HTMLView from "react-native-htmlview";
+import { PugText } from "../../components/Text/Text";
+import Colors from "../../constants/Colors";
+import { useTheme } from "../../hooks/useTheme";
+import { FeedItem, MediaAttachment } from "../../screens/types";
+import CustomIcon from "../../utils/Icons";
+import TootCardHtmlStyles from "../../utils/htmlStyles";
+import { formatServerUrl } from "../../utils/utils";
+import StatusActionBar from "../StatusActionBar/StatusActionBar";
+import {
+  CardContainer,
+  ContentContainer,
+  MediaImage,
+  ProfileImage,
+  ProfileImageContainer,
+  ReblogContainer,
+  ReblogText,
+  Server,
+  SourceContainer,
+  SourceProfileImage,
+  SourceProfileImageContainer,
+  SourceUserContainer,
+  SourceUsername,
+  UserInfo,
+  UserNameContainer,
+  Username,
+} from "./styles/TootCard.style";
 
 type TootCardProps = {
   content: string;
@@ -50,10 +52,14 @@ const TootCard: React.FC<TootCardProps> = ({
   reblog,
   statusId,
 }) => {
+  // Always call hooks at the top level
   const [fontsLoaded] = useFonts({
     PTSans_400Regular,
     PTSans_700Bold,
   });
+
+  const theme = useTheme();
+  const htmlStyles = TootCardHtmlStyles(theme);
 
   if (!fontsLoaded) {
     return <ActivityIndicator size="large" color="#0000ff" />;
@@ -104,7 +110,7 @@ const TootCard: React.FC<TootCardProps> = ({
   };
 
   if (!content && !reblog) {
-    return <Text>No Toots Found!</Text>;
+    return <PugText>No Toots Found!</PugText>;
   }
 
   return (
@@ -125,19 +131,6 @@ const TootCard: React.FC<TootCardProps> = ({
     </CardContainer>
   );
 };
-
-// Styles for the HTML content
-const htmlStyles = StyleSheet.create({
-  p: {
-    fontFamily: "PTSans_400Regular",
-    fontSize: 16,
-    color: "#000",
-  },
-  h1: {
-    fontFamily: "PTSans_700Bold",
-    fontSize: 24,
-  },
-});
 
 // General styles
 const styles = StyleSheet.create({

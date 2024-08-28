@@ -1,6 +1,6 @@
-import styled from "styled-components/native";
 import * as Animatable from "react-native-animatable";
-import { Text } from "@ui-kitten/components";
+import styled from "styled-components/native";
+import { PugText } from "../../../components/Text/Text";
 import Colors from "../../../constants/Colors";
 
 export const TouchableContainer = styled.TouchableOpacity`
@@ -24,7 +24,7 @@ export const IconWrapper = styled.View<{ focused: boolean }>`
   padding: 0;
 `;
 
-export const AnimatedCircle = styled(Animatable.View)<{ focused: boolean }>`
+export const AnimatedCircle = styled(Animatable.View) <{ focused: boolean }>`
   width: 28px;
   height: 28px;
   border-radius: 14px;
@@ -33,6 +33,6 @@ export const AnimatedCircle = styled(Animatable.View)<{ focused: boolean }>`
   left: 3px;
 `;
 
-export const Label = styled(Text)<{ focused: boolean }>`
+export const Label = styled(PugText) <{ focused: boolean }>`
   color: ${({ focused }) => (focused ? Colors.primary : Colors.primaryLite)};
 `;
