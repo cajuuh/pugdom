@@ -51,6 +51,7 @@ export interface HomeScreenRef {
 
 export interface StatusActionBarProps {
   statusId: string;
+  onReplyPress: (statusId: string) => void;
 }
 
 interface TouchableOpacityContainerProps {
@@ -66,4 +67,6 @@ export interface ThemeType {
   tabNavigationColor: string;
   tabNavigationGradient: string[];
   notificationsIcon: string;
+  replyDrawerBackgroundColor: string;
+  placeholderTextColor: string;
 }

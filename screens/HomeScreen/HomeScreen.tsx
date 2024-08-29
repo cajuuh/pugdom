@@ -2,6 +2,7 @@ import { useIsFocused } from "@react-navigation/native";
 import React, { forwardRef, useEffect, useRef, useState } from "react";
 import { ActivityIndicator, FlatList, RefreshControl } from "react-native";
 import Banner, { BannerRef } from "../../components/Banner/Banner";
+import ReplyDrawer from "../../components/ReplyDrawer/ReplyDrawer";
 import TootCard from "../../components/TootCard/TootCard";
 import { useAppContext } from "../../context/AppContext";
 import { useFeed } from "../../context/FeedContext";
@@ -15,15 +16,18 @@ const HomeScreen = forwardRef((props, ref) => {
   const { username } = appParams;
   const { feed, fetchFeed, hasNewContent, setHasNewContent } = useFeed();
   const [refreshing, setRefreshing] = useState(false);
+  const [selectedStatusId, setSelectedStatusId] = useState<string | null>(null);
+
   const flatListRef = useRef<FlatList>(null);
   const bannerRef = useRef<BannerRef>(null);
+  const replyDrawerRef = useRef<any>(null);  // Use this ref for ReplyDrawer
 
   useEffect(() => {
     fetchFeed();
   }, []);
 
   useEffect(() => {
-    console.log("Theme updated:", theme); // Debug line to check theme updates
+    console.log("Theme updated:", theme);
   }, [theme]);
 
   const onRefresh = async () => {
@@ -40,6 +44,13 @@ const HomeScreen = forwardRef((props, ref) => {
       bannerRef.current?.showBanner();
     }
   }, [hasNewContent]);
+
+  const openReplyDrawer = (statusId: string) => {
+    setSelectedStatusId(statusId);
+    if (replyDrawerRef.current) {
+      replyDrawerRef.current.openSheet(); // Open the drawer through ReplyDrawer's method
+    }
+  };
 
   return (
     <Container theme={theme}>
@@ -61,6 +72,7 @@ const HomeScreen = forwardRef((props, ref) => {
             reblog={item.reblog}
             statusId={item.id}
             customEmojis={item.emojis}
+            onReplyPress={openReplyDrawer} // Pass the function to TootCard
           />
         )}
         ListFooterComponent={
@@ -71,6 +83,12 @@ const HomeScreen = forwardRef((props, ref) => {
         refreshControl={
           <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
         }
+      />
+
+      {/* The ReplyDrawer component to be used for replying */}
+      <ReplyDrawer
+        ref={replyDrawerRef}
+        statusId={selectedStatusId}
       />
     </Container>
   );

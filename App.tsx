@@ -1,8 +1,11 @@
 import { PTSans_400Regular, PTSans_700Bold, useFonts } from "@expo-google-fonts/pt-sans";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { ActivityIndicator, StatusBar, View } from "react-native";
+import "react-native-gesture-handler";
+import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { ThemeProvider } from "styled-components/native";
 import { PugText, PugTextInput } from "./components/Text/Text";
 import { AppProvider, useAppContext } from "./context/AppContext";
@@ -17,13 +20,54 @@ const Stack = createNativeStackNavigator<RootStackParamList>();
 const AppContent = () => {
   const { theme } = useAppContext();
 
+  const [initialRoute, setInitialRoute] = useState<
+    keyof RootStackParamList | undefined
+  >(undefined);
+  const [loading, setLoading] = useState(true);
+
+  const Stack = createNativeStackNavigator<RootStackParamList>();
+
+  const { setAppParam } = useAppContext();
+
+  useEffect(() => {
+    const checkUserAuthentication = async () => {
+      const userInfo = await AsyncStorage.getItem("userInfo");
+      try {
+        if (userInfo) {
+          const parsedUserInfo = JSON.parse(userInfo);
+          setAppParam("username", parsedUserInfo.username);
+          setAppParam("apiBaseUrl", parsedUserInfo.serverUrl);
+          setAppParam("accessToken", parsedUserInfo.accessToken);
+          setInitialRoute("TabNavigation");
+        } else {
+          setInitialRoute("Server");
+        }
+      } catch (error) {
+        console.error("Error checking user authentication:", error);
+        setInitialRoute("Server");
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    checkUserAuthentication();
+  }, [loading]);
+
+  if (loading) {
+    return (
+      <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
+        <ActivityIndicator size="large" color="#0000ff" />
+      </View>
+    );
+  }
+
   return (
     <ThemeProvider theme={theme}>
       <StatusBar
         barStyle={theme.backgroundColor === "#1C1C1E" ? "light-content" : "dark-content"}
       />
       <NavigationContainer>
-        <Stack.Navigator screenOptions={{ headerShown: false }}>
+        <Stack.Navigator initialRouteName={initialRoute} screenOptions={{ headerShown: false }}>
           <Stack.Screen name="TabNavigation" component={TabNavigation} />
           <Stack.Screen name="Server" component={ServerScreen} />
           <Stack.Screen name="WebView" component={WebViewScreen} />
@@ -54,11 +98,13 @@ const App = () => {
   PugTextInput.defaultProps.style = { fontFamily: "PTSans_400Regular" };
 
   return (
-    <AppProvider>
-      <FeedProvider>
-        <AppContent />
-      </FeedProvider>
-    </AppProvider>
+    <GestureHandlerRootView style={{ flex: 1 }}>
+      <AppProvider>
+        <FeedProvider>
+          <AppContent />
+        </FeedProvider>
+      </AppProvider>
+    </GestureHandlerRootView>
   );
 };
 
