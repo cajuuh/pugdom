@@ -2,7 +2,8 @@ import React from "react";
 import { FlatList, Image, StyleSheet, View } from "react-native";
 import HTMLView from "react-native-htmlview";
 import { PugText } from "../../../../components/Text/Text";
-import { NotificationCardProps } from "../../../../components/interfaces";
+import { NotificationCardProps, ThemeType } from "../../../../components/interfaces";
+import { useTheme } from "../../../../hooks/useTheme";
 import CustomIcon from "../../../../utils/Icons";
 import { getTimeDifference } from "../../../../utils/utils";
 
@@ -16,16 +17,18 @@ const NotificationCard: React.FC<NotificationCardProps> = ({
 }) => {
   const timeDifference = getTimeDifference(date);
 
+  const theme = useTheme(); // Get the current theme
+
   const renderIcon = () => {
     switch (title) {
       case "follow":
-        return <CustomIcon name="UserPlusIcon" size={20} color="#2D9EE0" />;
+        return <CustomIcon name="UserPlusIcon" size={20} color={theme.notificationsIcon} />;
       case "favourite":
-        return <CustomIcon name="HeartIcon" size={20} color="#2D9EE0" />;
+        return <CustomIcon name="HeartIcon" size={20} color={theme.notificationsIcon} />;
       case "reblog":
-        return <CustomIcon name="ArrowPathIcon" size={20} color="#2D9EE0" />;
+        return <CustomIcon name="ArrowPathIcon" size={20} color={theme.notificationsIcon} />;
       case "mention":
-        return <CustomIcon name="AtSymbolIcon" size={20} color="#2D9EE0" />;
+        return <CustomIcon name="AtSymbolIcon" size={20} color={theme.notificationsIcon} />;
       default:
         return null;
     }
@@ -50,13 +53,13 @@ const NotificationCard: React.FC<NotificationCardProps> = ({
   return (
     <View style={styles.container}>
       <View style={styles.iconContainer}>{renderIcon()}</View>
-      <View style={styles.card}>
+      <View style={[styles.card, { backgroundColor: theme.backgroundColor, borderColor: theme.secondaryColor }]}>
         <View style={styles.content}>
           <View style={styles.userContainer}>
             <Image source={{ uri: avatar }} style={styles.avatar} />
             <View style={styles.userNameAndDateContainer}>
-              <PugText style={styles.username}>{username}</PugText>
-              <PugText style={styles.date}>
+              <PugText style={[styles.username, { color: theme.textColor }]}>{username}</PugText>
+              <PugText style={[styles.date, { color: theme.textColorSecondary }]}>
                 {typeof timeDifference === "number"
                   ? `${timeDifference} hours ago`
                   : timeDifference}
@@ -64,7 +67,7 @@ const NotificationCard: React.FC<NotificationCardProps> = ({
             </View>
           </View>
           <View style={styles.body}>
-            <HTMLView value={body} stylesheet={htmlStyles} />
+            <HTMLView value={body} stylesheet={htmlStyles(theme)} />
           </View>
           {renderMediaAttachments()}
         </View>
@@ -87,12 +90,10 @@ const styles = StyleSheet.create({
     marginTop: 10,
   },
   card: {
-    backgroundColor: "#fff",
     padding: 12,
     flex: 1,
     borderRadius: 8,
     borderWidth: 1,
-    borderColor: "#e6e6e6",
     shadowColor: "#000",
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.1,
@@ -120,7 +121,6 @@ const styles = StyleSheet.create({
   },
   date: {
     fontFamily: "PTSans_400Regular",
-    color: "#888",
     marginTop: 3,
     fontSize: 12,
   },
@@ -136,16 +136,22 @@ const styles = StyleSheet.create({
   },
 });
 
-const htmlStyles = StyleSheet.create({
+// Update the htmlStyles to be theme-aware
+const htmlStyles = (theme: ThemeType) => StyleSheet.create({
   p: {
     fontFamily: "PTSans_400Regular",
     fontSize: 16,
-    color: "#000",
+    color: theme.textColor, // Use theme text color
     flexWrap: "wrap",
   },
   h1: {
     fontFamily: "PTSans_700Bold",
     fontSize: 24,
+    color: theme.textColor, // Use theme text color
+  },
+  a: {
+    color: theme.primaryColor,
+    textDecorationLine: 'underline',
   },
 });
 

@@ -8,8 +8,10 @@ import { ActivityIndicator, Image, StyleSheet, View } from "react-native";
 import HTMLView from "react-native-htmlview";
 import { PugText } from "../../components/Text/Text";
 import Colors from "../../constants/Colors";
+import { useTheme } from "../../hooks/useTheme";
 import { FeedItem, MediaAttachment } from "../../screens/types";
 import CustomIcon from "../../utils/Icons";
+import TootCardHtmlStyles from "../../utils/htmlStyles";
 import { formatServerUrl } from "../../utils/utils";
 import StatusActionBar from "../StatusActionBar/StatusActionBar";
 import {
@@ -26,11 +28,9 @@ import {
   SourceUserContainer,
   SourceUsername,
   UserInfo,
-  Username,
   UserNameContainer,
+  Username,
 } from "./styles/TootCard.style";
-import { useTheme } from "../../hooks/useTheme";
-import TootCardHtmlStyles from "../../utils/htmlStyles";
 
 type Emoji = {
   shortcode: string;

@@ -7,7 +7,7 @@ const TootCardHtmlStyles = (theme: ThemeType) => {
     p: {
       fontFamily: "PTSans_400Regular",
       fontSize: 16,
-      color: theme?.textColor, // Use theme's text color
+      color: theme?.textColor,
     },
     h1: {
       fontFamily: "PTSans_700Bold",
@@ -15,8 +15,8 @@ const TootCardHtmlStyles = (theme: ThemeType) => {
       color: theme?.textColor,
     },
     a: {
-      color: theme.primaryColor, // Use theme's primary color for links
-      textDecorationLine: 'underline', // Optional: underline the links
+      color: theme.primaryColor,
+      textDecorationLine: 'underline',
     },
     img: {
       width: 20,
