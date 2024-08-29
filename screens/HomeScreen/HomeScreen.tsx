@@ -1,11 +1,11 @@
 import { useIsFocused } from "@react-navigation/native";
-import { useTheme } from "@ui-kitten/components";
 import React, { forwardRef, useEffect, useRef, useState } from "react";
 import { ActivityIndicator, FlatList, RefreshControl } from "react-native";
 import Banner, { BannerRef } from "../../components/Banner/Banner";
 import TootCard from "../../components/TootCard/TootCard";
 import { useAppContext } from "../../context/AppContext";
 import { useFeed } from "../../context/FeedContext";
+import { useTheme } from "../../hooks/useTheme";
 import { Container, WelcomeText } from "./styles/HomeScreen.style";
 
 const HomeScreen = forwardRef((props, ref) => {
@@ -21,6 +21,10 @@ const HomeScreen = forwardRef((props, ref) => {
   useEffect(() => {
     fetchFeed();
   }, []);
+
+  useEffect(() => {
+    console.log("Theme updated:", theme); // Debug line to check theme updates
+  }, [theme]);
 
   const onRefresh = async () => {
     setRefreshing(true);
@@ -61,10 +65,7 @@ const HomeScreen = forwardRef((props, ref) => {
         )}
         ListFooterComponent={
           refreshing ? (
-            <ActivityIndicator
-              size="large"
-              color={theme["color-primary-500"]}
-            />
+            <ActivityIndicator size="large" color={theme.primaryColor} />
           ) : null
         }
         refreshControl={
