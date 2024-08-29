@@ -7,6 +7,8 @@ import {
 } from "react-native";
 import { PugText } from "../../components/Text/Text";
 import { NotificationItem } from "../../components/interfaces";
+import Colors from "../../constants/Colors";
+import { useTheme } from "../../hooks/useTheme";
 import { getNotifications } from "../../services/notificationService";
 import NotificationCard from "./components/NotificationCard/NotificationCard";
 
@@ -15,6 +17,8 @@ const NotificationsScreen: React.FC = () => {
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
   const [error, setError] = useState<string | null>(null);
+
+  const theme = useTheme();
 
   const fetchNotifications = async () => {
     try {
@@ -41,7 +45,7 @@ const NotificationsScreen: React.FC = () => {
   if (loading) {
     return (
       <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
-        <ActivityIndicator size="large" color="#0000ff" />
+        <ActivityIndicator size="large" color={theme.primaryColor} />
       </View>
     );
   }
@@ -49,13 +53,13 @@ const NotificationsScreen: React.FC = () => {
   if (error) {
     return (
       <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
-        <PugText style={{ color: "red" }}>{error}</PugText>
+        <PugText style={{ color: Colors.red }}>{error}</PugText>
       </View>
     );
   }
 
   return (
-    <View style={{ flex: 1, padding: 16 }}>
+    <View style={{ flex: 1, padding: 16, backgroundColor: theme.backgroundColor }}>
       {notifications ? (
         <FlatList
           data={notifications}
@@ -73,11 +77,11 @@ const NotificationsScreen: React.FC = () => {
             </View>
           )}
           refreshControl={
-            <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+            <RefreshControl refreshing={refreshing} onRefresh={onRefresh} tintColor={theme.primaryColor} />
           }
         />
       ) : (
-        <PugText>No notifications</PugText>
+        <PugText style={{ color: theme.textColor }}>No notifications</PugText>
       )}
     </View>
   );

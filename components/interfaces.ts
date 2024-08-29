@@ -65,4 +65,5 @@ export interface ThemeType {
   reblogPillColor: string;
   tabNavigationColor: string;
   tabNavigationGradient: string[];
+  notificationsIcon: string;
 }

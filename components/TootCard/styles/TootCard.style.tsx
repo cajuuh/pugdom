@@ -97,8 +97,8 @@ export const SourceUserContainer = styled.View<ThemeProps>`
   flex-direction: row;
   align-items: center;
   margin-top: 3px;
-  padding-vertical: 5px;
-  padding-horizontal: 5px;
+  padding-vertical: 7px;
+  padding-horizontal: 12px;
   border-radius: 25px;
   background-color: ${(props) => props.theme.reblogPillColor};
 `;
