@@ -1,8 +1,5 @@
-import {
-  PTSans_400Regular,
-  PTSans_700Bold,
-  useFonts,
-} from "@expo-google-fonts/pt-sans";
+import { PTSans_400Regular, PTSans_700Bold } from "@expo-google-fonts/pt-sans";
+import { useFonts } from "@expo-google-fonts/pt-sans/useFonts";
 import React from "react";
 import { ActivityIndicator, Image, StyleSheet, View } from "react-native";
 import HTMLView from "react-native-htmlview";
@@ -46,6 +43,7 @@ type TootCardProps = {
   reblog?: FeedItem;
   statusId: string;
   customEmojis: Emoji[];
+  onReplyPress: (statusId: string) => void; // New prop to handle reply actions
 };
 
 const TootCard: React.FC<TootCardProps> = ({
@@ -57,8 +55,8 @@ const TootCard: React.FC<TootCardProps> = ({
   reblog,
   statusId = "",
   customEmojis = [],
+  onReplyPress,
 }) => {
-  // Always call hooks at the top level
   const [fontsLoaded] = useFonts({
     PTSans_400Regular,
     PTSans_700Bold,
@@ -72,24 +70,15 @@ const TootCard: React.FC<TootCardProps> = ({
   }
 
   const replaceEmojis = (text: string, emojis: Emoji[]) => {
-    console.log("Available emojis:", emojis);
-    console.log("Custom emojis:", customEmojis);
-
     return text.replace(/:([a-zA-Z0-9_]+):/g, (match, shortcode) => {
-      console.log("Processing shortcode:", shortcode);
-
       const emoji = emojis.find((e) => e.shortcode === shortcode);
-
       if (!emoji) {
         const globalEmoji = customEmojis.find((e) => e.shortcode === shortcode);
         if (globalEmoji) {
-          console.log("Found global emoji:", globalEmoji.url);
           return `<img key=${statusId} src="${globalEmoji.url}" alt="${shortcode}" style="width: 20px; height: 20px;" />`;
         }
         return match;
       }
-
-      console.log("Found post-specific emoji:", emoji.url);
       return `<img key=${statusId} src="${emoji.url}" alt="${shortcode}" style="width: 20px; height: 20px;" />`;
     });
   };
@@ -117,7 +106,6 @@ const TootCard: React.FC<TootCardProps> = ({
   const renderCardContent = () => {
     const relevantEmojis = reblog ? reblog.emojis : customEmojis;
     const processedContent = replaceEmojis(content, relevantEmojis);
-    console.log("Final HTML content:", processedContent);
 
     if (reblog) {
       return (
@@ -129,6 +117,7 @@ const TootCard: React.FC<TootCardProps> = ({
               if (node.name === "img") {
                 return (
                   <Image
+                    key={index}
                     source={{ uri: node.attribs.src }}
                     style={{ width: 20, height: 20 }}
                     resizeMode="contain"
@@ -153,6 +142,7 @@ const TootCard: React.FC<TootCardProps> = ({
               if (node.name === "img") {
                 return (
                   <Image
+                    key={index}
                     source={{ uri: node.attribs.src }}
                     style={{ width: 20, height: 20 }}
                     resizeMode="contain"
@@ -199,30 +189,11 @@ const TootCard: React.FC<TootCardProps> = ({
         </UserNameContainer>
       </UserInfo>
       <ContentContainer>{renderCardContent()}</ContentContainer>
-      <StatusActionBar statusId={statusId} />
+      <StatusActionBar statusId={statusId} onReplyPress={onReplyPress} />
     </CardContainer>
   );
 };
 
-// Styles for the HTML content
-const htmlStyles = StyleSheet.create({
-  p: {
-    fontFamily: "PTSans_400Regular",
-    fontSize: 16,
-    color: "#000",
-  },
-  h1: {
-    fontFamily: "PTSans_700Bold",
-    fontSize: 24,
-  },
-  img: {
-    width: 20,
-    height: 20,
-    resizeMode: "contain",
-  },
-});
-
-// General styles
 const styles = StyleSheet.create({
   username: {
     fontFamily: "PTSans_700Bold",
