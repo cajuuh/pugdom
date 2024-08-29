@@ -1,9 +1,3 @@
-import {
-  BottomTabNavigationEventMap,
-  BottomTabNavigationOptions,
-  BottomTabScreenProps,
-} from "@react-navigation/bottom-tabs";
-import { ParamListBase, TabNavigationState } from "@react-navigation/native";
 import { BottomTabParamList } from "../screens/types";
 import { IconName } from "../utils/Icons";
 
@@ -61,4 +55,15 @@ export interface StatusActionBarProps {
 
 interface TouchableOpacityContainerProps {
   isSelected: boolean;
+}
+
+export interface ThemeType {
+  backgroundColor: string;
+  textColor: string;
+  primaryColor: string;
+  secondaryColor: string;
+  reblogPillColor: string;
+  tabNavigationColor: string;
+  tabNavigationGradient: string[];
+  notificationsIcon: string;
 }

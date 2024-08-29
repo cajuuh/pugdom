@@ -2,16 +2,17 @@ import React, { useEffect, useRef } from "react";
 import { View } from "react-native";
 import * as Animatable from "react-native-animatable";
 import LinearGradient from "react-native-linear-gradient";
-import CustomIcon, { IconName } from "../../../utils/Icons";
 import { TabParams } from "../../../components/interfaces";
+import Colors from "../../../constants/Colors";
+import { useTheme } from "../../../hooks/useTheme";
+import CustomIcon from "../../../utils/Icons";
 import {
-  TouchableContainer,
+  AnimatedCircle,
   AnimatedContainer,
   IconWrapper,
-  AnimatedCircle,
   Label,
+  TouchableContainer,
 } from "./TabButton.style";
-import Colors from "../../../constants/Colors";
 
 const TabButton: React.FC<TabParams> = ({
   item,
@@ -21,6 +22,7 @@ const TabButton: React.FC<TabParams> = ({
   const focused = accessibilityState?.selected ?? false;
   const viewRef = useRef<Animatable.View & View>(null);
   const circleRef = useRef<Animatable.View & View>(null);
+  const theme = useTheme();
 
   const animate1 = {
     from: { transform: [{ scaleX: 0.8 }, { scaleY: 0.8 }] },
@@ -56,7 +58,7 @@ const TabButton: React.FC<TabParams> = ({
     <TouchableContainer onPress={onPress} activeOpacity={1}>
       <AnimatedContainer ref={viewRef} duration={500}>
         <LinearGradient
-          colors={focused ? ["#2F80ED", "#2D9EE0"] : ["#ffffff", "#ffffff"]}
+          colors={focused ? theme.tabNavigationGradient : ["#ffffff", "#ffffff"]}
           start={{ x: 1, y: 0 }}
           end={{ x: 0, y: 1 }}
           style={{ borderRadius: 50 }}
@@ -66,13 +68,13 @@ const TabButton: React.FC<TabParams> = ({
             <CustomIcon
               name={item.icon}
               solid={focused} // Solid icon when focused
-              color={focused ? Colors.white : Colors.primaryLite}
+              color={focused ? Colors.white : theme.primaryColor}
               size={22}
             />
           </IconWrapper>
         </LinearGradient>
       </AnimatedContainer>
-      <Label focused={focused} category="label">
+      <Label focused={focused}>
         {item.label}
       </Label>
     </TouchableContainer>

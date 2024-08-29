@@ -6,10 +6,12 @@ import {
 import React from "react";
 import { ActivityIndicator, Image, StyleSheet, View } from "react-native";
 import HTMLView from "react-native-htmlview";
-import { Text } from "../../components/Text/Text";
+import { PugText } from "../../components/Text/Text";
 import Colors from "../../constants/Colors";
+import { useTheme } from "../../hooks/useTheme";
 import { FeedItem, MediaAttachment } from "../../screens/types";
 import CustomIcon from "../../utils/Icons";
+import TootCardHtmlStyles from "../../utils/htmlStyles";
 import { formatServerUrl } from "../../utils/utils";
 import StatusActionBar from "../StatusActionBar/StatusActionBar";
 import {
@@ -26,8 +28,8 @@ import {
   SourceUserContainer,
   SourceUsername,
   UserInfo,
+  UserNameContainer,
   Username,
-  UserNameContainer
 } from "./styles/TootCard.style";
 
 type Emoji = {
@@ -56,10 +58,14 @@ const TootCard: React.FC<TootCardProps> = ({
   statusId = "",
   customEmojis = [],
 }) => {
+  // Always call hooks at the top level
   const [fontsLoaded] = useFonts({
     PTSans_400Regular,
     PTSans_700Bold,
   });
+
+  const theme = useTheme();
+  const htmlStyles = TootCardHtmlStyles(theme);
 
   if (!fontsLoaded) {
     return <ActivityIndicator size="large" color="#0000ff" />;
@@ -98,11 +104,7 @@ const TootCard: React.FC<TootCardProps> = ({
     >
       <SourceContainer>
         <SourceUserContainer>
-          <CustomIcon
-            name="ArrowPathIcon"
-            color={Colors.green}
-            size={20}
-          />
+          <CustomIcon name="ArrowPathIcon" color={Colors.green} size={20} />
           <SourceProfileImageContainer>
             <SourceProfileImage source={{ uri: profileImageUrl }} />
           </SourceProfileImageContainer>
@@ -124,7 +126,7 @@ const TootCard: React.FC<TootCardProps> = ({
             value={replaceEmojis(reblog.content, relevantEmojis)}
             stylesheet={htmlStyles}
             renderNode={(node, index, siblings, parent, defaultRenderer) => {
-              if (node.name === 'img') {
+              if (node.name === "img") {
                 return (
                   <Image
                     source={{ uri: node.attribs.src }}
@@ -148,7 +150,7 @@ const TootCard: React.FC<TootCardProps> = ({
             value={processedContent}
             stylesheet={htmlStyles}
             renderNode={(node, index, siblings, parent, defaultRenderer) => {
-              if (node.name === 'img') {
+              if (node.name === "img") {
                 return (
                   <Image
                     source={{ uri: node.attribs.src }}
@@ -169,7 +171,7 @@ const TootCard: React.FC<TootCardProps> = ({
   };
 
   if (!content && !reblog) {
-    return <Text>No Toots Found!</Text>;
+    return <PugText>No Toots Found!</PugText>;
   }
 
   return (
@@ -177,10 +179,20 @@ const TootCard: React.FC<TootCardProps> = ({
       {reblog && renderReblogPill()}
       <UserInfo>
         <ProfileImageContainer>
-          {reblog ? <ProfileImage source={{ uri: reblog?.account.avatar }} /> : <ProfileImage source={{ uri: profileImageUrl }} />}
+          {reblog ? (
+            <ProfileImage source={{ uri: reblog?.account.avatar }} />
+          ) : (
+            <ProfileImage source={{ uri: profileImageUrl }} />
+          )}
         </ProfileImageContainer>
         <UserNameContainer>
-          {reblog ? <Username style={styles.username}>{reblog?.account.username}</Username> : <Username style={styles.username}>{username}</Username>}
+          {reblog ? (
+            <Username style={styles.username}>
+              {reblog?.account.username}
+            </Username>
+          ) : (
+            <Username style={styles.username}>{username}</Username>
+          )}
           <Server style={styles.server}>
             {"@" + formatServerUrl(serverUrl)}
           </Server>
@@ -206,7 +218,7 @@ const htmlStyles = StyleSheet.create({
   img: {
     width: 20,
     height: 20,
-    resizeMode: 'contain',
+    resizeMode: "contain",
   },
 });
 
