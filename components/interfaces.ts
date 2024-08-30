@@ -1,3 +1,4 @@
+import { ForwardedRef } from "react";
 import { BottomTabParamList } from "../screens/types";
 import { IconName } from "../utils/Icons";
 
@@ -51,10 +52,15 @@ export interface HomeScreenRef {
 
 export interface StatusActionBarProps {
   statusId: string;
+  onReplyPress: (statusId: string) => void;
 }
 
 interface TouchableOpacityContainerProps {
   isSelected: boolean;
+}
+
+export interface HomeScreenProps {
+  replyDrawerRef?: ForwardedRef<any>;
 }
 
 export interface ThemeType {
@@ -66,4 +72,6 @@ export interface ThemeType {
   tabNavigationColor: string;
   tabNavigationGradient: string[];
   notificationsIcon: string;
+  replyDrawerBackgroundColor: string;
+  placeholderTextColor: string;
 }
