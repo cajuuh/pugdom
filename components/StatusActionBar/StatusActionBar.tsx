@@ -1,10 +1,11 @@
 import React, { useState } from "react";
-import { View, TouchableOpacity, StyleSheet } from "react-native";
-import CustomIcon from "../../utils/Icons";
+import { StyleSheet, TouchableOpacity, View } from "react-native";
 import { useMastodonAPI } from "../../hooks/useMastodonAPI";
-import { StatusActionBarProps } from "../../components/interfaces";
+import CustomIcon from "../../utils/Icons";
+import { StatusActionBarProps } from "../interfaces";
 
-const StatusActionBar: React.FC<StatusActionBarProps> = ({ statusId }) => {
+
+const StatusActionBar: React.FC<StatusActionBarProps> = ({ statusId, onReplyPress }) => {
   const [isFavorited, setIsFavorited] = useState(false);
   const [isReblogged, setIsReblogged] = useState(false);
   const [isBookmarked, setIsBookmarked] = useState(false);
@@ -30,7 +31,7 @@ const StatusActionBar: React.FC<StatusActionBarProps> = ({ statusId }) => {
     <View>
       <View style={styles.container}>
         <View style={styles.actions}>
-          <TouchableOpacity onPress={handleFavorite} style={styles.icon}>
+          <TouchableOpacity onPress={() => onReplyPress(statusId)} style={styles.icon}>
             <CustomIcon
               name="ChatBubbleOvalLeftIcon"
               solid={isFavorited}
@@ -48,7 +49,7 @@ const StatusActionBar: React.FC<StatusActionBarProps> = ({ statusId }) => {
           </TouchableOpacity>
           <TouchableOpacity onPress={handleReblog} style={styles.icon}>
             <CustomIcon
-              name={isReblogged ? "ArrowPathIcon" : "ArrowPathIcon"}
+              name="ArrowPathIcon"
               solid={isReblogged}
               size={22}
               color={isReblogged ? "#1DA1F2" : "#aaa"}
@@ -56,7 +57,7 @@ const StatusActionBar: React.FC<StatusActionBarProps> = ({ statusId }) => {
           </TouchableOpacity>
           <TouchableOpacity onPress={handleBookmark}>
             <CustomIcon
-              name={isBookmarked ? "BookmarkIcon" : "BookmarkIcon"}
+              name="BookmarkIcon"
               solid={isBookmarked}
               size={22}
               color={isBookmarked ? "#1DA1F2" : "#aaa"}

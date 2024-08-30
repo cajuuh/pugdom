@@ -74,4 +74,5 @@ export type RootStackParamList = {
     screen: keyof BottomTabParamList;
     params?: { username: string };
   };
+  ReplyScreen: { statusId: string | null };
 };
