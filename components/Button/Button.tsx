@@ -13,7 +13,7 @@ const PugButton: React.FC<PugButtonProps> = ({ title, style, ...props }) => {
 
   return (
     <TouchableOpacity style={[styles.button, { backgroundColor: theme.secondaryColor }, style]} {...props}>
-      <PugText style={[styles.text, { color: theme.primaryColor }]}>{title}</PugText>
+      <PugText style={[styles.text, { color: theme.buttonTextColor }]}>{title}</PugText>
     </TouchableOpacity>
   );
 };

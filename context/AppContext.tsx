@@ -4,6 +4,7 @@ import { useColorScheme } from "react-native";
 import { darkTheme, lightTheme } from "../themes"; // Adjust the path as necessary
 
 interface AppParams {
+  avatar?: string; // Avatar URL
   username?: string;
   [key: string]: any;
 }
@@ -26,10 +27,11 @@ export const AppProvider = ({ children }: { children: ReactNode }) => {
   const [appParams, setAppParams] = useState<AppParams>({});
   const [theme, setTheme] = useState<any>(lightTheme);
   const [isTabVisible, setIsTabVisible] = useState(true); // Initialize tab visibility state
-  const [replyStatusId, setReplyStatusId] = useState<string>('');
+  const [replyStatusId, setReplyStatusId] = useState<string>("");
 
   useEffect(() => {
-    const loadTheme = async () => {
+    const loadInitialData = async () => {
+      // Load theme from AsyncStorage
       const storedTheme = await AsyncStorage.getItem("appTheme");
       if (storedTheme === "dark") {
         setTheme(darkTheme);
@@ -39,8 +41,14 @@ export const AppProvider = ({ children }: { children: ReactNode }) => {
         const systemTheme = useColorScheme();
         setTheme(systemTheme === "dark" ? darkTheme : lightTheme);
       }
+
+      // Load user info from AsyncStorage
+      const storedUserInfo = await AsyncStorage.getItem("userInfo");
+      if (storedUserInfo) {
+        setAppParams(JSON.parse(storedUserInfo));
+      }
     };
-    loadTheme();
+    loadInitialData();
   }, []);
 
   const setAppParam = (key: string, value: any) => {
@@ -49,7 +57,7 @@ export const AppProvider = ({ children }: { children: ReactNode }) => {
 
   const setReplyStatus = (id: string) => {
     setReplyStatusId(id);
-  }
+  };
 
   const updateTheme = async (newTheme: string) => {
     await AsyncStorage.setItem("appTheme", newTheme);
@@ -70,7 +78,7 @@ export const AppProvider = ({ children }: { children: ReactNode }) => {
         showTabNavigation, // Expose the function to show TabNavigation
         hideTabNavigation, // Expose the function to hide TabNavigation
         replyStatusId,
-        setReplyStatus
+        setReplyStatus,
       }}
     >
       {children}
