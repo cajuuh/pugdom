@@ -88,15 +88,25 @@ const ServerScreen: React.FC<Props> = ({ navigation }) => {
           console.log("Access token:", accessToken);
           const userInfo = await getUserInfo(serverUrl, accessToken);
           console.log("User Info:", userInfo);
+
           if (userInfo && userInfo.username) {
             const fullUserInfo = { ...userInfo, accessToken, serverUrl };
+
+            // Save to AsyncStorage
             await AsyncStorage.setItem(
               "userInfo",
               JSON.stringify(fullUserInfo)
             );
+
+            // Update AppContext
             setAppParam("username", userInfo.username);
+            setAppParam("avatar", userInfo.avatar);
             setAppParam("apiBaseUrl", serverUrl);
             setAppParam("accessToken", accessToken);
+
+            console.log("AppContext Updated with Avatar:", userInfo.avatar);
+
+            // Navigate to the home screen
             navigation.navigate("TabNavigation", {
               screen: "Home",
               params: { username: userInfo.username },
