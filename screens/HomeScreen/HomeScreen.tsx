@@ -1,26 +1,29 @@
-import { useIsFocused } from "@react-navigation/native";
+import { useIsFocused, useNavigation } from "@react-navigation/native";
 import React, { forwardRef, useEffect, useRef, useState } from "react";
 import { ActivityIndicator, FlatList, RefreshControl } from "react-native";
 import Banner, { BannerRef } from "../../components/Banner/Banner";
-import ReplyDrawer from "../../components/ReplyDrawer/ReplyDrawer";
 import TootCard from "../../components/TootCard/TootCard";
+import { HomeScreenProps } from "../../components/interfaces";
 import { useAppContext } from "../../context/AppContext";
 import { useFeed } from "../../context/FeedContext";
 import { useTheme } from "../../hooks/useTheme";
 import { Container, WelcomeText } from "./styles/HomeScreen.style";
 
-const HomeScreen = forwardRef((props, ref) => {
+const HomeScreen = forwardRef<HomeScreenProps, any>(({ replyDrawerRef, ...props }, ref) => {
   const isFocused = useIsFocused();
   const theme = useTheme();
-  const { appParams } = useAppContext();
+  const { appParams, setReplyStatus, showTabNavigation } = useAppContext();
   const { username } = appParams;
   const { feed, fetchFeed, hasNewContent, setHasNewContent } = useFeed();
   const [refreshing, setRefreshing] = useState(false);
   const [selectedStatusId, setSelectedStatusId] = useState<string | null>(null);
 
+  const navigation = useNavigation();
+
   const flatListRef = useRef<FlatList>(null);
   const bannerRef = useRef<BannerRef>(null);
-  const replyDrawerRef = useRef<any>(null);  // Use this ref for ReplyDrawer
+
+  const appContext = useAppContext();
 
   useEffect(() => {
     fetchFeed();
@@ -46,10 +49,8 @@ const HomeScreen = forwardRef((props, ref) => {
   }, [hasNewContent]);
 
   const openReplyDrawer = (statusId: string) => {
-    setSelectedStatusId(statusId);
-    if (replyDrawerRef.current) {
-      replyDrawerRef.current.openSheet(); // Open the drawer through ReplyDrawer's method
-    }
+    setReplyStatus(statusId);
+    replyDrawerRef.current?.openSheet();
   };
 
   return (
@@ -72,7 +73,7 @@ const HomeScreen = forwardRef((props, ref) => {
             reblog={item.reblog}
             statusId={item.id}
             customEmojis={item.emojis}
-            onReplyPress={openReplyDrawer} // Pass the function to TootCard
+            onReplyPress={() => openReplyDrawer(item.id)}
           />
         )}
         ListFooterComponent={
@@ -83,12 +84,6 @@ const HomeScreen = forwardRef((props, ref) => {
         refreshControl={
           <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
         }
-      />
-
-      {/* The ReplyDrawer component to be used for replying */}
-      <ReplyDrawer
-        ref={replyDrawerRef}
-        statusId={selectedStatusId}
       />
     </Container>
   );

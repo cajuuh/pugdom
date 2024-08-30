@@ -43,7 +43,7 @@ type TootCardProps = {
   reblog?: FeedItem;
   statusId: string;
   customEmojis: Emoji[];
-  onReplyPress: (statusId: string) => void; // New prop to handle reply actions
+  onReplyPress: () => void; // New prop to handle reply actions
 };
 
 const TootCard: React.FC<TootCardProps> = ({
