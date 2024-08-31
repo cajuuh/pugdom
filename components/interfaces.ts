@@ -76,4 +76,5 @@ export interface ThemeType {
   replyDrawerBackgroundColor: string;
   placeholderTextColor: string;
   drawerHandleColor: string;
+  activeButtonColor: string;
 }
