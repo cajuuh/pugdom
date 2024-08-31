@@ -19,9 +19,10 @@ const CustomHandler = ({
       style={[
         styles.handleContainer,
         {
+          borderBottomColor: theme.placeholderTextColor,
           backgroundColor: theme.replyDrawerBackgroundColor,
-          borderTopLeftRadius: 25,
-          borderTopRightRadius: 25,
+          borderTopLeftRadius: 30,
+          borderTopRightRadius: 30,
         },
       ]}
     >
@@ -40,7 +41,9 @@ const CustomHandler = ({
 
       {/* Compose Text */}
       <View style={styles.composeContainer}>
-        <PugText style={styles.title}>Compose</PugText>
+        <PugText style={[styles.title, { color: theme.textColor }]}>
+          Compose
+        </PugText>
       </View>
 
       {/* Post Button */}
@@ -48,7 +51,10 @@ const CustomHandler = ({
         <PugButton
           title="Post"
           onPress={handlePost}
-          style={[styles.postButton, { backgroundColor: theme.primaryColor }]}
+          style={[
+            styles.postButton,
+            { backgroundColor: theme.notificationsIcon },
+          ]}
         />
       </View>
     </View>
@@ -63,7 +69,6 @@ const styles = StyleSheet.create({
     paddingVertical: "1.5%",
     paddingHorizontal: "4.5%",
     borderBottomWidth: 1,
-    borderBottomColor: "#ccc",
   },
   handleIcon: {
     position: "absolute",
@@ -80,15 +85,11 @@ const styles = StyleSheet.create({
   postButtonContainer: {
     left: "25%",
   },
-  closeButton: {
-    fontSize: 18,
-    color: "#000", // Or theme.textColor
-  },
   title: {
     fontSize: 18,
   },
   postButton: {
-    backgroundColor: "#1DA1F2", // Or theme.primaryColor
+    backgroundColor: "#1DA1F2",
   },
 });
 

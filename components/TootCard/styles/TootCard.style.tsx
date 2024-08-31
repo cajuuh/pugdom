@@ -12,7 +12,6 @@ type ThemeProps = {
 
 export const CardContainer = styled.View<ThemeProps>`
   padding: 16px;
-  margin: 8px 0;
   border-radius: 8px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   align-items: flex-start;
@@ -50,7 +49,7 @@ export const UserNameContainer = styled.View`
   align-items: flex-start;
 `;
 
-export const Username = styled(PugText) <ThemeProps>`
+export const Username = styled(PugText)<ThemeProps>`
   font-size: 16px;
   font-weight: bold;
   margin-right: 8px;
