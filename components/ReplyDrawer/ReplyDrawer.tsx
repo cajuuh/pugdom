@@ -17,6 +17,7 @@ import {
 import { useAppContext } from "../../context/AppContext";
 import { useTheme } from "../../hooks/useTheme";
 import CustomHandler from "./components/CustomHandler";
+import ActionBar from "./components/ActionBar";
 
 interface ReplyDrawerProps {
   statusId: string | null;
@@ -35,7 +36,7 @@ const ReplyDrawer = forwardRef<any, ReplyDrawerProps>(({ statusId }, ref) => {
     "What are you doing? ✨",
   ];
 
-  const [placeholderMessage, setPlaceholderMessage] = useState(
+  const [placeholderMessage] = useState(
     placeholderMessages[Math.floor(Math.random() * placeholderMessages.length)]
   );
 
@@ -48,15 +49,14 @@ const ReplyDrawer = forwardRef<any, ReplyDrawerProps>(({ statusId }, ref) => {
     },
     closeSheet() {
       Keyboard.dismiss();
-      setTimeout(() => {
-        sheetRef.current?.close();
-      }, 100);
+      sheetRef.current?.close();
     },
   }));
 
   const handleSheetChanges = useCallback(
     (index: number) => {
       if (index === -1) {
+        Keyboard.dismiss();
         showTabNavigation();
       } else if (index === 0) {
         hideTabNavigation();
@@ -67,17 +67,13 @@ const ReplyDrawer = forwardRef<any, ReplyDrawerProps>(({ statusId }, ref) => {
 
   const handleClose = () => {
     Keyboard.dismiss();
-    setTimeout(() => {
-      sheetRef.current?.close();
-    }, 100);
+    sheetRef.current?.close();
   };
 
   const handlePost = () => {
     console.log("Post submitted");
     Keyboard.dismiss();
-    setTimeout(() => {
-      sheetRef.current?.close();
-    }, 100);
+    sheetRef.current?.close();
   };
 
   return (
@@ -111,6 +107,7 @@ const ReplyDrawer = forwardRef<any, ReplyDrawerProps>(({ statusId }, ref) => {
           />
         </View>
       </View>
+      <ActionBar />
     </BottomSheet>
   );
 });
