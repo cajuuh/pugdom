@@ -61,7 +61,7 @@ const TabButton: React.FC<TabParams> = ({
           <AnimatedCircle focused={focused} ref={circleRef} />
           <CustomIcon
             name={item.icon}
-            solid={focused} // Solid icon when focused
+            solid={focused}
             color={focused ? Colors.white : theme.primaryColor}
             size={22}
           />

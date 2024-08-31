@@ -7,6 +7,8 @@ import { useTheme } from "../../../hooks/useTheme";
 const ActionBar = () => {
   const theme = useTheme();
 
+  // TODO: Add functionalities
+
   return (
     <View
       style={[
