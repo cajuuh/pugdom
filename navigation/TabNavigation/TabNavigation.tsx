@@ -23,31 +23,31 @@ const TabArr: Array<{
   icon: IconName;
   component: React.ComponentType<any>;
 }> = [
-    {
-      route: "Home",
-      label: "Home",
-      icon: "HomeIcon",
-      component: HomeScreen,
-    },
-    {
-      route: "Search",
-      label: "Search",
-      icon: "MagnifyingGlassIcon",
-      component: SearchScreen,
-    },
-    {
-      route: "Notifications",
-      label: "Notifications",
-      icon: "BellIcon",
-      component: NotificationsScreen,
-    },
-    {
-      route: "Profile",
-      label: "Profile",
-      icon: "UserCircleIcon",
-      component: ProfileScreen,
-    },
-  ];
+  {
+    route: "Home",
+    label: "Home",
+    icon: "HomeIcon",
+    component: HomeScreen,
+  },
+  {
+    route: "Search",
+    label: "Search",
+    icon: "MagnifyingGlassIcon",
+    component: SearchScreen,
+  },
+  {
+    route: "Notifications",
+    label: "Notifications",
+    icon: "BellIcon",
+    component: NotificationsScreen,
+  },
+  {
+    route: "Profile",
+    label: "Profile",
+    icon: "UserCircleIcon",
+    component: ProfileScreen,
+  },
+];
 
 const Tab = createBottomTabNavigator<BottomTabParamList>();
 
@@ -66,25 +66,18 @@ const TabNavigation: React.FC = () => {
 
   const theme = useTheme();
 
-
   return (
     <>
-      <SafeAreaView style={{ flex: 1, zIndex: 1000 }}>
+      <SafeAreaView
+        style={{
+          flex: 1,
+          zIndex: 1000,
+          backgroundColor: theme.backgroundColor,
+        }}
+      >
         <Tab.Navigator
           screenOptions={{
             headerShown: false,
-            tabBarStyle: {
-              height: 55,
-              position: "relative",
-              marginHorizontal: 16,
-              bottom: 15,
-              paddingBottom: 0,
-              borderTopWidth: 0,
-              borderRadius: 20,
-              backgroundColor: theme.tabNavigationColor,
-              justifyContent: "center",
-              alignItems: "center",
-            },
           }}
         >
           {TabArr.map((item, index) => (
@@ -93,28 +86,44 @@ const TabNavigation: React.FC = () => {
               name={item.route}
               component={
                 item.route === "Home"
-                  ? (props: any) => <HomeScreen ref={homeScreenRef} replyDrawerRef={replyDrawerRef} {...props} />
+                  ? (props: any) => (
+                      <HomeScreen
+                        ref={homeScreenRef}
+                        replyDrawerRef={replyDrawerRef}
+                        {...props}
+                      />
+                    )
                   : item.component
               }
               options={{
-                tabBarStyle: false,
+                tabBarStyle: {
+                  height: 60,
+                  position: "relative",
+                  marginHorizontal: 16,
+                  bottom: 2,
+                  paddingBottom: 0,
+                  borderTopWidth: 0,
+                  borderRadius: 20,
+                  backgroundColor: theme.tabNavigationColor,
+                  justifyContent: "center",
+                  alignItems: "center",
+                },
                 tabBarShowLabel: false,
                 tabBarButton: (props) => (
                   <TabButton
                     {...props}
                     item={item}
                     onPress={() => handleNavigation(item.route)}
-                    accessibilityState={props.accessibilityState as { selected: boolean }}
+                    accessibilityState={
+                      props.accessibilityState as { selected: boolean }
+                    }
                   />
                 ),
               }}
             />
           ))}
         </Tab.Navigator>
-        <ReplyDrawer
-          ref={replyDrawerRef}
-          statusId={replyStatusId}
-        />
+        <ReplyDrawer ref={replyDrawerRef} statusId={replyStatusId} />
       </SafeAreaView>
     </>
   );

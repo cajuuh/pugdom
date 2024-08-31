@@ -88,7 +88,7 @@ const TootCard: React.FC<TootCardProps> = ({
       style={{
         flexDirection: "row",
         alignItems: "center",
-        marginBottom: 15,
+        marginBottom: 10,
       }}
     >
       <SourceContainer>
