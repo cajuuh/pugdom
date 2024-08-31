@@ -4,6 +4,7 @@ import React, {
   useCallback,
   useImperativeHandle,
   useRef,
+  useState,
 } from "react";
 import {
   Dimensions,
@@ -27,6 +28,16 @@ const ReplyDrawer = forwardRef<any, ReplyDrawerProps>(({ statusId }, ref) => {
   const theme = useTheme();
   const { height: windowHeight } = Dimensions.get("window");
   const { showTabNavigation, hideTabNavigation, appParams } = useAppContext();
+
+  const placeholderMessages = [
+    "Ready to Toot? 🐘",
+    "What's on your mind? ✍️",
+    "What are you doing? ✨",
+  ];
+
+  const [placeholderMessage, setPlaceholderMessage] = useState(
+    placeholderMessages[Math.floor(Math.random() * placeholderMessages.length)]
+  );
 
   useImperativeHandle(ref, () => ({
     openSheet() {
@@ -72,8 +83,8 @@ const ReplyDrawer = forwardRef<any, ReplyDrawerProps>(({ statusId }, ref) => {
   return (
     <BottomSheet
       ref={sheetRef}
-      index={1}
-      snapPoints={[windowHeight * 0.5, windowHeight * 0.85]}
+      index={-1}
+      snapPoints={[windowHeight * 0.5, windowHeight * 0.95]}
       enablePanDownToClose={true}
       onChange={handleSheetChanges}
       backgroundStyle={{ backgroundColor: theme.replyDrawerBackgroundColor }}
@@ -94,7 +105,7 @@ const ReplyDrawer = forwardRef<any, ReplyDrawerProps>(({ statusId }, ref) => {
           />
           <TextInput
             ref={inputRef}
-            placeholder="Your thoughts?"
+            placeholder={placeholderMessage}
             placeholderTextColor={theme.placeholderTextColor}
             style={[styles.input, { color: theme.textColor }]}
           />
