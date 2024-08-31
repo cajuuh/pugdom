@@ -8,17 +8,14 @@ import React, {
 import {
   Dimensions,
   Image,
+  Keyboard,
   StyleSheet,
   TextInput,
   View,
-  TouchableOpacity,
-  Keyboard,
 } from "react-native";
 import { useAppContext } from "../../context/AppContext";
 import { useTheme } from "../../hooks/useTheme";
-import PugButton from "../Button/Button";
-import { PugText } from "../Text/Text"; // Assuming PugText is a styled text component
-import CustomHandler from "./components/CustomHandler"; // Assuming CustomHandler is the custom handle component
+import CustomHandler from "./components/CustomHandler";
 
 interface ReplyDrawerProps {
   statusId: string | null;
@@ -35,14 +32,14 @@ const ReplyDrawer = forwardRef<any, ReplyDrawerProps>(({ statusId }, ref) => {
     openSheet() {
       sheetRef.current?.expand();
       setTimeout(() => {
-        inputRef.current?.focus(); // Open keyboard when the drawer opens
-      }, 300); // Slight delay to ensure the drawer is fully open
+        inputRef.current?.focus();
+      }, 300);
     },
     closeSheet() {
-      Keyboard.dismiss(); // Dismiss the keyboard
+      Keyboard.dismiss();
       setTimeout(() => {
         sheetRef.current?.close();
-      }, 100); // Delay closing the drawer slightly after the keyboard dismisses
+      }, 100);
     },
   }));
 
@@ -58,25 +55,25 @@ const ReplyDrawer = forwardRef<any, ReplyDrawerProps>(({ statusId }, ref) => {
   );
 
   const handleClose = () => {
-    Keyboard.dismiss(); // Dismiss the keyboard
+    Keyboard.dismiss();
     setTimeout(() => {
-      sheetRef.current?.close(); // Close the drawer after the keyboard is dismissed
-    }, 100); // Delay to ensure the keyboard is fully dismissed before closing the drawer
+      sheetRef.current?.close();
+    }, 100);
   };
 
   const handlePost = () => {
     console.log("Post submitted");
-    Keyboard.dismiss(); // Dismiss the keyboard
+    Keyboard.dismiss();
     setTimeout(() => {
-      sheetRef.current?.close(); // Close the drawer after the keyboard is dismissed
-    }, 100); // Delay to ensure the keyboard is fully dismissed before closing the drawer
+      sheetRef.current?.close();
+    }, 100);
   };
 
   return (
     <BottomSheet
       ref={sheetRef}
-      index={-1}
-      snapPoints={[windowHeight * 0.5, windowHeight * 0.95]}
+      index={1}
+      snapPoints={[windowHeight * 0.5, windowHeight * 0.85]}
       enablePanDownToClose={true}
       onChange={handleSheetChanges}
       backgroundStyle={{ backgroundColor: theme.replyDrawerBackgroundColor }}
@@ -109,6 +106,7 @@ const ReplyDrawer = forwardRef<any, ReplyDrawerProps>(({ statusId }, ref) => {
 
 const styles = StyleSheet.create({
   drawerContent: {
+    paddingTop: 10,
     paddingHorizontal: 16,
     flex: 1,
   },
