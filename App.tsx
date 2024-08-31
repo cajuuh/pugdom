@@ -1,11 +1,15 @@
-import { PTSans_400Regular, PTSans_700Bold, useFonts } from "@expo-google-fonts/pt-sans";
+import {
+  PTSans_400Regular,
+  PTSans_700Bold,
+  useFonts,
+} from "@expo-google-fonts/pt-sans";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import React, { useEffect, useState } from "react";
 import { ActivityIndicator, StatusBar, View } from "react-native";
 import "react-native-gesture-handler";
-import { GestureHandlerRootView } from 'react-native-gesture-handler';
+import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { ThemeProvider } from "styled-components/native";
 import { PugText, PugTextInput } from "./components/Text/Text";
 import { AppProvider, useAppContext } from "./context/AppContext";
@@ -15,8 +19,6 @@ import ReplyScreen from "./screens/ReplyScreen/ReplyScreen";
 import ServerScreen from "./screens/ServerScreen/ServerScreen";
 import WebViewScreen from "./screens/WebViewScreen/WebViewScreen";
 import { RootStackParamList } from "./screens/types";
-
-const Stack = createNativeStackNavigator<RootStackParamList>();
 
 const AppContent = () => {
   const { theme } = useAppContext();
@@ -37,6 +39,7 @@ const AppContent = () => {
         if (userInfo) {
           const parsedUserInfo = JSON.parse(userInfo);
           setAppParam("username", parsedUserInfo.username);
+          setAppParam("avatar", parsedUserInfo.avatar);
           setAppParam("apiBaseUrl", parsedUserInfo.serverUrl);
           setAppParam("accessToken", parsedUserInfo.accessToken);
           setInitialRoute("TabNavigation");
@@ -65,10 +68,15 @@ const AppContent = () => {
   return (
     <ThemeProvider theme={theme}>
       <StatusBar
-        barStyle={theme.backgroundColor === "#1C1C1E" ? "light-content" : "dark-content"}
+        barStyle={
+          theme.backgroundColor === "#1C1C1E" ? "light-content" : "dark-content"
+        }
       />
       <NavigationContainer>
-        <Stack.Navigator initialRouteName={initialRoute} screenOptions={{ headerShown: false }}>
+        <Stack.Navigator
+          initialRouteName={initialRoute}
+          screenOptions={{ headerShown: false }}
+        >
           <Stack.Screen name="TabNavigation" component={TabNavigation} />
           <Stack.Screen name="Server" component={ServerScreen} />
           <Stack.Screen name="WebView" component={WebViewScreen} />
@@ -76,9 +84,9 @@ const AppContent = () => {
             name="ReplyScreen"
             component={ReplyScreen}
             options={{
-              presentation: 'modal',
+              presentation: "modal",
               gestureEnabled: true,
-              animationTypeForReplace: 'push'
+              animationTypeForReplace: "push",
             }}
           />
         </Stack.Navigator>

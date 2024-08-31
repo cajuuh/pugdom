@@ -66,6 +66,7 @@ export interface HomeScreenProps {
 export interface ThemeType {
   backgroundColor: string;
   textColor: string;
+  buttonTextColor: string;
   primaryColor: string;
   secondaryColor: string;
   reblogPillColor: string;
@@ -74,4 +75,5 @@ export interface ThemeType {
   notificationsIcon: string;
   replyDrawerBackgroundColor: string;
   placeholderTextColor: string;
+  drawerHandleColor: string;
 }
