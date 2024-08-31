@@ -57,26 +57,17 @@ const TabButton: React.FC<TabParams> = ({
   return (
     <TouchableContainer onPress={onPress} activeOpacity={1}>
       <AnimatedContainer ref={viewRef} duration={500}>
-        <LinearGradient
-          colors={focused ? theme.tabNavigationGradient : ["#ffffff", "#ffffff"]}
-          start={{ x: 1, y: 0 }}
-          end={{ x: 0, y: 1 }}
-          style={{ borderRadius: 50 }}
-        >
-          <IconWrapper focused={focused}>
-            <AnimatedCircle focused={focused} ref={circleRef} />
-            <CustomIcon
-              name={item.icon}
-              solid={focused} // Solid icon when focused
-              color={focused ? Colors.white : theme.primaryColor}
-              size={22}
-            />
-          </IconWrapper>
-        </LinearGradient>
+        <IconWrapper focused={focused}>
+          <AnimatedCircle focused={focused} ref={circleRef} />
+          <CustomIcon
+            name={item.icon}
+            solid={focused} // Solid icon when focused
+            color={focused ? Colors.white : theme.primaryColor}
+            size={22}
+          />
+        </IconWrapper>
       </AnimatedContainer>
-      <Label focused={focused}>
-        {item.label}
-      </Label>
+      <Label focused={focused}>{item.label}</Label>
     </TouchableContainer>
   );
 };
