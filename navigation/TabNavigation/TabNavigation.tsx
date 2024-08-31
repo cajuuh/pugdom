@@ -3,7 +3,7 @@ import {
   createBottomTabNavigator,
 } from "@react-navigation/bottom-tabs";
 import { useNavigation } from "@react-navigation/native";
-import React, { useEffect, useRef, useState } from "react";
+import React, { useRef, useState } from "react";
 import { SafeAreaView } from "react-native";
 import ReplyDrawer from "../../components/ReplyDrawer/ReplyDrawer";
 import { HomeScreenRef } from "../../components/interfaces";
@@ -58,10 +58,6 @@ const TabNavigation: React.FC = () => {
   const homeScreenRef = useRef<HomeScreenRef>(null);
   const { isTabVisible, replyStatusId } = useAppContext();
   const replyDrawerRef = useRef<any>(null);
-
-  useEffect(() => {
-    console.log('is tab visible now? ', isTabVisible);
-  }, [isTabVisible]);
 
   const handleNavigation = async (route: keyof BottomTabParamList) => {
     setCurrentRoute(route);
