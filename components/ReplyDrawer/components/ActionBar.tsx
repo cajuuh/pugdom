@@ -1,6 +1,6 @@
 import React from "react";
 import { View, TouchableOpacity, StyleSheet, Alert } from "react-native";
-// import * as ImagePicker from "expo-image-picker";
+import * as ImagePicker from "expo-image-picker";
 import CustomIcon from "../../../utils/Icons";
 import { PugText } from "../../Text/Text";
 import { useTheme } from "../../../hooks/useTheme";
@@ -10,27 +10,30 @@ const ActionBar: React.FC<ActionBarProps> = ({ onImageSelect }) => {
   const theme = useTheme();
 
   // TODO: Add functionalities
-  //   const handleImagePicker = async () => {
-  //     const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
-  //     if (status !== "granted") {
-  //       Alert.alert(
-  //         "Permission denied",
-  //         "We need access to your photos to add an image."
-  //       );
-  //       return;
-  //     }
+  const handleImagePicker = async () => {
+    const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
+    if (status !== "granted") {
+      Alert.alert(
+        "Permission denied",
+        "We need access to your photos to add an image."
+      );
+      return;
+    }
 
-  //     const result = await ImagePicker.launchImageLibraryAsync({
-  //       mediaTypes: ImagePicker.MediaTypeOptions.Images,
-  //       allowsEditing: true,
-  //       aspect: [4, 3],
-  //       quality: 1,
-  //     });
+    const result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.Images,
+      allowsMultipleSelection: true, // Enable multiple selection
+      allowsEditing: false, // Disabling editing when multiple images are selected
+      quality: 1,
+    });
 
-  //     if (!result.canceled) {
-  //       onImageSelect(result.assets[0].uri);
-  //     }
-  //   };
+    if (!result.canceled) {
+      // Handle multiple selected images
+      result.assets.forEach((asset) => {
+        onImageSelect(asset.uri);
+      });
+    }
+  };
 
   return (
     <View
@@ -39,10 +42,7 @@ const ActionBar: React.FC<ActionBarProps> = ({ onImageSelect }) => {
         { backgroundColor: theme.backgroundColor },
       ]}
     >
-      <TouchableOpacity
-        style={styles.actionButton}
-        onPress={() => console.log("Image picker")}
-      >
+      <TouchableOpacity style={styles.actionButton} onPress={handleImagePicker}>
         <CustomIcon name="PhotoIcon" size={24} color={theme.textColor} />
       </TouchableOpacity>
       <TouchableOpacity

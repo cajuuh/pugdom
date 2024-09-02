@@ -14,15 +14,15 @@ import {
   TextInput,
   View,
   ScrollView,
+  TouchableOpacity,
+  Alert,
 } from "react-native";
 import { useAppContext } from "../../context/AppContext";
 import { useTheme } from "../../hooks/useTheme";
 import CustomHandler from "./components/CustomHandler";
 import ActionBar from "./components/ActionBar";
-
-interface ReplyDrawerProps {
-  statusId: string | null;
-}
+import CustomIcon from "../../utils/Icons"; // Assuming CustomIcon wraps Heroicons
+import { ReplyDrawerProps, SelectedImage } from "../interfaces";
 
 const ReplyDrawer = forwardRef<any, ReplyDrawerProps>(({ statusId }, ref) => {
   const sheetRef = useRef<BottomSheet>(null);
@@ -41,21 +41,52 @@ const ReplyDrawer = forwardRef<any, ReplyDrawerProps>(({ statusId }, ref) => {
     placeholderMessages[Math.floor(Math.random() * placeholderMessages.length)]
   );
 
-  const [selectedImageUri, setSelectedImageUri] = useState<string | null>(null);
+  const [selectedImages, setSelectedImages] = useState<SelectedImage[]>([]);
 
   const handleImageSelect = (uri: string) => {
-    setSelectedImageUri(uri);
+    setSelectedImages((prevImages) => [...prevImages, { uri, altText: "" }]);
+  };
+
+  const handleRemoveImage = (index: number) => {
+    setSelectedImages((prevImages) => prevImages.filter((_, i) => i !== index));
+  };
+
+  const handleAddAltText = (index: number) => {
+    Alert.prompt(
+      "Add Alt Text",
+      "Enter alt text for the image:",
+      [
+        {
+          text: "Cancel",
+          style: "cancel",
+        },
+        {
+          text: "OK",
+          onPress: (altText = "") => {
+            setSelectedImages((prevImages) =>
+              prevImages.map((image, i) =>
+                i === index ? { ...image, altText: altText || "" } : image
+              )
+            );
+          },
+        },
+      ],
+      "plain-text"
+    );
   };
 
   useImperativeHandle(ref, () => ({
     openSheet() {
+      sheetRef.current?.expand();
       setTimeout(() => {
         inputRef.current?.focus();
-      }, 300);
+      }, 500);
     },
     closeSheet() {
-      Keyboard.dismiss();
       sheetRef.current?.close();
+      setTimeout(() => {
+        Keyboard.dismiss();
+      }, 300);
     },
   }));
 
@@ -72,14 +103,18 @@ const ReplyDrawer = forwardRef<any, ReplyDrawerProps>(({ statusId }, ref) => {
   );
 
   const handleClose = () => {
-    Keyboard.dismiss();
     sheetRef.current?.close();
+    setTimeout(() => {
+      Keyboard.dismiss();
+    }, 100);
   };
 
   const handlePost = () => {
     console.log("Post submitted");
-    Keyboard.dismiss();
     sheetRef.current?.close();
+    setTimeout(() => {
+      Keyboard.dismiss();
+    }, 100);
   };
 
   return (
@@ -112,16 +147,52 @@ const ReplyDrawer = forwardRef<any, ReplyDrawerProps>(({ statusId }, ref) => {
             style={[styles.input, { color: theme.textColor }]}
           />
         </View>
-        {/* {selectedImageUri && (
+        {selectedImages.length > 0 && (
           <View style={styles.imagePreviewContainer}>
-            <Image
-              source={{ uri: selectedImageUri }}
-              style={styles.imagePreview}
-            />
+            {selectedImages.map((image, index) => (
+              <View key={index} style={styles.imageWrapper}>
+                <Image
+                  source={{ uri: image.uri }}
+                  style={styles.imagePreview}
+                />
+                {image.altText === "" && (
+                  <CustomIcon
+                    name="ExclamationCircleIcon"
+                    size={24}
+                    color={theme.attention}
+                    style={[
+                      styles.exclamationIcon,
+                      { backgroundColor: theme.secondaryColor },
+                    ]}
+                  />
+                )}
+                <View
+                  style={[
+                    styles.imageActions,
+                    { backgroundColor: theme.secondaryColor50opacity },
+                  ]}
+                >
+                  <TouchableOpacity onPress={() => handleRemoveImage(index)}>
+                    <CustomIcon
+                      name="XCircleIcon"
+                      size={24}
+                      color={theme.attention}
+                    />
+                  </TouchableOpacity>
+                  <TouchableOpacity onPress={() => handleAddAltText(index)}>
+                    <CustomIcon
+                      name="PencilIcon"
+                      size={24}
+                      color={theme.textColor}
+                    />
+                  </TouchableOpacity>
+                </View>
+              </View>
+            ))}
           </View>
-        )} */}
-        <ActionBar onImageSelect={handleImageSelect} />
+        )}
       </ScrollView>
+      <ActionBar onImageSelect={handleImageSelect} />
     </BottomSheet>
   );
 });
@@ -152,12 +223,34 @@ const styles = StyleSheet.create({
   },
   imagePreviewContainer: {
     marginTop: 10,
-    alignItems: "center",
+    flexDirection: "row",
+    flexWrap: "wrap",
+    justifyContent: "flex-start",
+  },
+  imageWrapper: {
+    position: "relative",
+    margin: 5,
   },
   imagePreview: {
     width: 100,
     height: 100,
     borderRadius: 10,
+  },
+  exclamationIcon: {
+    position: "absolute",
+    top: "3%",
+    left: "2%",
+    borderRadius: 12,
+  },
+  imageActions: {
+    width: "100%",
+    position: "absolute",
+    bottom: 0,
+    borderBottomLeftRadius: 10,
+    borderBottomRightRadius: 10,
+    paddingHorizontal: "3%",
+    flexDirection: "row",
+    justifyContent: "space-between",
   },
 });
 
