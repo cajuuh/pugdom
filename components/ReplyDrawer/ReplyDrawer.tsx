@@ -21,8 +21,10 @@ import { useAppContext } from "../../context/AppContext";
 import { useTheme } from "../../hooks/useTheme";
 import CustomHandler from "./components/CustomHandler";
 import ActionBar from "./components/ActionBar";
-import CustomIcon from "../../utils/Icons"; // Assuming CustomIcon wraps Heroicons
+import CustomIcon from "../../utils/Icons";
 import { ReplyDrawerProps, SelectedImage } from "../interfaces";
+import Colors from "../../constants/Colors";
+import { PugText } from "../Text/Text";
 
 const ReplyDrawer = forwardRef<any, ReplyDrawerProps>(({ statusId }, ref) => {
   const sheetRef = useRef<BottomSheet>(null);
@@ -162,7 +164,7 @@ const ReplyDrawer = forwardRef<any, ReplyDrawerProps>(({ statusId }, ref) => {
                     color={theme.attention}
                     style={[
                       styles.exclamationIcon,
-                      { backgroundColor: theme.secondaryColor },
+                      { backgroundColor: "white" },
                     ]}
                   />
                 )}
@@ -174,17 +176,24 @@ const ReplyDrawer = forwardRef<any, ReplyDrawerProps>(({ statusId }, ref) => {
                 >
                   <TouchableOpacity onPress={() => handleRemoveImage(index)}>
                     <CustomIcon
-                      name="XCircleIcon"
+                      name="TrashIcon"
+                      solid={true}
                       size={24}
-                      color={theme.attention}
+                      color={Colors.white}
                     />
                   </TouchableOpacity>
                   <TouchableOpacity onPress={() => handleAddAltText(index)}>
-                    <CustomIcon
-                      name="PencilIcon"
-                      size={24}
-                      color={theme.textColor}
-                    />
+                    <View style={styles.altTextContaier}>
+                      <PugText
+                        style={{
+                          color: image.altText
+                            ? Colors.green
+                            : theme.noAltTextColor,
+                        }}
+                      >
+                        ALT
+                      </PugText>
+                    </View>
                   </TouchableOpacity>
                 </View>
               </View>
@@ -192,7 +201,10 @@ const ReplyDrawer = forwardRef<any, ReplyDrawerProps>(({ statusId }, ref) => {
           </View>
         )}
       </ScrollView>
-      <ActionBar onImageSelect={handleImageSelect} />
+      <ActionBar
+        onImageSelect={handleImageSelect}
+        selectedImages={selectedImages}
+      />
     </BottomSheet>
   );
 });
@@ -251,6 +263,10 @@ const styles = StyleSheet.create({
     paddingHorizontal: "3%",
     flexDirection: "row",
     justifyContent: "space-between",
+  },
+  altTextContaier: {
+    top: "10%",
+    right: "10%",
   },
 });
 

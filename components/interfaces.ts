@@ -64,7 +64,8 @@ export interface HomeScreenProps {
 }
 
 export interface ActionBarProps {
-  onImageSelect: (uri: string) => void; // Define the type for onImageSelect prop
+  onImageSelect: (uri: string) => void;
+  selectedImages: SelectedImage[];
 }
 
 export interface ReplyDrawerProps {
@@ -74,6 +75,40 @@ export interface ReplyDrawerProps {
 export interface SelectedImage {
   uri: string;
   altText: string;
+}
+
+export interface InstanceInfo {
+  uri: string;
+  title: string;
+  short_description: string;
+  description: string;
+  email: string;
+  version: string;
+  urls: {
+    streaming_api: string;
+  };
+  stats: {
+    user_count: number;
+    status_count: number;
+    domain_count: number;
+  };
+  thumbnail: string;
+  languages: string[];
+  registrations: boolean;
+  approval_required: boolean;
+  invites_enabled: boolean;
+  configuration: {
+    statuses: {
+      max_characters: number;
+      max_media_attachments: number;
+      characters_reserved_per_url: number;
+    };
+  };
+  contact_account: {
+    id: string;
+    username: string;
+    url: string;
+  };
 }
 
 export interface ThemeType {
@@ -92,4 +127,5 @@ export interface ThemeType {
   activeButtonColor: string;
   attention: string;
   secondaryColor50opacity: string;
+  noAltTextColor: string;
 }
