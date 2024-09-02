@@ -1,13 +1,36 @@
 import React from "react";
-import { View, TouchableOpacity, StyleSheet } from "react-native";
+import { View, TouchableOpacity, StyleSheet, Alert } from "react-native";
+// import * as ImagePicker from "expo-image-picker";
 import CustomIcon from "../../../utils/Icons";
 import { PugText } from "../../Text/Text";
 import { useTheme } from "../../../hooks/useTheme";
+import { ActionBarProps } from "../../interfaces";
 
-const ActionBar = () => {
+const ActionBar: React.FC<ActionBarProps> = ({ onImageSelect }) => {
   const theme = useTheme();
 
   // TODO: Add functionalities
+  //   const handleImagePicker = async () => {
+  //     const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
+  //     if (status !== "granted") {
+  //       Alert.alert(
+  //         "Permission denied",
+  //         "We need access to your photos to add an image."
+  //       );
+  //       return;
+  //     }
+
+  //     const result = await ImagePicker.launchImageLibraryAsync({
+  //       mediaTypes: ImagePicker.MediaTypeOptions.Images,
+  //       allowsEditing: true,
+  //       aspect: [4, 3],
+  //       quality: 1,
+  //     });
+
+  //     if (!result.canceled) {
+  //       onImageSelect(result.assets[0].uri);
+  //     }
+  //   };
 
   return (
     <View
@@ -18,7 +41,7 @@ const ActionBar = () => {
     >
       <TouchableOpacity
         style={styles.actionButton}
-        onPress={() => console.log("Add Image")}
+        onPress={() => console.log("Image picker")}
       >
         <CustomIcon name="PhotoIcon" size={24} color={theme.textColor} />
       </TouchableOpacity>
