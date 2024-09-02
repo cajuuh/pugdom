@@ -13,6 +13,7 @@ import {
   StyleSheet,
   TextInput,
   View,
+  ScrollView,
 } from "react-native";
 import { useAppContext } from "../../context/AppContext";
 import { useTheme } from "../../hooks/useTheme";
@@ -40,9 +41,14 @@ const ReplyDrawer = forwardRef<any, ReplyDrawerProps>(({ statusId }, ref) => {
     placeholderMessages[Math.floor(Math.random() * placeholderMessages.length)]
   );
 
+  const [selectedImageUri, setSelectedImageUri] = useState<string | null>(null);
+
+  const handleImageSelect = (uri: string) => {
+    setSelectedImageUri(uri);
+  };
+
   useImperativeHandle(ref, () => ({
     openSheet() {
-      sheetRef.current?.expand();
       setTimeout(() => {
         inputRef.current?.focus();
       }, 300);
@@ -88,7 +94,7 @@ const ReplyDrawer = forwardRef<any, ReplyDrawerProps>(({ statusId }, ref) => {
         <CustomHandler handleClose={handleClose} handlePost={handlePost} />
       )}
     >
-      <View
+      <ScrollView
         style={[
           styles.drawerContent,
           { backgroundColor: theme.replyDrawerBackgroundColor },
@@ -106,8 +112,16 @@ const ReplyDrawer = forwardRef<any, ReplyDrawerProps>(({ statusId }, ref) => {
             style={[styles.input, { color: theme.textColor }]}
           />
         </View>
-      </View>
-      <ActionBar />
+        {/* {selectedImageUri && (
+          <View style={styles.imagePreviewContainer}>
+            <Image
+              source={{ uri: selectedImageUri }}
+              style={styles.imagePreview}
+            />
+          </View>
+        )} */}
+        <ActionBar onImageSelect={handleImageSelect} />
+      </ScrollView>
     </BottomSheet>
   );
 });
@@ -135,6 +149,15 @@ const styles = StyleSheet.create({
     borderColor: "transparent",
     borderWidth: 1,
     padding: 8,
+  },
+  imagePreviewContainer: {
+    marginTop: 10,
+    alignItems: "center",
+  },
+  imagePreview: {
+    width: 100,
+    height: 100,
+    borderRadius: 10,
   },
 });
 
