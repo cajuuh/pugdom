@@ -63,6 +63,15 @@ export interface HomeScreenProps {
   replyDrawerRef?: ForwardedRef<any>;
 }
 
+export interface SelectedImage {
+  uri: string;
+  altText: string;
+}
+
+export interface AltTextDrawerProps {
+  image: SelectedImage;
+  onSave: (altText: string) => void;
+}
 export interface ActionBarProps {
   onImageSelect: (uri: string) => void;
   selectedImages: SelectedImage[];
@@ -70,11 +79,6 @@ export interface ActionBarProps {
 
 export interface ReplyDrawerProps {
   statusId: string | null;
-}
-
-export interface SelectedImage {
-  uri: string;
-  altText: string;
 }
 
 export interface InstanceInfo {
