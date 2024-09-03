@@ -62,7 +62,7 @@ const TabButton: React.FC<TabParams> = ({
           <CustomIcon
             name={item.icon}
             solid={focused}
-            color={focused ? Colors.white : theme.primaryColor}
+            color={focused ? theme.primaryColor : theme.primaryColor}
             size={22}
           />
         </IconWrapper>

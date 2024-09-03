@@ -16,6 +16,7 @@ export const lightTheme: ThemeType = {
   placeholderTextColor: "#96989C",
   drawerHandleColor: "#ccc",
   attention: "#E64A19",
+  noAltTextColor: "#E7E9EC",
 };
 
 export const darkTheme: ThemeType = {
@@ -34,4 +35,5 @@ export const darkTheme: ThemeType = {
   placeholderTextColor: "#666666",
   drawerHandleColor: "#AFAFAF",
   attention: "#E64A19",
+  noAltTextColor: "#E7E9EC",
 };

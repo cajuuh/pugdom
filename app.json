@@ -8,6 +8,7 @@
       "bundleIdentifier": "com.cajuuh.pugdom",
       "supportsTablet": true,
       "infoPlist": {
+        "NSPhotoLibraryUsageDescription": "This app requires access to your photo library to allow you to upload images.",
         "CFBundleURLTypes": [
           {
             "CFBundleURLSchemes": ["pugdom"]
