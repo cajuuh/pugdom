@@ -63,6 +63,19 @@ export interface HomeScreenProps {
   replyDrawerRef?: ForwardedRef<any>;
 }
 
+export interface ActionBarProps {
+  onImageSelect: (uri: string) => void; // Define the type for onImageSelect prop
+}
+
+export interface ReplyDrawerProps {
+  statusId: string | null;
+}
+
+export interface SelectedImage {
+  uri: string;
+  altText: string;
+}
+
 export interface ThemeType {
   backgroundColor: string;
   textColor: string;
@@ -77,4 +90,6 @@ export interface ThemeType {
   placeholderTextColor: string;
   drawerHandleColor: string;
   activeButtonColor: string;
+  attention: string;
+  secondaryColor50opacity: string;
 }

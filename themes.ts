@@ -6,6 +6,7 @@ export const lightTheme: ThemeType = {
   buttonTextColor: "#E7E7E8",
   primaryColor: "#2D9EE0",
   secondaryColor: "#e0e0e0",
+  secondaryColor50opacity: "#e0e0e080",
   reblogPillColor: "#E9EAEB",
   tabNavigationColor: "#E9EAEB",
   tabNavigationGradient: ["#091E3A", "#2F80ED", "#2D9EE0"],
@@ -14,6 +15,7 @@ export const lightTheme: ThemeType = {
   replyDrawerBackgroundColor: "#E7E9EC",
   placeholderTextColor: "#96989C",
   drawerHandleColor: "#ccc",
+  attention: "#E64A19",
 };
 
 export const darkTheme: ThemeType = {
@@ -22,6 +24,7 @@ export const darkTheme: ThemeType = {
   buttonTextColor: "#E7E7E8",
   primaryColor: "#BEC4F7",
   secondaryColor: "#444444",
+  secondaryColor50opacity: "#44444480",
   reblogPillColor: "#1B1A20",
   tabNavigationColor: "#30353C",
   tabNavigationGradient: ["#9400D3", "#4B0082"],
@@ -30,4 +33,5 @@ export const darkTheme: ThemeType = {
   replyDrawerBackgroundColor: "#363636",
   placeholderTextColor: "#666666",
   drawerHandleColor: "#AFAFAF",
+  attention: "#E64A19",
 };
