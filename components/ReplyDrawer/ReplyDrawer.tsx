@@ -150,7 +150,7 @@ const ReplyDrawer = forwardRef<any, ReplyDrawerProps>(({ statusId }, ref) => {
           />
         </View>
         {selectedImages.length > 0 && (
-          <View style={styles.imagePreviewContainer}>
+          <ScrollView horizontal style={styles.imagePreviewContainer}>
             {selectedImages.map((image, index) => (
               <View key={index} style={styles.imageWrapper}>
                 <Image
@@ -183,7 +183,7 @@ const ReplyDrawer = forwardRef<any, ReplyDrawerProps>(({ statusId }, ref) => {
                     />
                   </TouchableOpacity>
                   <TouchableOpacity onPress={() => handleAddAltText(index)}>
-                    <View style={styles.altTextContaier}>
+                    <View style={styles.altTextContainer}>
                       <PugText
                         style={{
                           color: image.altText
@@ -198,7 +198,7 @@ const ReplyDrawer = forwardRef<any, ReplyDrawerProps>(({ statusId }, ref) => {
                 </View>
               </View>
             ))}
-          </View>
+          </ScrollView>
         )}
       </ScrollView>
       <ActionBar
@@ -235,17 +235,14 @@ const styles = StyleSheet.create({
   },
   imagePreviewContainer: {
     marginTop: 10,
-    flexDirection: "row",
-    flexWrap: "wrap",
-    justifyContent: "flex-start",
   },
   imageWrapper: {
     position: "relative",
-    margin: 5,
+    marginRight: 10, // Add spacing between images
   },
   imagePreview: {
-    width: 100,
-    height: 100,
+    width: 200,
+    height: 200,
     borderRadius: 10,
   },
   exclamationIcon: {
@@ -264,7 +261,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "space-between",
   },
-  altTextContaier: {
+  altTextContainer: {
     top: "10%",
     right: "10%",
   },
