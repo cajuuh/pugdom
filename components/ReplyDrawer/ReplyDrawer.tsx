@@ -22,7 +22,6 @@ import CustomIcon from "../../utils/Icons";
 import { ReplyDrawerProps, SelectedImage } from "../interfaces";
 import BottomSheet, { BottomSheetFlatList } from "@gorhom/bottom-sheet";
 import AltTextDrawer from "../AltTextDrawer/AltTextDrawer";
-import { GestureDetector, Gesture } from "react-native-gesture-handler";
 import { PugText } from "../Text/Text";
 import Colors from "../../constants/Colors";
 
@@ -56,8 +55,12 @@ const ReplyDrawer = forwardRef<any, ReplyDrawerProps>(({ statusId }, ref) => {
   };
 
   const handleAddAltText = (index: number) => {
+    Keyboard.dismiss(); // Dismiss the keyboard immediately
     setCurrentIndex(index);
-    altTextDrawerRef.current?.openSheet(); // Open the AltTextDrawer
+    // Open the AltTextDrawer after a slight delay to ensure smoothness
+    setTimeout(() => {
+      altTextDrawerRef.current?.openSheet();
+    }, 150); // Reduced delay for better responsiveness
   };
 
   const saveAltText = (altText: string) => {
@@ -76,13 +79,13 @@ const ReplyDrawer = forwardRef<any, ReplyDrawerProps>(({ statusId }, ref) => {
       sheetRef.current?.expand();
       setTimeout(() => {
         inputRef.current?.focus();
-      }, 500);
+      }, 300); // Reduced delay to improve responsiveness
     },
     closeSheet() {
       sheetRef.current?.close();
       setTimeout(() => {
         Keyboard.dismiss();
-      }, 300);
+      }, 100);
     },
   }));
 
@@ -104,12 +107,6 @@ const ReplyDrawer = forwardRef<any, ReplyDrawerProps>(({ statusId }, ref) => {
       Keyboard.dismiss();
     }, 100);
   };
-
-  const panGesture = Gesture.Pan()
-    .onEnd(() => {
-      handleClose();
-    })
-    .minDistance(10); // Set a minimum distance for the pan gesture to be recognized
 
   const handlePost = () => {
     console.log("Post submitted");
