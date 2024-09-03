@@ -5,12 +5,26 @@ import CustomIcon from "../../../utils/Icons";
 import { PugText } from "../../Text/Text";
 import { useTheme } from "../../../hooks/useTheme";
 import { ActionBarProps } from "../../interfaces";
+import { useAppContext } from "../../../context/AppContext";
 
-const ActionBar: React.FC<ActionBarProps> = ({ onImageSelect }) => {
+const ActionBar: React.FC<ActionBarProps> = ({
+  onImageSelect,
+  selectedImages,
+}) => {
   const theme = useTheme();
+  const { instanceInfo } = useAppContext();
+  const maxMediaAttachments =
+    instanceInfo?.configuration?.statuses?.max_media_attachments || 4;
 
-  // TODO: Add functionalities
   const handleImagePicker = async () => {
+    if (selectedImages.length >= maxMediaAttachments) {
+      Alert.alert(
+        "Limit Reached",
+        `You can only add up to ${maxMediaAttachments} images.`
+      );
+      return;
+    }
+
     const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
     if (status !== "granted") {
       Alert.alert(
@@ -22,16 +36,17 @@ const ActionBar: React.FC<ActionBarProps> = ({ onImageSelect }) => {
 
     const result = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.Images,
-      allowsMultipleSelection: true, // Enable multiple selection
-      allowsEditing: false, // Disabling editing when multiple images are selected
+      allowsMultipleSelection: true,
+      allowsEditing: false,
       quality: 1,
     });
 
     if (!result.canceled) {
-      // Handle multiple selected images
-      result.assets.forEach((asset) => {
-        onImageSelect(asset.uri);
-      });
+      result.assets
+        .slice(0, maxMediaAttachments - selectedImages.length)
+        .forEach((asset) => {
+          onImageSelect(asset.uri);
+        });
     }
   };
 

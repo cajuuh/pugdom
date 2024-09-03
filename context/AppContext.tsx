@@ -1,11 +1,21 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import React, { ReactNode, createContext, useContext, useEffect, useState } from "react";
+import React, {
+  ReactNode,
+  createContext,
+  useContext,
+  useEffect,
+  useState,
+} from "react";
 import { useColorScheme } from "react-native";
-import { darkTheme, lightTheme } from "../themes"; // Adjust the path as necessary
+import { darkTheme, lightTheme } from "../themes";
+import { getInstanceInfo } from "../services/instanceService";
+import { InstanceInfo } from "../components/interfaces";
 
 interface AppParams {
-  avatar?: string; // Avatar URL
+  avatar?: string;
   username?: string;
+  apiBaseUrl?: string;
+  accessToken?: string;
   [key: string]: any;
 }
 
@@ -14,11 +24,12 @@ interface AppContextProps {
   setAppParam: (key: string, value: any) => void;
   theme: any;
   updateTheme: (newTheme: string) => void;
-  isTabVisible: boolean; // Visibility state for TabNavigation
-  showTabNavigation: () => void; // Function to show TabNavigation
-  hideTabNavigation: () => void; // Function to hide TabNavigation
+  isTabVisible: boolean;
+  showTabNavigation: () => void;
+  hideTabNavigation: () => void;
   replyStatusId: string;
   setReplyStatus: (id: string) => void;
+  instanceInfo: InstanceInfo | null;
 }
 
 const AppContext = createContext<AppContextProps | undefined>(undefined);
@@ -28,6 +39,7 @@ export const AppProvider = ({ children }: { children: ReactNode }) => {
   const [theme, setTheme] = useState<any>(lightTheme);
   const [isTabVisible, setIsTabVisible] = useState(true); // Initialize tab visibility state
   const [replyStatusId, setReplyStatusId] = useState<string>("");
+  const [instanceInfo, setInstanceInfo] = useState<InstanceInfo | null>(null);
 
   useEffect(() => {
     const loadInitialData = async () => {
@@ -50,6 +62,19 @@ export const AppProvider = ({ children }: { children: ReactNode }) => {
     };
     loadInitialData();
   }, []);
+
+  useEffect(() => {
+    const fetchInstanceInfo = async () => {
+      if (appParams.apiBaseUrl) {
+        const info = await getInstanceInfo(appParams.apiBaseUrl);
+        if (info) {
+          setInstanceInfo(info);
+        }
+      }
+    };
+
+    fetchInstanceInfo();
+  }, [appParams.apiBaseUrl]);
 
   const setAppParam = (key: string, value: any) => {
     setAppParams((prevParams) => ({ ...prevParams, [key]: value }));
@@ -79,6 +104,7 @@ export const AppProvider = ({ children }: { children: ReactNode }) => {
         hideTabNavigation, // Expose the function to hide TabNavigation
         replyStatusId,
         setReplyStatus,
+        instanceInfo,
       }}
     >
       {children}
