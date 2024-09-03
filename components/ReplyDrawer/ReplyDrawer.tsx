@@ -22,6 +22,7 @@ import CustomIcon from "../../utils/Icons";
 import { ReplyDrawerProps, SelectedImage } from "../interfaces";
 import BottomSheet, { BottomSheetFlatList } from "@gorhom/bottom-sheet";
 import AltTextDrawer from "../AltTextDrawer/AltTextDrawer";
+import { GestureDetector, Gesture } from "react-native-gesture-handler";
 import { PugText } from "../Text/Text";
 import Colors from "../../constants/Colors";
 
@@ -104,6 +105,12 @@ const ReplyDrawer = forwardRef<any, ReplyDrawerProps>(({ statusId }, ref) => {
     }, 100);
   };
 
+  const panGesture = Gesture.Pan()
+    .onEnd(() => {
+      handleClose();
+    })
+    .minDistance(10); // Set a minimum distance for the pan gesture to be recognized
+
   const handlePost = () => {
     console.log("Post submitted");
     sheetRef.current?.close();
@@ -119,8 +126,12 @@ const ReplyDrawer = forwardRef<any, ReplyDrawerProps>(({ statusId }, ref) => {
         index={1}
         snapPoints={[windowHeight * 0.97, windowHeight * 0.97]}
         enablePanDownToClose={true}
-        onChange={handleSheetChanges}
-        backgroundStyle={{ backgroundColor: theme.replyDrawerBackgroundColor }}
+        enableHandlePanningGesture={false}
+        enableOverDrag={true}
+        overDragResistanceFactor={0.8}
+        backgroundStyle={{
+          backgroundColor: theme.replyDrawerBackgroundColor,
+        }}
         footerComponent={() => (
           <ActionBar
             onImageSelect={handleImageSelect}
