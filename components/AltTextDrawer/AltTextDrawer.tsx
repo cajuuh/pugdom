@@ -65,7 +65,10 @@ const AltTextDrawer = forwardRef<any, AltTextDrawerProps>(
           <PugButton
             title="Save"
             onPress={handleSave}
-            style={[styles.saveButton, { backgroundColor: theme.primaryColor }]}
+            style={[
+              styles.saveButton,
+              { backgroundColor: theme.activeButtonColor },
+            ]}
           />
         </View>
       </BottomSheet>

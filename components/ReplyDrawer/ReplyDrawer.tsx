@@ -12,7 +12,6 @@ import {
   StyleSheet,
   TextInput,
   View,
-  ScrollView,
   TouchableOpacity,
 } from "react-native";
 import { useAppContext } from "../../context/AppContext";
@@ -21,8 +20,10 @@ import CustomHandler from "./components/CustomHandler";
 import ActionBar from "./components/ActionBar";
 import CustomIcon from "../../utils/Icons";
 import { ReplyDrawerProps, SelectedImage } from "../interfaces";
-import BottomSheet from "@gorhom/bottom-sheet";
+import BottomSheet, { BottomSheetFlatList } from "@gorhom/bottom-sheet";
 import AltTextDrawer from "../AltTextDrawer/AltTextDrawer";
+import { PugText } from "../Text/Text";
+import Colors from "../../constants/Colors";
 
 const ReplyDrawer = forwardRef<any, ReplyDrawerProps>(({ statusId }, ref) => {
   const [currentIndex, setCurrentIndex] = useState<number | null>(null);
@@ -115,16 +116,22 @@ const ReplyDrawer = forwardRef<any, ReplyDrawerProps>(({ statusId }, ref) => {
     <>
       <BottomSheet
         ref={sheetRef}
-        index={-1}
-        snapPoints={[windowHeight * 0.5, windowHeight * 0.95]}
+        index={1}
+        snapPoints={[windowHeight * 0.97, windowHeight * 0.97]}
         enablePanDownToClose={true}
         onChange={handleSheetChanges}
         backgroundStyle={{ backgroundColor: theme.replyDrawerBackgroundColor }}
+        footerComponent={() => (
+          <ActionBar
+            onImageSelect={handleImageSelect}
+            selectedImages={selectedImages}
+          />
+        )}
         handleComponent={() => (
           <CustomHandler handleClose={handleClose} handlePost={handlePost} />
         )}
       >
-        <ScrollView
+        <View
           style={[
             styles.drawerContent,
             { backgroundColor: theme.replyDrawerBackgroundColor },
@@ -143,59 +150,65 @@ const ReplyDrawer = forwardRef<any, ReplyDrawerProps>(({ statusId }, ref) => {
             />
           </View>
           {selectedImages.length > 0 && (
-            <ScrollView
-              horizontal
-              showsHorizontalScrollIndicator={false}
-              contentContainerStyle={styles.imagePreviewContainer}
-            >
-              {selectedImages.map((image, index) => (
-                <View key={index} style={styles.imageWrapper}>
-                  <Image
-                    source={{ uri: image.uri }}
-                    style={styles.imagePreview}
-                  />
-                  {image.altText === "" && (
-                    <CustomIcon
-                      name="ExclamationCircleIcon"
-                      size={24}
-                      color={theme.attention}
-                      style={[
-                        styles.exclamationIcon,
-                        { backgroundColor: "white" },
-                      ]}
+            <View style={{ height: 250 }}>
+              <BottomSheetFlatList
+                horizontal
+                showsHorizontalScrollIndicator={false}
+                data={selectedImages}
+                keyExtractor={(_, index) => index.toString()}
+                renderItem={({ item: image, index }) => (
+                  <View key={index} style={styles.imageWrapper}>
+                    <Image
+                      source={{ uri: image.uri }}
+                      style={styles.imagePreview}
                     />
-                  )}
-                  <View
-                    style={[
-                      styles.imageActions,
-                      { backgroundColor: theme.secondaryColor50opacity },
-                    ]}
-                  >
-                    <TouchableOpacity onPress={() => handleRemoveImage(index)}>
+                    {image.altText === "" && (
                       <CustomIcon
-                        name="TrashIcon"
-                        solid={true}
+                        name="ExclamationCircleIcon"
                         size={24}
-                        color={theme.textColor}
+                        color={theme.attention}
+                        style={[
+                          styles.exclamationIcon,
+                          { backgroundColor: "white" },
+                        ]}
                       />
-                    </TouchableOpacity>
-                    <TouchableOpacity onPress={() => handleAddAltText(index)}>
-                      <CustomIcon
-                        name="PencilIcon"
-                        size={24}
-                        color={theme.textColor}
-                      />
-                    </TouchableOpacity>
+                    )}
+                    <View
+                      style={[
+                        styles.imageActions,
+                        { backgroundColor: theme.secondaryColor50opacity },
+                      ]}
+                    >
+                      <TouchableOpacity
+                        onPress={() => handleRemoveImage(index)}
+                      >
+                        <CustomIcon
+                          name="TrashIcon"
+                          solid={true}
+                          size={24}
+                          color={theme.textColor}
+                        />
+                      </TouchableOpacity>
+                      <TouchableOpacity onPress={() => handleAddAltText(index)}>
+                        <View style={styles.altTextContainer}>
+                          <PugText
+                            style={{
+                              color: image.altText
+                                ? Colors.green
+                                : theme.noAltTextColor,
+                            }}
+                          >
+                            ALT
+                          </PugText>
+                        </View>
+                      </TouchableOpacity>
+                    </View>
                   </View>
-                </View>
-              ))}
-            </ScrollView>
+                )}
+              />
+            </View>
           )}
-        </ScrollView>
-        <ActionBar
-          onImageSelect={handleImageSelect}
-          selectedImages={selectedImages}
-        />
+        </View>
       </BottomSheet>
       {currentIndex !== null && (
         <AltTextDrawer
@@ -217,7 +230,7 @@ const styles = StyleSheet.create({
   body: {
     flexDirection: "row",
     alignItems: "center",
-    marginBottom: 16,
+    marginBottom: "30%",
   },
   profileImage: {
     width: 40,
@@ -231,12 +244,7 @@ const styles = StyleSheet.create({
     borderColor: "transparent",
     borderWidth: 1,
     padding: 8,
-  },
-  imagePreviewContainer: {
-    marginTop: 10,
-    flexDirection: "row",
-    justifyContent: "flex-start",
-    alignItems: "center",
+    fontSize: 16,
   },
   imageWrapper: {
     position: "relative",
@@ -257,12 +265,16 @@ const styles = StyleSheet.create({
   imageActions: {
     width: "100%",
     position: "absolute",
-    bottom: 0,
+    bottom: "20%",
     borderBottomLeftRadius: 10,
     borderBottomRightRadius: 10,
     paddingHorizontal: "3%",
     flexDirection: "row",
     justifyContent: "space-between",
+  },
+  altTextContainer: {
+    top: "10%",
+    right: "10%",
   },
 });
 
