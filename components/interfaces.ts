@@ -66,6 +66,8 @@ export interface HomeScreenProps {
 export interface SelectedImage {
   uri: string;
   altText: string;
+  id?: string;
+  mediaId?: string;
 }
 
 export interface AltTextDrawerProps {
@@ -113,6 +115,12 @@ export interface InstanceInfo {
     username: string;
     url: string;
   };
+}
+
+export interface PostParams {
+  statusId?: string;
+  statusText: string;
+  mediaIds?: string[];
 }
 
 export interface ThemeType {
