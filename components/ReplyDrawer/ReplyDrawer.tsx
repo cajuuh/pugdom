@@ -96,7 +96,7 @@ const ReplyDrawer = forwardRef<any, ReplyDrawerProps>(({ statusId }, ref) => {
     sheetRef.current?.close();
     setTimeout(() => {
       Keyboard.dismiss();
-    }, 100);
+    }, 200);
   };
 
   const uploadImages = async (): Promise<string[]> => {
@@ -116,38 +116,34 @@ const ReplyDrawer = forwardRef<any, ReplyDrawerProps>(({ statusId }, ref) => {
 
   const handlePost = async () => {
     try {
-      // Filter out any undefined values from the mediaIds array
       const mediaIds = selectedImages
         .map((image) => image.id)
         .filter((id): id is string => id !== undefined);
       if (statusId) {
-        // Replying to an existing status
         await replyToStatus({
           statusId,
           statusText,
           mediaIds,
         });
       } else {
-        // Creating a new status
         await createStatus({
           statusText,
           mediaIds,
         });
       }
       console.log("Post submitted successfully");
-      // Reset the status text
+
       setStatusText("");
-      // Close the BottomSheet
+
       if (sheetRef.current) {
         sheetRef.current.close();
       }
     } catch (error) {
       console.error("Failed to post:", error);
     } finally {
-      // Ensure the keyboard is dismissed after everything
       setTimeout(() => {
         Keyboard.dismiss();
-      }, 200); // Increased timeout to ensure BottomSheet closes first
+      }, 200);
     }
   };
 
@@ -191,7 +187,7 @@ const ReplyDrawer = forwardRef<any, ReplyDrawerProps>(({ statusId }, ref) => {
               placeholderTextColor={theme.placeholderTextColor}
               style={[styles.input, { color: theme.textColor }]}
               value={statusText}
-              onChangeText={setStatusText} // Capture the status text
+              onChangeText={setStatusText}
             />
           </View>
           {selectedImages.length > 0 && (
