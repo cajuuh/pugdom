@@ -24,15 +24,19 @@ import BottomSheet, { BottomSheetFlatList } from "@gorhom/bottom-sheet";
 import AltTextDrawer from "../AltTextDrawer/AltTextDrawer";
 import { PugText } from "../Text/Text";
 import Colors from "../../constants/Colors";
+import { uploadMedia } from "../../services/mediaService";
+import { useStatusService } from "../../services/statusService";
 
 const ReplyDrawer = forwardRef<any, ReplyDrawerProps>(({ statusId }, ref) => {
   const [currentIndex, setCurrentIndex] = useState<number | null>(null);
+  const [statusText, setStatusText] = useState<string>("");
   const sheetRef = useRef<BottomSheet>(null);
   const altTextDrawerRef = useRef<any>(null);
   const inputRef = useRef<TextInput>(null);
   const theme = useTheme();
   const { height: windowHeight } = Dimensions.get("window");
   const { showTabNavigation, hideTabNavigation, appParams } = useAppContext();
+  const { createStatus, replyToStatus } = useStatusService();
 
   const placeholderMessages = [
     "Ready to Toot? 🐘",
@@ -55,12 +59,11 @@ const ReplyDrawer = forwardRef<any, ReplyDrawerProps>(({ statusId }, ref) => {
   };
 
   const handleAddAltText = (index: number) => {
-    Keyboard.dismiss(); // Dismiss the keyboard immediately
+    Keyboard.dismiss();
     setCurrentIndex(index);
-    // Open the AltTextDrawer after a slight delay to ensure smoothness
     setTimeout(() => {
       altTextDrawerRef.current?.openSheet();
-    }, 150); // Reduced delay for better responsiveness
+    }, 150);
   };
 
   const saveAltText = (altText: string) => {
@@ -70,7 +73,7 @@ const ReplyDrawer = forwardRef<any, ReplyDrawerProps>(({ statusId }, ref) => {
           i === currentIndex ? { ...image, altText } : image
         )
       );
-      setCurrentIndex(null); // Clear the index after saving
+      setCurrentIndex(null);
     }
   };
 
@@ -79,7 +82,7 @@ const ReplyDrawer = forwardRef<any, ReplyDrawerProps>(({ statusId }, ref) => {
       sheetRef.current?.expand();
       setTimeout(() => {
         inputRef.current?.focus();
-      }, 300); // Reduced delay to improve responsiveness
+      }, 300);
     },
     closeSheet() {
       sheetRef.current?.close();
@@ -89,18 +92,6 @@ const ReplyDrawer = forwardRef<any, ReplyDrawerProps>(({ statusId }, ref) => {
     },
   }));
 
-  const handleSheetChanges = useCallback(
-    (index: number) => {
-      if (index === -1) {
-        Keyboard.dismiss();
-        showTabNavigation();
-      } else if (index === 0) {
-        hideTabNavigation();
-      }
-    },
-    [hideTabNavigation, showTabNavigation]
-  );
-
   const handleClose = () => {
     sheetRef.current?.close();
     setTimeout(() => {
@@ -108,19 +99,63 @@ const ReplyDrawer = forwardRef<any, ReplyDrawerProps>(({ statusId }, ref) => {
     }, 100);
   };
 
-  const handlePost = () => {
-    console.log("Post submitted");
-    sheetRef.current?.close();
-    setTimeout(() => {
-      Keyboard.dismiss();
-    }, 100);
+  const uploadImages = async (): Promise<string[]> => {
+    const mediaIds: string[] = [];
+
+    for (const image of selectedImages) {
+      try {
+        const mediaId = await uploadMedia(image.uri, image.altText);
+        mediaIds.push(mediaId);
+      } catch (error) {
+        console.error("Failed to upload image:", error);
+      }
+    }
+
+    return mediaIds;
+  };
+
+  const handlePost = async () => {
+    try {
+      // Filter out any undefined values from the mediaIds array
+      const mediaIds = selectedImages
+        .map((image) => image.id)
+        .filter((id): id is string => id !== undefined);
+      if (statusId) {
+        // Replying to an existing status
+        await replyToStatus({
+          statusId,
+          statusText,
+          mediaIds,
+        });
+      } else {
+        // Creating a new status
+        await createStatus({
+          statusText,
+          mediaIds,
+        });
+      }
+      console.log("Post submitted successfully");
+      // Reset the status text
+      setStatusText("");
+      // Close the BottomSheet
+      if (sheetRef.current) {
+        sheetRef.current.close();
+      }
+    } catch (error) {
+      console.error("Failed to post:", error);
+    } finally {
+      // Ensure the keyboard is dismissed after everything
+      setTimeout(() => {
+        Keyboard.dismiss();
+      }, 200); // Increased timeout to ensure BottomSheet closes first
+    }
   };
 
   return (
     <>
       <BottomSheet
         ref={sheetRef}
-        index={1}
+        index={-1}
         snapPoints={[windowHeight * 0.97, windowHeight * 0.97]}
         enablePanDownToClose={true}
         enableHandlePanningGesture={false}
@@ -155,6 +190,8 @@ const ReplyDrawer = forwardRef<any, ReplyDrawerProps>(({ statusId }, ref) => {
               placeholder={placeholderMessage}
               placeholderTextColor={theme.placeholderTextColor}
               style={[styles.input, { color: theme.textColor }]}
+              value={statusText}
+              onChangeText={setStatusText} // Capture the status text
             />
           </View>
           {selectedImages.length > 0 && (
