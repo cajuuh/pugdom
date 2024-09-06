@@ -10,6 +10,7 @@ import { useAppContext } from "../../../context/AppContext";
 const ActionBar: React.FC<ActionBarProps> = ({
   onImageSelect,
   selectedImages,
+  openPoll,
 }) => {
   const theme = useTheme();
   const { instanceInfo } = useAppContext();
@@ -88,10 +89,7 @@ const ActionBar: React.FC<ActionBarProps> = ({
           color={theme.textColor}
         />
       </TouchableOpacity>
-      <TouchableOpacity
-        style={styles.actionButton}
-        onPress={() => console.log("Add Poll")}
-      >
+      <TouchableOpacity style={styles.actionButton} onPress={openPoll}>
         <CustomIcon name="ChartBarIcon" size={24} color={theme.textColor} />
       </TouchableOpacity>
     </View>

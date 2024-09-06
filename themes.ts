@@ -17,6 +17,7 @@ export const lightTheme: ThemeType = {
   drawerHandleColor: "#ccc",
   attention: "#E64A19",
   noAltTextColor: "#E7E9EC",
+  modalBackground: "#F8F9F9",
 };
 
 export const darkTheme: ThemeType = {
@@ -36,4 +37,5 @@ export const darkTheme: ThemeType = {
   drawerHandleColor: "#AFAFAF",
   attention: "#E64A19",
   noAltTextColor: "#E7E9EC",
+  modalBackground: "#32323A",
 };
