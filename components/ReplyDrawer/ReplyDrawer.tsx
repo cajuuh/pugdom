@@ -34,6 +34,7 @@ const ReplyDrawer = forwardRef<any, ReplyDrawerProps>(({ statusId }, ref) => {
   const [showPoll, setShowPoll] = useState<boolean>(true);
   const [duration, setDuration] = useState<number>(1440);
   const [isDurationModalVisible, setDurationModalVisible] = useState(false);
+  const [activateOverlay, setActivateOverlay] = useState(false);
   //refs
   const sheetRef = useRef<BottomSheet>(null);
   const altTextDrawerRef = useRef<any>(null);
