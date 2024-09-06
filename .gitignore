@@ -39,5 +39,5 @@ config.ts
 eas.json
 
 # native folders
-/android
-/ios
+android
+ios
