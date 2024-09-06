@@ -30,7 +30,7 @@ const DurationSelectModal: React.FC<DurationSelectModalProps> = ({
   ];
 
   return (
-    <Modal visible={visible} transparent={true} animationType="slide">
+    <Modal visible={visible} transparent={true} animationType="none">
       <TouchableOpacity style={styles.overlay} onPress={onClose}>
         <View
           style={[
