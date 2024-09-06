@@ -77,6 +77,7 @@ export interface AltTextDrawerProps {
 export interface ActionBarProps {
   onImageSelect: (uri: string) => void;
   selectedImages: SelectedImage[];
+  openPoll: () => void;
 }
 
 export interface ReplyDrawerProps {
@@ -110,6 +111,12 @@ export interface InstanceInfo {
       characters_reserved_per_url: number;
     };
   };
+  polls: {
+    max_options: number;
+    max_characters_per_option: number;
+    min_expiration: number;
+    max_expiration: number;
+  };
   contact_account: {
     id: string;
     username: string;
@@ -121,6 +128,16 @@ export interface PostParams {
   statusId?: string;
   statusText: string;
   mediaIds?: string[];
+}
+
+export interface PollDrawerProps {
+  onSavePoll: (pollData: any) => void;
+}
+
+export interface DurationSelectModalProps {
+  visible: boolean;
+  onClose: () => void;
+  onSelect: (duration: { label: string; value: number }) => void;
 }
 
 export interface ThemeType {
@@ -140,4 +157,5 @@ export interface ThemeType {
   attention: string;
   secondaryColor50opacity: string;
   noAltTextColor: string;
+  modalBackground: string;
 }

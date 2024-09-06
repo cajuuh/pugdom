@@ -1,12 +1,11 @@
-import { useIsFocused, useNavigation } from "@react-navigation/native";
+import { useIsFocused } from "@react-navigation/native";
 import React, { forwardRef, useEffect, useRef, useState } from "react";
 import {
   ActivityIndicator,
   FlatList,
   RefreshControl,
-  TouchableOpacity,
-  View,
   StyleSheet,
+  TouchableOpacity,
 } from "react-native";
 import Banner, { BannerRef } from "../../components/Banner/Banner";
 import TootCard from "../../components/TootCard/TootCard";
@@ -14,8 +13,8 @@ import { HomeScreenProps } from "../../components/interfaces";
 import { useAppContext } from "../../context/AppContext";
 import { useFeed } from "../../context/FeedContext";
 import { useTheme } from "../../hooks/useTheme";
+import CustomIcon from "../../utils/Icons";
 import { Container, WelcomeText } from "./styles/HomeScreen.style";
-import CustomIcon from "../../utils/Icons"; // Ensure you have an icon component
 
 const HomeScreen = forwardRef<HomeScreenProps, any>(
   ({ replyDrawerRef, ...props }, ref) => {
@@ -62,9 +61,7 @@ const HomeScreen = forwardRef<HomeScreenProps, any>(
     return (
       <Container theme={theme}>
         <WelcomeText theme={theme}>Welcome, {username}!</WelcomeText>
-
         {isFocused && <Banner ref={bannerRef} onRefresh={onRefresh} />}
-
         <FlatList
           ref={flatListRef}
           data={feed}
@@ -91,7 +88,6 @@ const HomeScreen = forwardRef<HomeScreenProps, any>(
             <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
           }
         />
-
         <TouchableOpacity
           style={[styles.fab, { backgroundColor: theme.primaryColor }]}
           onPress={() => openReplyDrawer(null)}
