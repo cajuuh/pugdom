@@ -26,17 +26,28 @@ import { PugText } from "../Text/Text";
 import Colors from "../../constants/Colors";
 import { uploadMedia } from "../../services/mediaService";
 import { useStatusService } from "../../services/statusService";
+import PollComponent from "../PollComponent/PollComponent";
 
 const ReplyDrawer = forwardRef<any, ReplyDrawerProps>(({ statusId }, ref) => {
   const [currentIndex, setCurrentIndex] = useState<number | null>(null);
   const [statusText, setStatusText] = useState<string>("");
+  const [showPoll, setShowPoll] = useState<boolean>(true);
+  const [duration, setDuration] = useState<number>(1440);
+  const [isDurationModalVisible, setDurationModalVisible] = useState(false);
+  //refs
   const sheetRef = useRef<BottomSheet>(null);
   const altTextDrawerRef = useRef<any>(null);
   const inputRef = useRef<TextInput>(null);
+  //hooks
   const theme = useTheme();
   const { height: windowHeight } = Dimensions.get("window");
-  const { showTabNavigation, hideTabNavigation, appParams } = useAppContext();
+  const { showTabNavigation, hideTabNavigation, appParams, instanceInfo } =
+    useAppContext();
   const { createStatus, replyToStatus } = useStatusService();
+
+  const maxOptions = instanceInfo?.polls?.max_options || 4;
+  const maxCharactersPerOption =
+    instanceInfo?.polls?.max_characters_per_option || 255;
 
   const placeholderMessages = [
     "Ready to Toot? 🐘",
@@ -99,21 +110,6 @@ const ReplyDrawer = forwardRef<any, ReplyDrawerProps>(({ statusId }, ref) => {
     }, 200);
   };
 
-  const uploadImages = async (): Promise<string[]> => {
-    const mediaIds: string[] = [];
-
-    for (const image of selectedImages) {
-      try {
-        const mediaId = await uploadMedia(image.uri, image.altText);
-        mediaIds.push(mediaId);
-      } catch (error) {
-        console.error("Failed to upload image:", error);
-      }
-    }
-
-    return mediaIds;
-  };
-
   const handlePost = async () => {
     try {
       const mediaIds = selectedImages
@@ -147,11 +143,15 @@ const ReplyDrawer = forwardRef<any, ReplyDrawerProps>(({ statusId }, ref) => {
     }
   };
 
+  const togglePoll = () => {
+    setShowPoll((prev) => !prev);
+  };
+
   return (
     <>
       <BottomSheet
         ref={sheetRef}
-        index={-1}
+        index={1}
         snapPoints={[windowHeight * 0.97, windowHeight * 0.97]}
         enablePanDownToClose={true}
         enableHandlePanningGesture={false}
@@ -162,6 +162,7 @@ const ReplyDrawer = forwardRef<any, ReplyDrawerProps>(({ statusId }, ref) => {
         }}
         footerComponent={() => (
           <ActionBar
+            openPoll={togglePoll}
             onImageSelect={handleImageSelect}
             selectedImages={selectedImages}
           />
@@ -177,18 +178,25 @@ const ReplyDrawer = forwardRef<any, ReplyDrawerProps>(({ statusId }, ref) => {
           ]}
         >
           <View style={styles.body}>
-            <Image
-              source={{ uri: appParams.avatar || "default_avatar_url" }}
-              style={styles.profileImage}
-            />
-            <TextInput
-              ref={inputRef}
-              placeholder={placeholderMessage}
-              placeholderTextColor={theme.placeholderTextColor}
-              style={[styles.input, { color: theme.textColor }]}
-              value={statusText}
-              onChangeText={setStatusText}
-            />
+            <View style={styles.textInput}>
+              <Image
+                source={{ uri: appParams.avatar || "default_avatar_url" }}
+                style={styles.profileImage}
+              />
+              <TextInput
+                ref={inputRef}
+                placeholder={placeholderMessage}
+                placeholderTextColor={theme.placeholderTextColor}
+                style={[styles.input, { color: theme.textColor }]}
+                value={statusText}
+                onChangeText={setStatusText}
+              />
+            </View>
+            {showPoll && (
+              <PollComponent
+                onSavePoll={(pollData) => console.log("Poll data:", pollData)}
+              />
+            )}
           </View>
           {selectedImages.length > 0 && (
             <View style={{ height: 250 }}>
@@ -251,6 +259,7 @@ const ReplyDrawer = forwardRef<any, ReplyDrawerProps>(({ statusId }, ref) => {
           )}
         </View>
       </BottomSheet>
+
       {currentIndex !== null && (
         <AltTextDrawer
           ref={altTextDrawerRef}
@@ -269,9 +278,13 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   body: {
+    flexDirection: "column",
+    alignItems: "center",
+  },
+  textInput: {
     flexDirection: "row",
     alignItems: "center",
-    marginBottom: "30%",
+    marginBottom: "20%",
   },
   profileImage: {
     width: 40,
