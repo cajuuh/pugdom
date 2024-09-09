@@ -1,3 +1,5 @@
+import { PTSans_400Regular, PTSans_700Bold } from "@expo-google-fonts/pt-sans";
+import { useFonts } from "@expo-google-fonts/pt-sans/useFonts";
 import React from "react";
 import { ActivityIndicator, Image, StyleSheet, View, Text } from "react-native";
 import { PugText } from "../../components/Text/Text";
