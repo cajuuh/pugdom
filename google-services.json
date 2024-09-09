@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "421958313141",
+    "project_id": "push-pugdom",
+    "storage_bucket": "push-pugdom.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:421958313141:android:22140afb241b82d89d8afc",
+        "android_client_info": {
+          "package_name": "com.cajuuh.pugdom"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDtOtoPjnEloLsttdJ8WaGz6MD3CdTdkzQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -15,7 +15,6 @@ import { PugText, PugTextInput } from "./components/Text/Text";
 import { AppProvider, useAppContext } from "./context/AppContext";
 import { FeedProvider } from "./context/FeedContext";
 import TabNavigation from "./navigation/TabNavigation/TabNavigation";
-import ReplyScreen from "./screens/ReplyScreen/ReplyScreen";
 import ServerScreen from "./screens/ServerScreen/ServerScreen";
 import WebViewScreen from "./screens/WebViewScreen/WebViewScreen";
 import { RootStackParamList } from "./screens/types";
@@ -80,15 +79,6 @@ const AppContent = () => {
           <Stack.Screen name="TabNavigation" component={TabNavigation} />
           <Stack.Screen name="Server" component={ServerScreen} />
           <Stack.Screen name="WebView" component={WebViewScreen} />
-          <Stack.Screen
-            name="ReplyScreen"
-            component={ReplyScreen}
-            options={{
-              presentation: "modal",
-              gestureEnabled: true,
-              animationTypeForReplace: "push",
-            }}
-          />
         </Stack.Navigator>
       </NavigationContainer>
     </ThemeProvider>
