@@ -123,6 +123,7 @@ const NotificationCard: React.FC<NotificationCardProps> = ({
           },
         ]}
       >
+        {/* Update post */}
         <View style={styles.content}>
           <View style={styles.userContainer}>
             <Image source={{ uri: avatar }} style={styles.avatar} />

@@ -44,7 +44,7 @@ export const getNotifications = async () => {
             }
           : undefined,
         mediaAttachments,
-        poll, // Include the poll data
+        poll,
       };
     });
   } catch (error) {
