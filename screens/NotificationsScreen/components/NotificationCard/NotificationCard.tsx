@@ -59,12 +59,12 @@ const NotificationCard: React.FC<NotificationCardProps> = ({
             color={theme.notificationsIcon}
           />
         );
-      case "poll": // Add case for "Polls"
+      case "poll":
         return (
           <CustomIcon
             name="ChartBarIcon"
-            solid={true}
             size={20}
+            solid={true}
             color={theme.notificationsIcon}
           />
         );
@@ -123,10 +123,11 @@ const NotificationCard: React.FC<NotificationCardProps> = ({
           },
         ]}
       >
-        {/* Update post */}
         <View style={styles.content}>
           <View style={styles.userContainer}>
-            <Image source={{ uri: avatar }} style={styles.avatar} />
+            <View style={styles.avatarContainer}>
+              <Image source={{ uri: avatar }} style={styles.avatar} />
+            </View>
             <View style={styles.userNameAndDateContainer}>
               <PugText style={[styles.username, { color: theme.textColor }]}>
                 {username}
@@ -179,10 +180,15 @@ const styles = StyleSheet.create({
   content: {
     flex: 1,
   },
-  avatar: {
+  avatarContainer: {
     width: 40,
     height: 40,
     borderRadius: 20,
+    overflow: "hidden", // Ensure the image is clipped to the container's shape
+  },
+  avatar: {
+    width: 40,
+    height: 40,
   },
   userContainer: {
     flexDirection: "row",
