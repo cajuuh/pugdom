@@ -1,6 +1,6 @@
 export type MediaAttachment = {
   id: string;
-  type: 'image' | 'video' | 'gifv' | 'audio' | 'unknown';
+  type: "image" | "video" | "gifv" | "audio" | "unknown";
   url: string;
   preview_url: string;
   remote_url?: string;
@@ -25,6 +25,13 @@ export type Account = {
   acct: string;
 };
 
+export type Emoji = {
+  shortcode: string;
+  url: string;
+  static_url: string;
+  visible_in_picker: boolean;
+};
+
 export type FeedItem = {
   id: string;
   content: string;
@@ -35,12 +42,26 @@ export type FeedItem = {
   };
   media_attachments: MediaAttachment[];
   reblog?: FeedItem;
-  emojis: {
-    shortcode: string;
-    url: string;
-    static_url: string;
-    visible_in_picker: boolean;
-  }[];
+  emojis: Emoji[];
+  poll?: Poll;
+};
+
+export type PollOption = {
+  title: string;
+  votes_count: number;
+};
+
+export type Poll = {
+  id: string;
+  expires_at: string;
+  expired: boolean;
+  multiple: boolean;
+  votes_count: number;
+  voters_count: number;
+  options: PollOption[];
+  voted: boolean;
+  own_votes: number[];
+  emojis: any[]; // Adjust the type as needed
 };
 
 export type BottomTabParamList = {

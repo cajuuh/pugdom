@@ -3,6 +3,12 @@
     "name": "Pugdom",
     "slug": "pugdom",
     "scheme": "pugdom",
+    "splash": {
+      "backgroundColor": "#F8F9F9",
+      "dark": {
+        "backgroundColor": "#2A2E34"
+      }
+    },
     "platforms": ["ios", "android", "web"],
     "ios": {
       "bundleIdentifier": "com.cajuuh.pugdom",

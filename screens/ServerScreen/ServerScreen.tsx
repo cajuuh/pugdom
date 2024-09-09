@@ -5,11 +5,11 @@ import React, { useCallback, useEffect, useRef, useState } from "react";
 import { ActivityIndicator, View } from "react-native";
 import PugButton from "../../components/Button/Button";
 import { PugText } from "../../components/Text/Text";
-import { config } from "../../config";
 import { useAppContext } from "../../context/AppContext";
 import { getToken, getUserInfo } from "../../services/authService";
 import { RootStackParamList } from "../types";
 import { Container, StyledInput } from "./styles/ServerScreen.style";
+import { config } from "../../config";
 
 type Props = NativeStackScreenProps<RootStackParamList, "Server">;
 

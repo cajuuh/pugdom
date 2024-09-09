@@ -32,10 +32,6 @@ const HomeScreen = forwardRef<HomeScreenProps, any>(
       fetchFeed();
     }, []);
 
-    useEffect(() => {
-      console.log("Theme updated:", theme);
-    }, [theme]);
-
     const onRefresh = async () => {
       setRefreshing(true);
       await fetchFeed();
@@ -77,6 +73,7 @@ const HomeScreen = forwardRef<HomeScreenProps, any>(
               statusId={item.id}
               customEmojis={item.emojis}
               onReplyPress={() => openReplyDrawer(item.id)}
+              poll={item.poll}
             />
           )}
           ListFooterComponent={
