@@ -30,9 +30,13 @@ const EmojiRenderer: React.FC<EmojiRendererProps> = ({
 
   const processedContent = replaceEmojis(content, emojis);
 
+  const wrappedContent = !processedContent.trim().startsWith("<p>")
+    ? `<p>${processedContent}</p>`
+    : processedContent;
+
   return (
     <HTMLView
-      value={processedContent}
+      value={wrappedContent}
       stylesheet={stylesheet}
       renderNode={(node, index, siblings, parent, defaultRenderer) => {
         if (node.name === "img") {

@@ -1,5 +1,10 @@
 import { ForwardedRef } from "react";
-import { BottomTabParamList, Emoji, Poll } from "../screens/types";
+import {
+  BottomTabParamList,
+  Emoji,
+  MediaAttachment,
+  Poll,
+} from "../screens/types";
 import { IconName } from "../utils/Icons";
 
 // src/components/interfaces.ts
@@ -24,6 +29,7 @@ export interface NotificationItem {
   title: string;
   body: string;
   date: string;
+  created_at: string;
   account: {
     id: string;
     username: string;
@@ -32,6 +38,8 @@ export interface NotificationItem {
   status?: {
     id: string;
     content: string;
+    media_attachments?: MediaAttachment[];
+    poll?: Poll;
   };
   mediaAttachments?: string[];
   poll?: Poll;
