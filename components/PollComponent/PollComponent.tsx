@@ -25,7 +25,7 @@ interface DurationObject {
 }
 
 const PollComponent = forwardRef<any, PollDrawerProps>(
-  ({ onSavePoll }, ref) => {
+  ({ onPollDataChange }, ref) => {
     const sheetRef = useRef<BottomSheet>(null);
     const [pollOptions, setPollOptions] = useState<string[]>(["", ""]);
     const [duration, setDuration] = useState<DurationObject>();
@@ -55,21 +55,27 @@ const PollComponent = forwardRef<any, PollDrawerProps>(
       const updatedOptions = [...pollOptions];
       updatedOptions[index] = text;
       setPollOptions(updatedOptions);
+      onPollDataChange({ options: updatedOptions, duration: duration?.value });
+    };
+
+    const handleDurationChange = (newDuration: DurationObject) => {
+      setDuration(newDuration);
+      onPollDataChange({ options: pollOptions, duration: newDuration.value });
     };
 
     const addPollOption = () => {
       if (pollOptions.length < maxOptions) {
-        setPollOptions([...pollOptions, ""]);
+        const updatedOptions = [...pollOptions, ""];
+        setPollOptions(updatedOptions);
+        onPollDataChange({
+          options: updatedOptions,
+          duration: duration?.value,
+        });
       }
     };
 
     const removePollOption = (index: number) => {
       setPollOptions(pollOptions.filter((_, i) => i !== index));
-    };
-
-    const handleSavePoll = () => {
-      onSavePoll({ options: pollOptions, duration });
-      sheetRef.current?.close();
     };
 
     return (
@@ -131,7 +137,7 @@ const PollComponent = forwardRef<any, PollDrawerProps>(
         <DurationSelectModal
           visible={isDurationModalVisible}
           onClose={toggleDurationModal}
-          onSelect={(durationValue) => setDuration(durationValue)}
+          onSelect={handleDurationChange}
         />
       </View>
     );

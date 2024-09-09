@@ -59,25 +59,35 @@ const NotificationsScreen: React.FC = () => {
   }
 
   return (
-    <View style={{ flex: 1, padding: 16, backgroundColor: theme.backgroundColor }}>
+    <View
+      style={{ flex: 1, padding: 16, backgroundColor: theme.backgroundColor }}
+    >
       {notifications ? (
         <FlatList
           data={notifications}
           keyExtractor={(item) => item.id}
-          renderItem={({ item }) => (
-            <View>
-              <NotificationCard
-                title={item.title}
-                body={item.body}
-                date={item.date}
-                avatar={item.account.avatar}
-                username={item.account.username}
-                mediaAttachments={item.mediaAttachments}
-              />
-            </View>
-          )}
+          renderItem={({ item }) => {
+            return (
+              <View>
+                <NotificationCard
+                  title={item.title}
+                  body={item.body}
+                  date={item.date}
+                  avatar={item.account.avatar}
+                  username={item.account.username}
+                  mediaAttachments={item.mediaAttachments}
+                  poll={item.poll}
+                  customEmojis={item.customEmojis || []}
+                />
+              </View>
+            );
+          }}
           refreshControl={
-            <RefreshControl refreshing={refreshing} onRefresh={onRefresh} tintColor={theme.primaryColor} />
+            <RefreshControl
+              refreshing={refreshing}
+              onRefresh={onRefresh}
+              tintColor={theme.primaryColor}
+            />
           }
         />
       ) : (

@@ -1,5 +1,5 @@
 import { ForwardedRef } from "react";
-import { BottomTabParamList } from "../screens/types";
+import { BottomTabParamList, Emoji, Poll } from "../screens/types";
 import { IconName } from "../utils/Icons";
 
 // src/components/interfaces.ts
@@ -34,6 +34,8 @@ export interface NotificationItem {
     content: string;
   };
   mediaAttachments?: string[];
+  poll?: Poll;
+  customEmojis?: Emoji[];
 }
 
 export interface NotificationCardProps {
@@ -43,6 +45,8 @@ export interface NotificationCardProps {
   avatar: string;
   username: string;
   mediaAttachments?: string[];
+  poll?: Poll;
+  customEmojis?: Emoji[];
 }
 
 export interface HomeScreenRef {
@@ -131,7 +135,7 @@ export interface PostParams {
 }
 
 export interface PollDrawerProps {
-  onSavePoll: (pollData: any) => void;
+  onPollDataChange: (pollData: any) => void;
 }
 
 export interface DurationSelectModalProps {

@@ -23,7 +23,9 @@ export const getNotifications = async () => {
       const mediaAttachments =
         notification.status?.media_attachments?.map(
           (attachment: any) => attachment.url
-        ) || []; // Extract media attachment URLs
+        ) || [];
+
+      const poll = notification.status?.poll;
 
       return {
         id: notification.id,
@@ -42,6 +44,7 @@ export const getNotifications = async () => {
             }
           : undefined,
         mediaAttachments,
+        poll,
       };
     });
   } catch (error) {
