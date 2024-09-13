@@ -18,7 +18,7 @@ Thank you for considering contributing to **Pugdom**! We welcome any contributio
 ## Guidelines
 
 - **Code Style**: Stick to TypeScript best practices.
-- **Commit Messages**: I use (gitmoji)[https://gitmoji.dev/] but you should use conventional commits.
+- **Commit Messages**: I use [gitmoji](https://gitmoji.dev/) but you can use conventional commits.
 - **Testing**: Ensure features are covered by tests.
 - **Issues**: Report bugs or suggest enhancements through the issue tracker.
 
