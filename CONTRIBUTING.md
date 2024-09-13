@@ -1,6 +1,5 @@
 ### CONTRIBUTING.md
 
-````markdown
 # Contributing to Pugdom
 
 Thank you for considering contributing to **Pugdom**! We welcome any contributions to improve the project.
@@ -24,4 +23,3 @@ Thank you for considering contributing to **Pugdom**! We welcome any contributio
 - **Issues**: Report bugs or suggest enhancements through the issue tracker.
 
 Thank you for your contribution!
-````
