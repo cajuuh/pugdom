@@ -1,4 +1,4 @@
-import { ForwardedRef } from "react";
+import { ForwardedRef, ReactNode } from "react";
 import {
   BottomTabParamList,
   Emoji,
@@ -150,6 +150,10 @@ export interface DurationSelectModalProps {
   visible: boolean;
   onClose: () => void;
   onSelect: (duration: { label: string; value: number }) => void;
+}
+
+export interface FeedProviderProps {
+  children: ReactNode;
 }
 
 export interface ThemeType {

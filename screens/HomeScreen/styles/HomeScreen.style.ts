@@ -1,9 +1,5 @@
 import styled from "styled-components/native";
-import { ThemeType } from "../../../components/interfaces";
-
-type ThemeProps = {
-  theme: ThemeType;
-};
+import { ThemeProps } from "../../types";
 
 const Container = styled.View<ThemeProps>`
   flex: 1;

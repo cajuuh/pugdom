@@ -18,6 +18,7 @@ import { Container, WelcomeText } from "./styles/HomeScreen.style";
 
 const HomeScreen = forwardRef<HomeScreenProps, any>(
   ({ replyDrawerRef, ...props }, ref) => {
+    let newContentCount = 0;
     const isFocused = useIsFocused();
     const theme = useTheme();
     const { appParams, setReplyStatus } = useAppContext();
@@ -42,8 +43,12 @@ const HomeScreen = forwardRef<HomeScreenProps, any>(
 
     useEffect(() => {
       if (hasNewContent) {
-        console.log("New content detected, showing banner...");
-        bannerRef.current?.showBanner();
+        newContentCount++;
+        if (newContentCount > 5) {
+          console.log("New content detected, showing banner...");
+          bannerRef.current?.showBanner();
+          newContentCount = 0;
+        }
       }
     }, [hasNewContent]);
 
