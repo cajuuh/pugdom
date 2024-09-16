@@ -3,7 +3,7 @@ import { useState, useEffect } from "react";
 import { TootContext } from "../screens/types";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
-const useTootContext = (tootId: string | null, accessToken: string) => {
+const useTootContext = (tootId: string | null) => {
   const [thread, setThread] = useState<TootContext | null>(null);
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
@@ -45,7 +45,7 @@ const useTootContext = (tootId: string | null, accessToken: string) => {
     };
 
     fetchTootContext();
-  }, [tootId, accessToken]);
+  }, [tootId]);
 
   return { thread, loading, error };
 };

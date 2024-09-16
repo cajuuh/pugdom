@@ -65,7 +65,8 @@ export type Poll = {
   options: PollOption[];
   voted: boolean;
   own_votes: number[];
-  emojis: any[]; // Adjust the type as needed
+  emojis: Emoji[];
+  question: string;
 };
 
 export type BottomTabParamList = {
@@ -116,6 +117,26 @@ export type TootCardProps = {
   poll?: Poll;
 };
 
+export type Mention = {
+  id: string;
+  username: string;
+  acct: string;
+  url: string;
+};
+
+export type Tag = {
+  name: string;
+  url: string;
+};
+
+export type Card = {
+  url: string;
+  title: string;
+  description: string;
+  image?: string;
+};
+
+// for more information check(https://docs.joinmastodon.org/methods/statuses/#index)
 export type TootDetailParams = {
   content: string;
   profileImageUrl: string;
@@ -126,6 +147,21 @@ export type TootDetailParams = {
   statusId: string;
   customEmojis: Emoji[];
   poll?: Poll;
+  in_reply_to_id: string | null;
+  in_reply_to_account_id: string | null;
+  createdAt: string;
+  sensitive: boolean;
+  spoilerText: string;
+  visibility: "public" | "unlisted" | "private" | "direct";
+  favouritesCount: number;
+  reblogsCount: number;
+  repliesCount: number;
+  accountId: string;
+  url: string;
+  emojis: Emoji[];
+  mentions: Mention[];
+  tags: Tag[];
+  card?: Card;
 };
 
 export type TootScreenRouteProp = RouteProp<RootStackParamList, "TootScreen">;
