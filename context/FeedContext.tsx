@@ -1,18 +1,8 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import React, {
-  createContext,
-  ReactNode,
-  useContext,
-  useEffect,
-  useState,
-} from "react";
-import { FeedItem } from "../screens/types";
+import React, { createContext, useContext, useEffect, useState } from "react";
+import { FeedProviderProps } from "../components/interfaces";
+import { Emoji, FeedItem } from "../screens/types";
 import { getHomeFeed } from "../services/feedService";
-
-interface Emoji {
-  shortcode: string;
-  url: string;
-}
 
 interface FeedContextProps {
   feed: FeedItem[];
@@ -28,10 +18,6 @@ interface FeedContextProps {
 
 const FeedContext = createContext<FeedContextProps | undefined>(undefined);
 
-interface FeedProviderProps {
-  children: ReactNode;
-}
-
 export const FeedProvider: React.FC<FeedProviderProps> = ({ children }) => {
   const [feed, setFeed] = useState<FeedItem[]>([]);
   const [customEmojis, setCustomEmojis] = useState<Emoji[]>([]);
@@ -42,7 +28,6 @@ export const FeedProvider: React.FC<FeedProviderProps> = ({ children }) => {
   let ws: WebSocket | null = null;
 
   useEffect(() => {
-    // Load user preference for autoUpdate
     const loadPreference = async () => {
       const storedPreference = await AsyncStorage.getItem(
         "autoUpdatePreference"
@@ -57,7 +42,7 @@ export const FeedProvider: React.FC<FeedProviderProps> = ({ children }) => {
     try {
       const { feedItems, customEmojis } = await getHomeFeed();
       setFeed(feedItems);
-      setCustomEmojis(customEmojis); // Store the custom emojis for use in the UI
+      setCustomEmojis(customEmojis);
       return feedItems;
     } catch (error) {
       console.error("Error fetching home feed:", error);
@@ -69,7 +54,7 @@ export const FeedProvider: React.FC<FeedProviderProps> = ({ children }) => {
     try {
       const latestFeedItem = await getHomeFeed({ latestOnly: true });
       if (!feed.length) return false;
-      return latestFeedItem && latestFeedItem[0].id !== feed[0].id;
+      return latestFeedItem && latestFeedItem.feedItems[0]?.id !== feed[0].id;
     } catch (error) {
       console.error("Error checking for new content:", error);
       return false;

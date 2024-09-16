@@ -4,8 +4,10 @@ import { useMastodonAPI } from "../../hooks/useMastodonAPI";
 import CustomIcon from "../../utils/Icons";
 import { StatusActionBarProps } from "../interfaces";
 
-
-const StatusActionBar: React.FC<StatusActionBarProps> = ({ statusId, onReplyPress }) => {
+const StatusActionBar: React.FC<StatusActionBarProps> = ({
+  statusId,
+  onReplyPress,
+}) => {
   const [isFavorited, setIsFavorited] = useState(false);
   const [isReblogged, setIsReblogged] = useState(false);
   const [isBookmarked, setIsBookmarked] = useState(false);
@@ -31,12 +33,14 @@ const StatusActionBar: React.FC<StatusActionBarProps> = ({ statusId, onReplyPres
     <View>
       <View style={styles.container}>
         <View style={styles.actions}>
-          <TouchableOpacity onPress={() => onReplyPress(statusId)} style={styles.icon}>
+          <TouchableOpacity
+            onPress={() => onReplyPress(statusId)}
+            style={styles.icon}
+          >
             <CustomIcon
               name="ChatBubbleOvalLeftIcon"
-              solid={isFavorited}
               size={22}
-              color={isFavorited ? "#E0245E" : "#aaa"}
+              color={"#aaa"}
             />
           </TouchableOpacity>
           <TouchableOpacity onPress={handleFavorite} style={styles.icon}>

@@ -1,5 +1,6 @@
 import { RouteProp } from "@react-navigation/native";
 import { StackNavigationProp } from "@react-navigation/stack";
+import { ThemeType } from "../components/interfaces";
 
 export type MediaAttachment = {
   id: string;
@@ -31,8 +32,8 @@ export type Account = {
 export type Emoji = {
   shortcode: string;
   url: string;
-  static_url: string;
-  visible_in_picker: boolean;
+  static_url?: string;
+  visible_in_picker?: boolean;
 };
 
 export type FeedItem = {
@@ -132,3 +133,12 @@ export type TootScreenNavigationProp = StackNavigationProp<
   RootStackParamList,
   "TootScreen"
 >;
+
+export type ThemeProps = {
+  theme: ThemeType;
+};
+
+export type TootContext = {
+  ancestors: Array<any>;
+  descendants: Array<any>;
+};
