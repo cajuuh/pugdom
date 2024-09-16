@@ -1,5 +1,11 @@
 import React from "react";
-import { Dimensions, FlatList, TouchableOpacity } from "react-native";
+import {
+  ActivityIndicator,
+  Dimensions,
+  FlatList,
+  TouchableOpacity,
+  View,
+} from "react-native";
 
 import {
   MediaAttachment,
@@ -21,6 +27,7 @@ import {
 } from "./TootScreen.style";
 import { PugText } from "../../components/Text/Text";
 import CustomIcon from "../../utils/Icons";
+import useTootContext from "../../context/TootContext";
 
 const { width } = Dimensions.get("window");
 
@@ -33,6 +40,8 @@ export default function TootScreen({ route, navigation }: Props) {
   const { toot } = route.params;
   const theme = useTheme();
   const htmlStyles = TootCardHtmlStyles(theme);
+
+  const { thread, loading, error } = useTootContext(toot.in_reply_to_id);
 
   const renderMediaItem = ({ item }: { item: MediaAttachment }) => (
     <MediaImage
@@ -61,15 +70,49 @@ export default function TootScreen({ route, navigation }: Props) {
           </BackButtonContainer>
         </TouchableOpacity>
       </HeaderContainer>
+
+      {/* Sensitive content warning */}
+      {toot.sensitive && toot.spoilerText && (
+        <View style={{ padding: 10, backgroundColor: theme.attention }}>
+          <PugText style={{ color: theme.textColor, fontWeight: "bold" }}>
+            {toot.spoilerText}
+          </PugText>
+        </View>
+      )}
+
+      {/* Thread loading state */}
+      {loading && <ActivityIndicator size="small" color={theme.textColor} />}
+      {error && <PugText style={{ color: "red" }}>{error}</PugText>}
+
+      {/* Display the thread (ancestors) if it exists */}
+      {thread && thread.ancestors.length > 0 && (
+        <View style={{ padding: 10 }}>
+          <PugText style={{ color: theme.textColor, fontWeight: "bold" }}>
+            Thread:
+          </PugText>
+          {thread.ancestors.map((ancestor) => (
+            <View key={ancestor.id} style={{ marginVertical: 5 }}>
+              <PugText style={{ color: theme.textColor }}>
+                {ancestor.content}
+              </PugText>
+            </View>
+          ))}
+        </View>
+      )}
+
       <DataContainer>
         <ProfileImageContainer>
           <ProfileImage source={{ uri: toot.profileImageUrl }} />
         </ProfileImageContainer>
+
+        {/* Content of the toot */}
         <EmojiRenderer
           content={toot.content}
           emojis={toot.customEmojis}
           stylesheet={htmlStyles}
         />
+
+        {/* Display media attachments */}
         <FlatList
           data={toot.mediaAttachments}
           renderItem={renderMediaItem}
@@ -78,6 +121,86 @@ export default function TootScreen({ route, navigation }: Props) {
           pagingEnabled
           showsHorizontalScrollIndicator={false}
         />
+
+        {/* Display poll if exists */}
+        {toot.poll && (
+          <View style={{ padding: 10 }}>
+            {/* Render poll details here */}
+            <PugText style={{ color: theme.textColor }}>
+              Poll: {toot.poll.question}
+            </PugText>
+            {/* Map through poll options */}
+            {toot.poll.options.map((option, index) => (
+              <PugText key={index} style={{ color: theme.textColor }}>
+                {option.title} - {option.votes_count} votes
+              </PugText>
+            ))}
+          </View>
+        )}
+
+        {/* Display engagement metrics (reblogs, favourites, replies) */}
+        {/* <View
+          style={{
+            padding: 10,
+            flexDirection: "row",
+            justifyContent: "space-between",
+          }}
+        >
+          <Text style={{ color: theme.colors.text }}>
+            ❤️ {toot.favouritesCount}
+          </Text>
+          <Text style={{ color: theme.colors.text }}>
+            🔁 {toot.reblogsCount}
+          </Text>
+          <Text style={{ color: theme.colors.text }}>
+            💬 {toot.repliesCount}
+          </Text>
+        </View> */}
+
+        {/* Mentions and hashtags */}
+        {/* {toot.mentions.length > 0 && (
+          <View style={{ padding: 10 }}>
+            <Text style={{ color: theme.colors.text, fontWeight: "bold" }}>
+              Mentions:
+            </Text>
+            {toot.mentions.map((mention) => (
+              <Text key={mention.id} style={{ color: theme.colors.text }}>
+                @{mention.username} ({mention.acct})
+              </Text>
+            ))}
+          </View>
+        )} */}
+
+        {toot.tags?.length > 0 && (
+          <View style={{ padding: 10 }}>
+            <PugText style={{ color: theme.textColor, fontWeight: "bold" }}>
+              Tags:
+            </PugText>
+            {toot.tags.map((tag) => (
+              <PugText key={tag.name} style={{ color: theme.textColor }}>
+                #{tag.name}
+              </PugText>
+            ))}
+          </View>
+        )}
+
+        {/* If the toot has a URL, display a preview card */}
+        {toot.card && (
+          <View style={{ padding: 10 }}>
+            <PugText style={{ color: theme.textColor, fontWeight: "bold" }}>
+              {toot.card.title}
+            </PugText>
+            <PugText style={{ color: theme.textColor }}>
+              {toot.card.description}
+            </PugText>
+            {toot.card.image && (
+              <MediaImage
+                source={{ uri: toot.card.image }}
+                style={{ width: width - 15, height: 150 }}
+              />
+            )}
+          </View>
+        )}
       </DataContainer>
     </Container>
   );
