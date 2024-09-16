@@ -18,6 +18,7 @@ import TabNavigation from "./navigation/TabNavigation/TabNavigation";
 import ServerScreen from "./screens/ServerScreen/ServerScreen";
 import WebViewScreen from "./screens/WebViewScreen/WebViewScreen";
 import { RootStackParamList } from "./screens/types";
+import TootScreen from "./screens/TootScreen/TootScreen";
 
 const AppContent = () => {
   const { theme } = useAppContext();
@@ -79,6 +80,11 @@ const AppContent = () => {
           <Stack.Screen name="TabNavigation" component={TabNavigation} />
           <Stack.Screen name="Server" component={ServerScreen} />
           <Stack.Screen name="WebView" component={WebViewScreen} />
+          <Stack.Screen
+            name="TootScreen"
+            component={TootScreen}
+            options={{ headerShown: false }}
+          />
         </Stack.Navigator>
       </NavigationContainer>
     </ThemeProvider>

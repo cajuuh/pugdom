@@ -1,16 +1,18 @@
 import { PTSans_400Regular, PTSans_700Bold } from "@expo-google-fonts/pt-sans";
 import { useFonts } from "@expo-google-fonts/pt-sans/useFonts";
 import React from "react";
-import { ActivityIndicator, Image, StyleSheet, View, Text } from "react-native";
+import {
+  ActivityIndicator,
+  Image,
+  StyleSheet,
+  View,
+  Text,
+  TouchableOpacity,
+} from "react-native";
 import { PugText } from "../../components/Text/Text";
 import Colors from "../../constants/Colors";
 import { useTheme } from "../../hooks/useTheme";
-import {
-  FeedItem,
-  MediaAttachment,
-  Poll,
-  PollOption,
-} from "../../screens/types";
+import { RootStackParamList, TootCardProps } from "../../screens/types";
 import CustomIcon from "../../utils/Icons";
 import TootCardHtmlStyles from "../../utils/htmlStyles";
 import { formatServerUrl } from "../../utils/utils";
@@ -33,24 +35,10 @@ import {
   Username,
 } from "./styles/TootCard.style";
 import EmojiRenderer from "../EmojiRenderer/EmojiRenderer";
+import { useNavigation } from "@react-navigation/native";
+import { StackNavigationProp } from "@react-navigation/stack";
 
-type Emoji = {
-  shortcode: string;
-  url: string;
-};
-
-type TootCardProps = {
-  content: string;
-  profileImageUrl: string;
-  mediaAttachments: MediaAttachment[];
-  username: string;
-  serverUrl: string;
-  reblog?: FeedItem;
-  statusId: string;
-  customEmojis: Emoji[];
-  onReplyPress: () => void;
-  poll?: Poll; // Use the Poll type here
-};
+type TootCardNavigationProp = StackNavigationProp<RootStackParamList, "Home">;
 
 const TootCard: React.FC<TootCardProps> = ({
   content = "",
@@ -66,6 +54,7 @@ const TootCard: React.FC<TootCardProps> = ({
 }) => {
   const theme = useTheme();
   const htmlStyles = TootCardHtmlStyles(theme);
+  const navigation = useNavigation<TootCardNavigationProp>();
 
   const renderReblogPill = () => (
     <View
@@ -139,34 +128,52 @@ const TootCard: React.FC<TootCardProps> = ({
     return <PugText>No Toots Found!</PugText>;
   }
 
+  const handlePress = () => {
+    navigation.navigate("TootScreen", {
+      toot: {
+        content,
+        profileImageUrl,
+        mediaAttachments,
+        username,
+        serverUrl,
+        reblog,
+        statusId,
+        customEmojis,
+        poll,
+      },
+    });
+  };
+
   return (
-    <CardContainer>
-      {reblog && renderReblogPill()}
-      <UserInfo>
-        <ProfileImageContainer>
-          {reblog ? (
-            <ProfileImage source={{ uri: reblog?.account.avatar }} />
-          ) : (
-            <ProfileImage source={{ uri: profileImageUrl }} />
-          )}
-        </ProfileImageContainer>
-        <UserNameContainer>
-          {reblog ? (
-            <Username style={styles.username}>
-              {reblog?.account.username}
-            </Username>
-          ) : (
-            <Username style={styles.username}>{username}</Username>
-          )}
-          <Server style={styles.server}>
-            {"@" + formatServerUrl(serverUrl)}
-          </Server>
-        </UserNameContainer>
-      </UserInfo>
-      <ContentContainer>{renderCardContent()}</ContentContainer>
-      {poll && renderPoll()}
-      <StatusActionBar statusId={statusId} onReplyPress={onReplyPress} />
-    </CardContainer>
+    <TouchableOpacity onPress={handlePress}>
+      <CardContainer>
+        {reblog && renderReblogPill()}
+        <UserInfo>
+          <ProfileImageContainer>
+            {reblog ? (
+              <ProfileImage source={{ uri: reblog?.account.avatar }} />
+            ) : (
+              <ProfileImage source={{ uri: profileImageUrl }} />
+            )}
+          </ProfileImageContainer>
+          <UserNameContainer>
+            {reblog ? (
+              <Username style={styles.username}>
+                {reblog?.account.username}
+              </Username>
+            ) : (
+              <Username style={styles.username}>{username}</Username>
+            )}
+            <Server style={styles.server}>
+              {"@" + formatServerUrl(serverUrl)}
+            </Server>
+          </UserNameContainer>
+        </UserInfo>
+        <ContentContainer>{renderCardContent()}</ContentContainer>
+        {poll && renderPoll()}
+        <StatusActionBar statusId={statusId} onReplyPress={onReplyPress} />
+      </CardContainer>
+    </TouchableOpacity>
   );
 };
 
