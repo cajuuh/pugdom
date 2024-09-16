@@ -1,3 +1,6 @@
+import { RouteProp } from "@react-navigation/native";
+import { StackNavigationProp } from "@react-navigation/stack";
+
 export type MediaAttachment = {
   id: string;
   type: "image" | "video" | "gifv" | "audio" | "unknown";
@@ -96,4 +99,36 @@ export type RootStackParamList = {
     params?: { username: string };
   };
   ReplyScreen: { statusId: string | null };
+  TootScreen: { toot: TootDetailParams };
 };
+
+export type TootCardProps = {
+  content: string;
+  profileImageUrl: string;
+  mediaAttachments: MediaAttachment[];
+  username: string;
+  serverUrl: string;
+  reblog?: FeedItem;
+  statusId: string;
+  customEmojis: Emoji[];
+  onReplyPress: () => void;
+  poll?: Poll;
+};
+
+export type TootDetailParams = {
+  content: string;
+  profileImageUrl: string;
+  mediaAttachments: MediaAttachment[];
+  username: string;
+  serverUrl: string;
+  reblog?: FeedItem;
+  statusId: string;
+  customEmojis: Emoji[];
+  poll?: Poll;
+};
+
+export type TootScreenRouteProp = RouteProp<RootStackParamList, "TootScreen">;
+export type TootScreenNavigationProp = StackNavigationProp<
+  RootStackParamList,
+  "TootScreen"
+>;
