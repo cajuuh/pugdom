@@ -24,6 +24,7 @@ import {
   DataContainer,
   HeaderContainer,
   BackButtonContainer,
+  MediaContainer,
 } from "./TootScreen.style";
 import { PugText } from "../../components/Text/Text";
 import CustomIcon from "../../utils/Icons";
@@ -43,11 +44,15 @@ export default function TootScreen({ route, navigation }: Props) {
 
   const { thread, loading, error } = useTootContext(toot.in_reply_to_id);
 
+  const originalToot = toot.reblog ? toot.reblog : toot;
+
+  console.log(originalToot);
+
   const renderMediaItem = ({ item }: { item: MediaAttachment }) => (
     <MediaImage
       key={item.id}
       source={{ uri: item.url }}
-      style={{ width: width - 15, height: "50%", marginRight: "2%" }}
+      style={{ width: width - 50, height: "50%", marginRight: "2%" }}
     />
   );
 
@@ -102,24 +107,20 @@ export default function TootScreen({ route, navigation }: Props) {
 
       <DataContainer>
         <ProfileImageContainer>
-          <ProfileImage source={{ uri: toot.profileImageUrl }} />
+          <ProfileImage
+            source={{
+              uri: originalToot?.account?.avatar
+                ? originalToot?.account?.avatar
+                : originalToot.profileImageUrl,
+            }}
+          />
         </ProfileImageContainer>
 
         {/* Content of the toot */}
         <EmojiRenderer
-          content={toot.content}
-          emojis={toot.customEmojis}
+          content={originalToot.content}
+          emojis={originalToot.emojis}
           stylesheet={htmlStyles}
-        />
-
-        {/* Display media attachments */}
-        <FlatList
-          data={toot.mediaAttachments}
-          renderItem={renderMediaItem}
-          keyExtractor={(item) => item.id}
-          horizontal
-          pagingEnabled
-          showsHorizontalScrollIndicator={false}
         />
 
         {/* Display poll if exists */}
@@ -202,6 +203,15 @@ export default function TootScreen({ route, navigation }: Props) {
           </View>
         )}
       </DataContainer>
+      {/* Display media attachments */}
+      <FlatList
+        data={originalToot.media_attachments}
+        renderItem={renderMediaItem}
+        keyExtractor={(item) => item.id}
+        horizontal
+        pagingEnabled
+        showsHorizontalScrollIndicator={false}
+      />
     </Container>
   );
 }

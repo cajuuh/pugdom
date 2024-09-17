@@ -43,7 +43,7 @@ type TootCardNavigationProp = StackNavigationProp<RootStackParamList, "Home">;
 const TootCard: React.FC<TootCardProps> = ({
   content = "",
   profileImageUrl = "",
-  mediaAttachments = [],
+  media_attachments = [],
   username = "",
   serverUrl = "",
   reblog,
@@ -100,7 +100,7 @@ const TootCard: React.FC<TootCardProps> = ({
             emojis={relevantEmojis}
             stylesheet={htmlStyles}
           />
-          {mediaAttachments.map((media) => (
+          {media_attachments.map((media) => (
             <MediaImage key={media.id} source={{ uri: media.url }} />
           ))}
         </>
@@ -133,13 +133,33 @@ const TootCard: React.FC<TootCardProps> = ({
       toot: {
         content,
         profileImageUrl,
-        mediaAttachments,
+        media_attachments,
+        account: {
+          username,
+          avatar: profileImageUrl,
+          url: serverUrl,
+        },
         username,
         serverUrl,
         reblog,
         statusId,
         customEmojis,
         poll,
+        in_reply_to_id: null,
+        in_reply_to_account_id: null,
+        createdAt: new Date().toISOString(),
+        sensitive: false,
+        spoilerText: "",
+        visibility: "public",
+        favouritesCount: 0,
+        reblogsCount: 0,
+        repliesCount: 0,
+        accountId: "12345",
+        url: undefined,
+        emojis: customEmojis,
+        mentions: [],
+        tags: [],
+        card: undefined,
       },
     });
   };
