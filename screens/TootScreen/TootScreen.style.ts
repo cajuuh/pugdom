@@ -40,6 +40,10 @@ const MediaImage = styled(ExpoImage)`
   cache-policy: memory-disk;
 `;
 
+const MediaContainer = styled.View`
+  margin-top: 10px;
+`;
+
 const ProfileImageContainer = styled.View`
   width: 40px;
   height: 40px;
@@ -66,4 +70,5 @@ export {
   DataContainer,
   HeaderContainer,
   BackButtonContainer,
+  MediaContainer,
 };

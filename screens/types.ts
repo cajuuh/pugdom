@@ -39,12 +39,13 @@ export type Emoji = {
 export type FeedItem = {
   id: string;
   content: string;
+  profileImageUrl: string;
   account: {
     username: string;
     avatar: string;
     url: string;
   };
-  media_attachments: MediaAttachment[];
+  media_attachments: MediaAttachment[]; // Keep only media_attachments
   reblog?: FeedItem;
   emojis: Emoji[];
   poll?: Poll;
@@ -65,8 +66,8 @@ export type Poll = {
   options: PollOption[];
   voted: boolean;
   own_votes: number[];
-  emojis: Emoji[];
   question: string;
+  emojis: Emoji[];
 };
 
 export type BottomTabParamList = {
@@ -107,14 +108,34 @@ export type RootStackParamList = {
 export type TootCardProps = {
   content: string;
   profileImageUrl: string;
-  mediaAttachments: MediaAttachment[];
+  media_attachments: MediaAttachment[]; // Keep only media_attachments
   username: string;
+  account: {
+    username: string;
+    avatar: string;
+    url: string;
+  };
   serverUrl: string;
   reblog?: FeedItem;
   statusId: string;
   customEmojis: Emoji[];
-  onReplyPress: () => void;
   poll?: Poll;
+  in_reply_to_id: string | null;
+  in_reply_to_account_id: string | null;
+  createdAt: string;
+  sensitive: boolean;
+  spoilerText: string;
+  visibility: "public" | "unlisted" | "private" | "direct";
+  favouritesCount: number;
+  reblogsCount: number;
+  repliesCount: number;
+  accountId: string;
+  url: string | undefined;
+  emojis: Emoji[];
+  mentions: Mention[];
+  tags: Tag[];
+  card?: Card;
+  onReplyPress: () => void;
 };
 
 export type Mention = {
@@ -136,11 +157,15 @@ export type Card = {
   image?: string;
 };
 
-// for more information check(https://docs.joinmastodon.org/methods/statuses/#index)
 export type TootDetailParams = {
   content: string;
   profileImageUrl: string;
-  mediaAttachments: MediaAttachment[];
+  account: {
+    username: string;
+    avatar: string;
+    url: string;
+  };
+  media_attachments: MediaAttachment[]; // Keep only media_attachments
   username: string;
   serverUrl: string;
   reblog?: FeedItem;
@@ -157,7 +182,7 @@ export type TootDetailParams = {
   reblogsCount: number;
   repliesCount: number;
   accountId: string;
-  url: string;
+  url: string | undefined;
   emojis: Emoji[];
   mentions: Mention[];
   tags: Tag[];
