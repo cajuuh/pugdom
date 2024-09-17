@@ -204,14 +204,22 @@ export default function TootScreen({ route, navigation }: Props) {
         )}
       </DataContainer>
       {/* Display media attachments */}
-      <FlatList
-        data={originalToot.media_attachments}
-        renderItem={renderMediaItem}
-        keyExtractor={(item) => item.id}
-        horizontal
-        pagingEnabled
-        showsHorizontalScrollIndicator={false}
-      />
+      {originalToot.media_attachments.length === 1 ? (
+        // Render a single image directly
+        <MediaContainer>
+          <MediaImage source={{ uri: originalToot.media_attachments[0].url }} />
+        </MediaContainer>
+      ) : (
+        // Render multiple images with FlatList
+        <FlatList
+          data={originalToot.media_attachments}
+          renderItem={renderMediaItem}
+          keyExtractor={(item) => item.id}
+          horizontal
+          pagingEnabled
+          showsHorizontalScrollIndicator={false}
+        />
+      )}
     </Container>
   );
 }

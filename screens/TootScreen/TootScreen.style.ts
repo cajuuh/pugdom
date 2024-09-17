@@ -41,7 +41,9 @@ const MediaImage = styled(ExpoImage)`
 `;
 
 const MediaContainer = styled.View`
-  margin-top: 10px;
+  justify-content: center;
+  align-content: center;
+  left: 10%;
 `;
 
 const ProfileImageContainer = styled.View`
