@@ -51,6 +51,7 @@ const TootCard: React.FC<TootCardProps> = ({
   customEmojis = [],
   onReplyPress,
   poll,
+  card,
 }) => {
   const theme = useTheme();
   const htmlStyles = TootCardHtmlStyles(theme);
@@ -131,17 +132,17 @@ const TootCard: React.FC<TootCardProps> = ({
   const handlePress = () => {
     navigation.navigate("TootScreen", {
       toot: {
-        content,
-        profileImageUrl,
-        media_attachments,
+        content: content,
+        profileImageUrl: profileImageUrl,
+        media_attachments: media_attachments,
         account: {
           username,
           avatar: profileImageUrl,
           url: serverUrl,
         },
-        username,
-        serverUrl,
-        reblog,
+        username: username,
+        serverUrl: serverUrl,
+        reblog: reblog,
         statusId,
         customEmojis,
         poll,
@@ -159,7 +160,7 @@ const TootCard: React.FC<TootCardProps> = ({
         emojis: customEmojis,
         mentions: [],
         tags: [],
-        card: undefined,
+        card: card,
       },
     });
   };

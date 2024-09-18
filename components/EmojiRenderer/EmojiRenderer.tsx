@@ -1,6 +1,7 @@
 import React from "react";
 import { Image } from "react-native";
 import HTMLView from "react-native-htmlview";
+import LinkPreview from "../../utils/LinkPreview";
 
 type Emoji = {
   shortcode: string;
@@ -18,6 +19,12 @@ const EmojiRenderer: React.FC<EmojiRendererProps> = ({
   emojis,
   stylesheet,
 }) => {
+  const extractFirstURL = (content: string) => {
+    const regex = /(https?:\/\/[^\s]+)/g;
+    const match = content.match(regex);
+    return match ? match[0] : null;
+  };
+
   const replaceEmojis = (text: string, emojis: Emoji[]) => {
     return text.replace(/:([a-zA-Z0-9_]+):/g, (match, shortcode) => {
       const emoji = emojis.find((e) => e.shortcode === shortcode);
@@ -27,6 +34,8 @@ const EmojiRenderer: React.FC<EmojiRendererProps> = ({
       return match;
     });
   };
+
+  const firstURL = extractFirstURL(content);
 
   const processedContent = replaceEmojis(content, emojis);
 

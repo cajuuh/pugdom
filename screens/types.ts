@@ -155,6 +155,7 @@ export type Card = {
   title: string;
   description: string;
   image?: string;
+  embed_url?: string;
 };
 
 export type TootDetailParams = {
