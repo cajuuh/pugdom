@@ -1,3 +1,7 @@
+import { RouteProp } from "@react-navigation/native";
+import { StackNavigationProp } from "@react-navigation/stack";
+import { ThemeType } from "../components/interfaces";
+
 export type MediaAttachment = {
   id: string;
   type: "image" | "video" | "gifv" | "audio" | "unknown";
@@ -28,19 +32,20 @@ export type Account = {
 export type Emoji = {
   shortcode: string;
   url: string;
-  static_url: string;
-  visible_in_picker: boolean;
+  static_url?: string;
+  visible_in_picker?: boolean;
 };
 
 export type FeedItem = {
   id: string;
   content: string;
+  profileImageUrl: string;
   account: {
     username: string;
     avatar: string;
     url: string;
   };
-  media_attachments: MediaAttachment[];
+  media_attachments: MediaAttachment[]; // Keep only media_attachments
   reblog?: FeedItem;
   emojis: Emoji[];
   poll?: Poll;
@@ -61,7 +66,8 @@ export type Poll = {
   options: PollOption[];
   voted: boolean;
   own_votes: number[];
-  emojis: any[]; // Adjust the type as needed
+  question: string;
+  emojis: Emoji[];
 };
 
 export type BottomTabParamList = {
@@ -96,4 +102,105 @@ export type RootStackParamList = {
     params?: { username: string };
   };
   ReplyScreen: { statusId: string | null };
+  TootScreen: { toot: TootDetailParams };
+};
+
+export type TootCardProps = {
+  content: string;
+  profileImageUrl: string;
+  media_attachments: MediaAttachment[]; // Keep only media_attachments
+  username: string;
+  account: {
+    username: string;
+    avatar: string;
+    url: string;
+  };
+  serverUrl: string;
+  reblog?: FeedItem;
+  statusId: string;
+  customEmojis: Emoji[];
+  poll?: Poll;
+  in_reply_to_id: string | null;
+  in_reply_to_account_id: string | null;
+  createdAt: string;
+  sensitive: boolean;
+  spoilerText: string;
+  visibility: "public" | "unlisted" | "private" | "direct";
+  favouritesCount: number;
+  reblogsCount: number;
+  repliesCount: number;
+  accountId: string;
+  url: string | undefined;
+  emojis: Emoji[];
+  mentions: Mention[];
+  tags: Tag[];
+  card?: Card;
+  onReplyPress: () => void;
+};
+
+export type Mention = {
+  id: string;
+  username: string;
+  acct: string;
+  url: string;
+};
+
+export type Tag = {
+  name: string;
+  url: string;
+};
+
+export type Card = {
+  url: string;
+  title: string;
+  description: string;
+  image?: string;
+  embed_url?: string;
+};
+
+export type TootDetailParams = {
+  content: string;
+  profileImageUrl: string;
+  account: {
+    username: string;
+    avatar: string;
+    url: string;
+  };
+  media_attachments: MediaAttachment[]; // Keep only media_attachments
+  username: string;
+  serverUrl: string;
+  reblog?: FeedItem;
+  statusId: string;
+  customEmojis: Emoji[];
+  poll?: Poll;
+  in_reply_to_id: string | null;
+  in_reply_to_account_id: string | null;
+  createdAt: string;
+  sensitive: boolean;
+  spoilerText: string;
+  visibility: "public" | "unlisted" | "private" | "direct";
+  favouritesCount: number;
+  reblogsCount: number;
+  repliesCount: number;
+  accountId: string;
+  url: string | undefined;
+  emojis: Emoji[];
+  mentions: Mention[];
+  tags: Tag[];
+  card?: Card;
+};
+
+export type TootScreenRouteProp = RouteProp<RootStackParamList, "TootScreen">;
+export type TootScreenNavigationProp = StackNavigationProp<
+  RootStackParamList,
+  "TootScreen"
+>;
+
+export type ThemeProps = {
+  theme: ThemeType;
+};
+
+export type TootContext = {
+  ancestors: Array<any>;
+  descendants: Array<any>;
 };
