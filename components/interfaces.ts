@@ -1,4 +1,4 @@
-import { ForwardedRef } from "react";
+import { ForwardedRef, ReactNode } from "react";
 import {
   BottomTabParamList,
   Emoji,
@@ -41,7 +41,7 @@ export interface NotificationItem {
     media_attachments?: MediaAttachment[];
     poll?: Poll;
   };
-  mediaAttachments?: string[];
+  media_attachments?: string[];
   poll?: Poll;
   customEmojis?: Emoji[];
 }
@@ -52,7 +52,7 @@ export interface NotificationCardProps {
   date: string;
   avatar: string;
   username: string;
-  mediaAttachments?: string[];
+  media_attachments?: string[];
   poll?: Poll;
   customEmojis?: Emoji[];
 }
@@ -150,6 +150,10 @@ export interface DurationSelectModalProps {
   visible: boolean;
   onClose: () => void;
   onSelect: (duration: { label: string; value: number }) => void;
+}
+
+export interface FeedProviderProps {
+  children: ReactNode;
 }
 
 export interface ThemeType {

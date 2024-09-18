@@ -18,6 +18,7 @@ import { Container, WelcomeText } from "./styles/HomeScreen.style";
 
 const HomeScreen = forwardRef<HomeScreenProps, any>(
   ({ replyDrawerRef, ...props }, ref) => {
+    let newContentCount = 0;
     const isFocused = useIsFocused();
     const theme = useTheme();
     const { appParams, setReplyStatus } = useAppContext();
@@ -42,8 +43,12 @@ const HomeScreen = forwardRef<HomeScreenProps, any>(
 
     useEffect(() => {
       if (hasNewContent) {
-        console.log("New content detected, showing banner...");
-        bannerRef.current?.showBanner();
+        newContentCount++;
+        if (newContentCount > 5) {
+          console.log("New content detected, showing banner...");
+          bannerRef.current?.showBanner();
+          newContentCount = 0;
+        }
       }
     }, [hasNewContent]);
 
@@ -66,7 +71,7 @@ const HomeScreen = forwardRef<HomeScreenProps, any>(
             <TootCard
               content={item.content}
               profileImageUrl={item.account.avatar}
-              mediaAttachments={item.media_attachments}
+              media_attachments={item.media_attachments}
               username={item.account.username}
               serverUrl={item.account.url}
               reblog={item.reblog}
@@ -74,6 +79,22 @@ const HomeScreen = forwardRef<HomeScreenProps, any>(
               customEmojis={item.emojis}
               onReplyPress={() => openReplyDrawer(item.id)}
               poll={item.poll}
+              card={item.card}
+              account={item.account}
+              in_reply_to_id={item.in_reply_to_id}
+              in_reply_to_account_id={item.in_reply_to_account_id}
+              createdAt={item.createdAt}
+              sensitive={item.sensitive}
+              spoilerText={item.spoilerText}
+              visibility={item.visibility}
+              favouritesCount={item.favouritesCount}
+              reblogsCount={item.reblogsCount}
+              repliesCount={item.repliesCount}
+              accountId={item.account.id}
+              url={item.url}
+              emojis={item.emojis}
+              mentions={item.mentions}
+              tags={item.tags}
             />
           )}
           ListFooterComponent={
