@@ -41,7 +41,7 @@ export interface NotificationItem {
     media_attachments?: MediaAttachment[];
     poll?: Poll;
   };
-  mediaAttachments?: string[];
+  media_attachments?: string[];
   poll?: Poll;
   customEmojis?: Emoji[];
 }
@@ -52,7 +52,7 @@ export interface NotificationCardProps {
   date: string;
   avatar: string;
   username: string;
-  mediaAttachments?: string[];
+  media_attachments?: string[];
   poll?: Poll;
   customEmojis?: Emoji[];
 }

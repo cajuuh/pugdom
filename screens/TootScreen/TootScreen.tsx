@@ -41,7 +41,6 @@ export default function TootScreen({ route, navigation }: Props) {
   const { toot } = route.params;
   const theme = useTheme();
   const htmlStyles = TootCardHtmlStyles(theme);
-
   const { thread, loading, error } = useTootContext(toot.in_reply_to_id);
 
   const originalToot = toot.reblog ? toot.reblog : toot;

@@ -1,4 +1,3 @@
-// tootContext.tsx
 import { useState, useEffect } from "react";
 import { TootContext } from "../screens/types";
 import AsyncStorage from "@react-native-async-storage/async-storage";
@@ -12,35 +11,44 @@ const useTootContext = (tootId: string | null) => {
     const fetchTootContext = async () => {
       if (!tootId) return;
 
-      const userInfoString = await AsyncStorage.getItem("userInfo");
-
-      if (!userInfoString) {
-        console.error("User not authenticated");
-        return;
-      }
-
-      const { accessToken, serverUrl } = JSON.parse(userInfoString);
-      if (!accessToken || !serverUrl) {
-        console.error("Access token or server URL is missing");
-        return;
-      }
-
-      setLoading(true);
       try {
-        const response = await fetch(
-          `${serverUrl}/api/v1/statuses/${tootId}/context`,
-          {
-            headers: {
-              Authorization: `Bearer ${accessToken}`,
-            },
-          }
-        );
+        // Fetch the user info from AsyncStorage
+        const userInfoString = await AsyncStorage.getItem("userInfo");
+
+        if (!userInfoString) {
+          throw new Error("User not authenticated. Please log in.");
+        }
+
+        const { accessToken, serverUrl } = JSON.parse(userInfoString);
+        if (!accessToken || !serverUrl) {
+          throw new Error("Missing access token or server URL.");
+        }
+
+        setLoading(true);
+
+        // Fetch the toot context from the API
+        const response = await fetch(`${serverUrl}/api/v1/statuses/${tootId}`, {
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+          },
+        });
+
+        // Check for non-OK responses
+        if (!response.ok) {
+          const errorText = await response.text();
+          throw new Error(`Failed to load toot context: ${errorText}`);
+        }
+
         const data = await response.json();
-        setThread(data);
-      } catch (err) {
-        setError("Failed to load toot context.");
+        setThread(data); // Set the thread state with the fetched data
+        setError(null); // Clear any existing error
+      } catch (err: any) {
+        // Set specific error messages based on what happened
+        setError(
+          err.message || "An error occurred while loading the toot context."
+        );
       } finally {
-        setLoading(false);
+        setLoading(false); // Stop loading when the request is done
       }
     };
 
