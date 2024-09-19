@@ -3,12 +3,12 @@ import { useFonts } from "@expo-google-fonts/pt-sans/useFonts";
 import React from "react";
 import {
   ActivityIndicator,
-  Image,
   StyleSheet,
   View,
   Text,
   TouchableOpacity,
 } from "react-native";
+import { Image } from "expo-image"; // Import expo-image component
 import { PugText } from "../../components/Text/Text";
 import Colors from "../../constants/Colors";
 import { useTheme } from "../../hooks/useTheme";
@@ -20,13 +20,10 @@ import StatusActionBar from "../StatusActionBar/StatusActionBar";
 import {
   CardContainer,
   ContentContainer,
-  MediaImage,
-  ProfileImage,
   ProfileImageContainer,
   ReblogContainer,
   Server,
   SourceContainer,
-  SourceProfileImage,
   SourceProfileImageContainer,
   SourceUserContainer,
   SourceUsername,
@@ -72,7 +69,11 @@ const TootCard: React.FC<TootCardProps> = ({
         <SourceUserContainer>
           <CustomIcon name="ArrowPathIcon" color={Colors.green} size={20} />
           <SourceProfileImageContainer>
-            <SourceProfileImage source={{ uri: profileImageUrl }} />
+            <Image
+              source={profileImageUrl}
+              style={styles.profileImage}
+              contentFit="cover"
+            />
           </SourceProfileImageContainer>
           <SourceUsername>{username}</SourceUsername>
         </SourceUserContainer>
@@ -92,7 +93,12 @@ const TootCard: React.FC<TootCardProps> = ({
             stylesheet={htmlStyles}
           />
           {reblog.media_attachments.map((media) => (
-            <MediaImage key={media.id} source={{ uri: media.url }} />
+            <Image
+              key={media.id}
+              source={{ uri: media.url }}
+              style={styles.mediaImage}
+              contentFit="cover"
+            />
           ))}
         </ReblogContainer>
       );
@@ -105,7 +111,12 @@ const TootCard: React.FC<TootCardProps> = ({
             stylesheet={htmlStyles}
           />
           {media_attachments.map((media) => (
-            <MediaImage key={media.id} source={{ uri: media.url }} />
+            <Image
+              key={media.id}
+              source={{ uri: media.url }}
+              style={styles.mediaImage}
+              contentFit="cover"
+            />
           ))}
         </>
       );
@@ -175,9 +186,17 @@ const TootCard: React.FC<TootCardProps> = ({
         <UserInfo>
           <ProfileImageContainer>
             {reblog ? (
-              <ProfileImage source={{ uri: reblog?.account.avatar }} />
+              <Image
+                source={{ uri: reblog?.account.avatar }}
+                style={styles.profileImage}
+                contentFit="cover"
+              />
             ) : (
-              <ProfileImage source={{ uri: profileImageUrl }} />
+              <Image
+                source={{ uri: profileImageUrl }}
+                style={styles.profileImage}
+                contentFit="cover"
+              />
             )}
           </ProfileImageContainer>
           <UserNameContainer>
@@ -207,6 +226,17 @@ const styles = StyleSheet.create({
   },
   server: {
     fontFamily: "PTSans_400Regular",
+  },
+  profileImage: {
+    width: 50,
+    height: 50,
+    borderRadius: 25,
+  },
+  mediaImage: {
+    width: 100,
+    height: 100,
+    borderRadius: 8,
+    marginTop: 10,
   },
   pollContainer: {
     marginTop: 10,
