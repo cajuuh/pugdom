@@ -16,6 +16,23 @@ import SearchScreen from "../../screens/SearchScreen/SearchScreen";
 import { BottomTabParamList } from "../../screens/types";
 import { IconName } from "../../utils/Icons";
 import TabButton from "../TabNavigation/components/TabButton";
+import { createStackNavigator } from "@react-navigation/stack";
+import TootScreen from "../../screens/TootScreen/TootScreen";
+
+const HomeStack = createStackNavigator();
+
+const HomeStackNavigator: React.FC = () => {
+  return (
+    <HomeStack.Navigator
+      screenOptions={{
+        headerShown: false,
+      }}
+    >
+      <HomeStack.Screen name="HomeScreen" component={HomeScreen} />
+      <HomeStack.Screen name="TootScreen" component={TootScreen} />
+    </HomeStack.Navigator>
+  );
+};
 
 const TabArr: Array<{
   route: keyof BottomTabParamList;
@@ -27,7 +44,7 @@ const TabArr: Array<{
     route: "Home",
     label: "Home",
     icon: "HomeIcon",
-    component: HomeScreen,
+    component: HomeStackNavigator, // Pass the HomeStackNavigator here
   },
   {
     route: "Search",
@@ -56,12 +73,12 @@ const TabNavigation: React.FC = () => {
   const navigation =
     useNavigation<BottomTabNavigationProp<BottomTabParamList>>();
   const homeScreenRef = useRef<HomeScreenRef>(null);
-  const { isTabVisible, replyStatusId } = useAppContext();
+  const { replyStatusId } = useAppContext();
   const replyDrawerRef = useRef<any>(null);
 
-  const handleNavigation = async (route: keyof BottomTabParamList) => {
+  const handleNavigation = (route: keyof BottomTabParamList) => {
     setCurrentRoute(route);
-    navigation.navigate(route);
+    navigation.navigate(route as any);
   };
 
   const theme = useTheme();
@@ -84,17 +101,7 @@ const TabNavigation: React.FC = () => {
             <Tab.Screen
               key={index}
               name={item.route}
-              component={
-                item.route === "Home"
-                  ? (props: any) => (
-                      <HomeScreen
-                        ref={homeScreenRef}
-                        replyDrawerRef={replyDrawerRef}
-                        {...props}
-                      />
-                    )
-                  : item.component
-              }
+              component={item.component}
               options={{
                 tabBarStyle: {
                   height: 60,

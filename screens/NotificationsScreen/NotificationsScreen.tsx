@@ -6,21 +6,14 @@ import {
   View,
 } from "react-native";
 import { PugText } from "../../components/Text/Text";
-import { NotificationItem } from "../../components/interfaces";
 import Colors from "../../constants/Colors";
 import { useTheme } from "../../hooks/useTheme";
 import { getNotifications } from "../../services/notificationService";
 import NotificationCard from "./components/NotificationCard/NotificationCard";
-import { Emoji } from "../types";
-
-interface NotificationsResponse {
-  notifications: NotificationItem[];
-  customEmojis: Emoji[];
-}
+import { FeedItem } from "../types"; // Reuse FeedItem as the type for notifications
 
 const NotificationsScreen: React.FC = () => {
-  const [notifications, setNotifications] = useState<NotificationItem[]>([]);
-  const [customEmojis, setCustomEmojis] = useState<Emoji[]>([]);
+  const [notifications, setNotifications] = useState<FeedItem[]>([]); // Use FeedItem[] instead of NotificationItem[]
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -29,10 +22,9 @@ const NotificationsScreen: React.FC = () => {
 
   const fetchNotifications = async () => {
     try {
-      const { notifications, customEmojis }: NotificationsResponse =
+      const { notifications }: { notifications: FeedItem[] } =
         await getNotifications();
       setNotifications(notifications);
-      setCustomEmojis(customEmojis);
     } catch (error) {
       setError("Error fetching notifications. Please try again.");
       console.error("Error fetching notifications:", error);
@@ -71,26 +63,22 @@ const NotificationsScreen: React.FC = () => {
     <View
       style={{ flex: 1, padding: 16, backgroundColor: theme.backgroundColor }}
     >
-      {notifications ? (
+      {notifications.length > 0 ? (
         <FlatList
           data={notifications}
           keyExtractor={(item) => item.id}
-          renderItem={({ item }) => {
-            return (
-              <View>
-                <NotificationCard
-                  title={item.title}
-                  body={item.body}
-                  date={item.date}
-                  avatar={item.account.avatar}
-                  username={item.account.username}
-                  mediaAttachments={item.mediaAttachments}
-                  poll={item.poll}
-                  customEmojis={customEmojis} // Pass customEmojis
-                />
-              </View>
-            );
-          }}
+          renderItem={({ item }) => (
+            <NotificationCard
+              title={item.content} // Assuming title maps to content
+              body={item.content} // Assuming body maps to content
+              date={item.created_at} // Using created_at for date
+              avatar={item.account.avatar} // Avatar from account
+              username={item.account.username} // Username from account
+              media_attachments={item.media_attachments} // Using media_attachments directly
+              poll={item.poll} // Poll if available
+              customEmojis={item.emojis} // Emojis from status
+            />
+          )}
           refreshControl={
             <RefreshControl
               refreshing={refreshing}
