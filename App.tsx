@@ -80,7 +80,6 @@ const AppContent = () => {
           <Stack.Screen name="TabNavigation" component={TabNavigation} />
           <Stack.Screen name="Server" component={ServerScreen} />
           <Stack.Screen name="WebView" component={WebViewScreen} />
-          <Stack.Screen name="TootScreen" component={TootScreen} />
         </Stack.Navigator>
       </NavigationContainer>
     </ThemeProvider>

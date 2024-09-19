@@ -40,15 +40,33 @@ export type FeedItem = {
   id: string;
   content: string;
   profileImageUrl: string;
+  media_attachments: MediaAttachment[];
+  username: string;
   account: {
     username: string;
     avatar: string;
     url: string;
   };
-  media_attachments: MediaAttachment[]; // Keep only media_attachments
+  serverUrl: string;
   reblog?: FeedItem;
-  emojis: Emoji[];
+  statusId: string;
+  customEmojis: Emoji[];
   poll?: Poll;
+  in_reply_to_id: string | null;
+  in_reply_to_account_id: string | null;
+  created_at: string;
+  sensitive: boolean;
+  spoilerText: string;
+  visibility: "public" | "unlisted" | "private" | "direct";
+  favouritesCount: number;
+  reblogsCount: number;
+  repliesCount: number;
+  accountId: string;
+  url: string | undefined;
+  emojis: Emoji[];
+  mentions: Mention[];
+  tags: Tag[];
+  card?: Card;
 };
 
 export type PollOption = {
@@ -70,13 +88,16 @@ export type Poll = {
   emojis: Emoji[];
 };
 
+// Define your Bottom Tab's param list, including TootScreen with its required params
 export type BottomTabParamList = {
   Home: undefined;
   Search: undefined;
   Profile: undefined;
   Notifications: undefined;
+  TootScreen: { toot: TootDetailParams };
 };
 
+// Define TabParams for use in tab navigation
 export type TabParams = {
   item: {
     route: keyof BottomTabParamList;
@@ -93,6 +114,7 @@ export type TabParams = {
   };
 };
 
+// Root stack params for more complex navigators
 export type RootStackParamList = {
   Server: undefined;
   WebView: { serverUrl: string };
@@ -105,10 +127,11 @@ export type RootStackParamList = {
   TootScreen: { toot: TootDetailParams };
 };
 
+// Define the props for TootCard
 export type TootCardProps = {
   content: string;
   profileImageUrl: string;
-  media_attachments: MediaAttachment[]; // Keep only media_attachments
+  media_attachments: MediaAttachment[];
   username: string;
   account: {
     username: string;
@@ -122,7 +145,7 @@ export type TootCardProps = {
   poll?: Poll;
   in_reply_to_id: string | null;
   in_reply_to_account_id: string | null;
-  createdAt: string;
+  created_at: string;
   sensitive: boolean;
   spoilerText: string;
   visibility: "public" | "unlisted" | "private" | "direct";
@@ -148,6 +171,14 @@ export type Mention = {
 export type Tag = {
   name: string;
   url: string;
+  history: [
+    {
+      day: string;
+      accounts: number;
+      uses: number;
+    }
+  ];
+  following: boolean;
 };
 
 export type Card = {
@@ -158,6 +189,7 @@ export type Card = {
   embed_url?: string;
 };
 
+// Define the TootDetailParams for the TootScreen
 export type TootDetailParams = {
   content: string;
   profileImageUrl: string;
@@ -166,7 +198,7 @@ export type TootDetailParams = {
     avatar: string;
     url: string;
   };
-  media_attachments: MediaAttachment[]; // Keep only media_attachments
+  media_attachments: MediaAttachment[];
   username: string;
   serverUrl: string;
   reblog?: FeedItem;
@@ -190,16 +222,19 @@ export type TootDetailParams = {
   card?: Card;
 };
 
-export type TootScreenRouteProp = RouteProp<RootStackParamList, "TootScreen">;
+// Navigation prop types for TootScreen
+export type TootScreenRouteProp = RouteProp<BottomTabParamList, "TootScreen">;
 export type TootScreenNavigationProp = StackNavigationProp<
-  RootStackParamList,
+  BottomTabParamList,
   "TootScreen"
 >;
 
+// Theme props
 export type ThemeProps = {
   theme: ThemeType;
 };
 
+// Context type for handling toot-related data
 export type TootContext = {
   ancestors: Array<any>;
   descendants: Array<any>;

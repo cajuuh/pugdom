@@ -38,7 +38,10 @@ import EmojiRenderer from "../EmojiRenderer/EmojiRenderer";
 import { useNavigation } from "@react-navigation/native";
 import { StackNavigationProp } from "@react-navigation/stack";
 
-type TootCardNavigationProp = StackNavigationProp<RootStackParamList, "Home">;
+type TootCardNavigationProp = StackNavigationProp<
+  RootStackParamList,
+  "TootScreen"
+>;
 
 const TootCard: React.FC<TootCardProps> = ({
   content = "",
