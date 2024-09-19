@@ -1,15 +1,29 @@
 import React from "react";
-import { FlatList, Image, StyleSheet, View, Text } from "react-native";
-import HTMLView from "react-native-htmlview";
+import { FlatList, Image, StyleSheet, View } from "react-native";
 import { PugText } from "../../../../components/Text/Text";
 import {
-  NotificationCardProps,
-  ThemeType,
-} from "../../../../components/interfaces";
+  FeedItem,
+  MediaAttachment,
+  Poll,
+  Emoji,
+  ThemeProps,
+} from "../../../../screens/types";
 import { useTheme } from "../../../../hooks/useTheme";
 import CustomIcon from "../../../../utils/Icons";
 import { getTimeDifference } from "../../../../utils/utils";
 import EmojiRenderer from "../../../../components/EmojiRenderer/EmojiRenderer";
+import { ThemeType } from "../../../../components/interfaces";
+
+interface NotificationCardProps {
+  title: string; // Type of notification (follow, reblog, etc.)
+  body: string; // The body/content of the toot
+  date: string; // Created at
+  avatar: string; // User's avatar URL
+  username: string; // User's name or username
+  media_attachments?: MediaAttachment[]; // Media attached to the toot
+  poll?: Poll; // Poll information (if available)
+  customEmojis?: Emoji[]; // Emojis used in the toot
+}
 
 const NotificationCard: React.FC<NotificationCardProps> = ({
   title,
@@ -17,12 +31,11 @@ const NotificationCard: React.FC<NotificationCardProps> = ({
   date,
   avatar,
   username,
-  mediaAttachments = [],
+  media_attachments = [], // Media attachments as per your project standard
   poll,
   customEmojis = [],
 }) => {
   const timeDifference = getTimeDifference(date);
-
   const theme = useTheme();
 
   const renderIcon = () => {
@@ -74,14 +87,14 @@ const NotificationCard: React.FC<NotificationCardProps> = ({
   };
 
   const renderMediaAttachments = () => {
-    if (mediaAttachments.length > 0) {
+    if (media_attachments.length > 0) {
       return (
         <FlatList
           horizontal
-          data={mediaAttachments}
-          keyExtractor={(item, index) => index.toString()}
+          data={media_attachments}
+          keyExtractor={(item) => item.id}
           renderItem={({ item }) => (
-            <Image source={{ uri: item }} style={styles.mediaImage} />
+            <Image source={{ uri: item.url }} style={styles.mediaImage} />
           )}
         />
       );
@@ -184,7 +197,7 @@ const styles = StyleSheet.create({
     width: 40,
     height: 40,
     borderRadius: 20,
-    overflow: "hidden", // Ensure the image is clipped to the container's shape
+    overflow: "hidden",
   },
   avatar: {
     width: 40,
@@ -236,13 +249,13 @@ const htmlStyles = (theme: ThemeType) =>
     p: {
       fontFamily: "PTSans_400Regular",
       fontSize: 16,
-      color: theme.textColor, // Use theme text color
+      color: theme.textColor,
       flexWrap: "wrap",
     },
     h1: {
       fontFamily: "PTSans_700Bold",
       fontSize: 24,
-      color: theme.textColor, // Use theme text color
+      color: theme.textColor,
     },
     a: {
       color: theme.primaryColor,
