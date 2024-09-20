@@ -156,6 +156,28 @@ export interface FeedProviderProps {
   children: ReactNode;
 }
 
+export interface AppParams {
+  avatar?: string;
+  username?: string;
+  apiBaseUrl?: string;
+  accessToken?: string;
+  [key: string]: any;
+}
+
+export interface AppContextProps {
+  appParams: AppParams;
+  setAppParam: (key: string, value: any) => void;
+  theme: any;
+  updateTheme: (newTheme: string) => void;
+  isTabVisible: boolean;
+  showTabNavigation: () => void;
+  hideTabNavigation: () => void;
+  replyStatusId: string;
+  setReplyStatus: (id: string) => void;
+  instanceInfo: InstanceInfo | null;
+  loading: boolean;
+}
+
 export interface ThemeType {
   backgroundColor: string;
   textColor: string;

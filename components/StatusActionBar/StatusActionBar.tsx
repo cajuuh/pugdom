@@ -1,8 +1,9 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { StyleSheet, TouchableOpacity, View } from "react-native";
 import { useMastodonAPI } from "../../hooks/useMastodonAPI";
 import CustomIcon from "../../utils/Icons";
 import { StatusActionBarProps } from "../interfaces";
+import { PugText } from "../Text/Text";
 
 const StatusActionBar: React.FC<StatusActionBarProps> = ({
   statusId,
@@ -12,20 +13,33 @@ const StatusActionBar: React.FC<StatusActionBarProps> = ({
   const [isReblogged, setIsReblogged] = useState(false);
   const [isBookmarked, setIsBookmarked] = useState(false);
 
-  const { favoriteStatus, reblogStatus, bookmarkStatus } = useMastodonAPI();
+  const { favoriteStatus, reblogStatus, bookmarkStatus, loading, error } =
+    useMastodonAPI();
+
+  useEffect(() => {
+    if (error) {
+      console.log("Error:", error);
+    }
+  }, [error]);
 
   const handleFavorite = async () => {
+    console.log("Handling favorite status...");
     const result = await favoriteStatus(statusId, isFavorited);
+    console.log("Favorite result:", result);
     if (result) setIsFavorited(!isFavorited);
   };
 
   const handleReblog = async () => {
+    console.log("Handling reblog status...");
     const result = await reblogStatus(statusId, isReblogged);
+    console.log("Reblog result:", result);
     if (result) setIsReblogged(!isReblogged);
   };
 
   const handleBookmark = async () => {
+    console.log("Handling bookmark status...");
     const result = await bookmarkStatus(statusId, isBookmarked);
+    console.log("Bookmark result:", result);
     if (result) setIsBookmarked(!isBookmarked);
   };
 
