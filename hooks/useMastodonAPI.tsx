@@ -5,7 +5,7 @@ import { useAppContext } from "../context/AppContext";
 
 export const useMastodonAPI = () => {
   const { appParams } = useAppContext();
-  const apiBaseUrl = appParams.apiBaseUrl;
+  const apiBaseUrl = appParams?.apiBaseUrl;
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -17,6 +17,11 @@ export const useMastodonAPI = () => {
   };
 
   const favoriteStatus = async (statusId: string, isFavorited: boolean) => {
+    if (!apiBaseUrl) {
+      setError("API base URL is undefined.");
+      return false;
+    }
+
     setLoading(true);
     let endpoint = "";
     try {
@@ -39,6 +44,11 @@ export const useMastodonAPI = () => {
   };
 
   const reblogStatus = async (statusId: string, isReblogged: boolean) => {
+    if (!apiBaseUrl) {
+      setError("API base URL is undefined.");
+      return false;
+    }
+
     setLoading(true);
     try {
       const headers = await getAuthHeaders();
@@ -63,6 +73,11 @@ export const useMastodonAPI = () => {
   };
 
   const bookmarkStatus = async (statusId: string, isBookmarked: boolean) => {
+    if (!apiBaseUrl) {
+      setError("API base URL is undefined.");
+      return false;
+    }
+
     setLoading(true);
     try {
       const headers = await getAuthHeaders();
