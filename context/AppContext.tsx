@@ -9,28 +9,11 @@ import React, {
 import { useColorScheme } from "react-native";
 import { darkTheme, lightTheme } from "../themes";
 import { getInstanceInfo } from "../services/instanceService";
-import { InstanceInfo } from "../components/interfaces";
-
-interface AppParams {
-  avatar?: string;
-  username?: string;
-  apiBaseUrl?: string;
-  accessToken?: string;
-  [key: string]: any;
-}
-
-interface AppContextProps {
-  appParams: AppParams;
-  setAppParam: (key: string, value: any) => void;
-  theme: any;
-  updateTheme: (newTheme: string) => void;
-  isTabVisible: boolean;
-  showTabNavigation: () => void;
-  hideTabNavigation: () => void;
-  replyStatusId: string;
-  setReplyStatus: (id: string) => void;
-  instanceInfo: InstanceInfo | null;
-}
+import {
+  AppContextProps,
+  AppParams,
+  InstanceInfo,
+} from "../components/interfaces";
 
 const AppContext = createContext<AppContextProps | undefined>(undefined);
 
@@ -40,24 +23,43 @@ export const AppProvider = ({ children }: { children: ReactNode }) => {
   const [isTabVisible, setIsTabVisible] = useState(true); // Initialize tab visibility state
   const [replyStatusId, setReplyStatusId] = useState<string>("");
   const [instanceInfo, setInstanceInfo] = useState<InstanceInfo | null>(null);
+  const [loading, setLoading] = useState(true); // Add loading state
 
   useEffect(() => {
     const loadInitialData = async () => {
-      // Load theme from AsyncStorage
-      const storedTheme = await AsyncStorage.getItem("appTheme");
-      if (storedTheme === "dark") {
-        setTheme(darkTheme);
-      } else if (storedTheme === "light") {
-        setTheme(lightTheme);
-      } else {
-        const systemTheme = useColorScheme();
-        setTheme(systemTheme === "dark" ? darkTheme : lightTheme);
-      }
+      try {
+        // Load theme from AsyncStorage
+        const storedTheme = await AsyncStorage.getItem("appTheme");
+        if (storedTheme === "dark") {
+          setTheme(darkTheme);
+        } else if (storedTheme === "light") {
+          setTheme(lightTheme);
+        } else {
+          const systemTheme = useColorScheme();
+          setTheme(systemTheme === "dark" ? darkTheme : lightTheme);
+        }
 
-      // Load user info from AsyncStorage
-      const storedUserInfo = await AsyncStorage.getItem("userInfo");
-      if (storedUserInfo) {
-        setAppParams(JSON.parse(storedUserInfo));
+        // Load user info from AsyncStorage
+        const storedUserInfo = await AsyncStorage.getItem("userInfo");
+        console.log("Loaded userInfo from AsyncStorage:", storedUserInfo);
+        if (storedUserInfo) {
+          const userInfo = JSON.parse(storedUserInfo);
+          console.log("Parsed userInfo:", userInfo);
+
+          if (!userInfo?.apiBaseUrl) {
+            console.warn(
+              "apiBaseUrl is missing in userInfo. App will be fetching it again..."
+            );
+          } else {
+            setAppParams(userInfo);
+          }
+        } else {
+          console.error("User info is missing from AsyncStorage.");
+        }
+      } catch (error) {
+        console.error("Error loading initial data:", error);
+      } finally {
+        setLoading(false); // Set loading to false after data is loaded
       }
     };
     loadInitialData();
@@ -105,6 +107,7 @@ export const AppProvider = ({ children }: { children: ReactNode }) => {
         replyStatusId,
         setReplyStatus,
         instanceInfo,
+        loading, // Expose the loading state
       }}
     >
       {children}
