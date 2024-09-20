@@ -45,6 +45,12 @@ export default function TootScreen({ route, navigation }: any) {
 
   const originalToot = toot.reblog ? toot.reblog : toot;
 
+  console.log(
+    "===================== ORIGINAL TOOT START ====================="
+  );
+  console.log(originalToot);
+  console.log("===================== ORIGINAL TOOT END =====================");
+
   const renderMediaItem = ({ item }: { item: MediaAttachment }) => (
     <MediaImage
       key={item.id}
