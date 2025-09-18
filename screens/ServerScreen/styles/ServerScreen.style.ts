@@ -30,6 +30,6 @@ export const StyledInput = styled(PugTextInput)`
   background-color: #fff;
   box-shadow: 0px 2px 8px #0001;
   border-width: 1px;
-  border-color: #e0e0e0;
+  border-color: ${(props) => props.theme.borderColor};
   font-size: 16px;
 `;

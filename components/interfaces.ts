@@ -137,7 +137,7 @@ export interface InstanceInfo {
 }
 
 export interface PostParams {
-  statusText: string;
+  status: string;
   mediaIds?: string[];
   pollData?: {
     options: string[];

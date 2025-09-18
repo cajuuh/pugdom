@@ -64,7 +64,9 @@ export const useStatusService = () => {
   };
 
   const replyToStatus = async (payload: PostParams) => {
-    // Same logic as createStatus, just ensure inReplyToId is set
+    if (!payload.inReplyToId) {
+      throw new Error("inReplyToId must be set when replying to a status.");
+    }
     return createStatus(payload);
   };
 

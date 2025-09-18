@@ -139,6 +139,10 @@ const ReplyDrawer = forwardRef<any, ReplyDrawerProps>(({ statusId }, ref) => {
         status: statusText,
       };
 
+      if (statusId) {
+        payload.inReplyToId = statusId;
+      }
+
       if (!payload.inReplyToId) {
         throw new Error("inReplyToId must be set when replying to a status.");
       }
