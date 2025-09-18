@@ -8,8 +8,8 @@ export const LogoImage = styled.Image`
   height: 120px;
   margin-bottom: 24px;
   border-radius: 24px;
-  background-color: #fff;
-  box-shadow: 0px 2px 8px #0002;
+  background-color: ${(props) => props.theme.backgroundColor};
+  box-shadow: 0px 2px 8px ${(props) => props.theme.shadowColor};
 `;
 
 // Container remains the same, but you could add a subtle background if you want

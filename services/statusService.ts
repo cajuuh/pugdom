@@ -8,6 +8,7 @@ export const useStatusService = () => {
       const userInfoString = await AsyncStorage.getItem("userInfo");
       if (!userInfoString) throw new Error("User not authenticated");
       const { accessToken, serverUrl } = JSON.parse(userInfoString);
+      if (!accessToken || !serverUrl) throw new Error("Access token or server URL is missing");
 
       const params = new URLSearchParams();
 

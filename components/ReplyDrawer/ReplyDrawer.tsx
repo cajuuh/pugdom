@@ -130,7 +130,7 @@ const ReplyDrawer = forwardRef<any, ReplyDrawerProps>(({ statusId }, ref) => {
   const handlePost = async () => {
     try {
       if (!statusText.trim()) {
-        throw new Error("Cannot post a blank status.");
+        throw new Error("Please enter some text before posting.");
       }
 
       const mediaIds = selectedImages.map((img) => img.id).filter((id) => !!id);
@@ -138,6 +138,10 @@ const ReplyDrawer = forwardRef<any, ReplyDrawerProps>(({ statusId }, ref) => {
       const payload: any = {
         status: statusText,
       };
+
+      if (!payload.inReplyToId) {
+        throw new Error("inReplyToId must be set when replying to a status.");
+      }
 
       if (mediaIds.length > 0) {
         payload.media_ids = mediaIds;
