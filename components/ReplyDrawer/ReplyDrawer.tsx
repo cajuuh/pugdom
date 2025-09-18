@@ -1,30 +1,3 @@
-/**
- * ReplyDrawer Component
- *
- * This component is designed to allow users to compose and reply to posts in a Mastodon-like social platform.
- * It provides the functionality to:
- * - Add text input for the post/reply.
- * - Attach and manage images, including the ability to add alt text to images.
- * - Create and manage polls with customizable options and duration.
- * - Post the reply or new status to the Mastodon API via provided service functions.
- *
- * @param {ReplyDrawerProps} props - The props for the component.
- * @param {string} props.statusId - (optional) The ID of the status to reply to. If provided, the post is treated as a reply.
- * @param {React.Ref<any>} ref - The reference to control opening and closing of the bottom sheet externally.
- * @returns {JSX.Element} The rendered ReplyDrawer component.
- *
- * Example Usage:
- * ```tsx
- * const replyDrawerRef = useRef(null);
- *
- * // To open the reply drawer
- * replyDrawerRef.current?.openSheet();
- *
- * // To close the reply drawer
- * replyDrawerRef.current?.closeSheet();
- * ```
- */
-
 import BottomSheet, { BottomSheetFlatList } from "@gorhom/bottom-sheet";
 import React, {
   forwardRef,
@@ -53,9 +26,7 @@ import { PugText } from "../Text/Text";
 import ActionBar from "./components/ActionBar";
 import CustomHandler from "./components/CustomHandler";
 
-// The main component for handling replies and post creation
 const ReplyDrawer = forwardRef<any, ReplyDrawerProps>(({ statusId }, ref) => {
-  // Local state for managing the reply text, selected images, and poll data
   const [currentIndex, setCurrentIndex] = useState<number | null>(null);
   const [statusText, setStatusText] = useState<string>("");
   const [showPoll, setShowPoll] = useState<boolean>(false);
@@ -67,133 +38,121 @@ const ReplyDrawer = forwardRef<any, ReplyDrawerProps>(({ statusId }, ref) => {
     duration: undefined,
   });
 
-  // Refs to control bottom sheet and text input behaviors
   const sheetRef = useRef<BottomSheet>(null);
   const altTextDrawerRef = useRef<any>(null);
   const inputRef = useRef<TextInput>(null);
 
-  // Theme and app context hooks for customization and app data
   const theme = useTheme();
   const { height: windowHeight } = Dimensions.get("window");
   const { appParams, instanceInfo } = useAppContext();
   const { createStatus, replyToStatus } = useStatusService();
 
-  // Get limits for poll options and character counts from instance info
   const maxOptions = instanceInfo?.polls?.max_options || 4;
   const maxCharactersPerOption =
     instanceInfo?.polls?.max_characters_per_option || 255;
 
-  // Placeholder messages for the text input, randomly selected
   const placeholderMessages = [
     "Ready to Toot? 🐘",
     "What's on your mind? ✍️",
     "What are you doing? ✨",
   ];
-
   const [placeholderMessage] = useState(
-    placeholderMessages[Math.floor(Math.random() * placeholderMessages.length)]
+    placeholderMessages[Math.floor(Math.random() * placeholderMessages.length)],
   );
 
-  // State for managing selected images
   const [selectedImages, setSelectedImages] = useState<SelectedImage[]>([]);
 
-  /**
-   * Handle image selection and add the selected image to the reply.
-   * @param {string} uri - The URI of the selected image.
-   */
   const handleImageSelect = (uri: string) => {
     setSelectedImages((prevImages) => [...prevImages, { uri, altText: "" }]);
   };
 
-  /**
-   * Remove an image from the selected images.
-   * @param {number} index - The index of the image to remove.
-   */
   const handleRemoveImage = (index: number) => {
     setSelectedImages((prevImages) => prevImages.filter((_, i) => i !== index));
   };
 
-  /**
-   * Open the AltTextDrawer to allow users to add alt text to the selected image.
-   * @param {number} index - The index of the image to add alt text to.
-   */
   const handleAddAltText = (index: number) => {
     Keyboard.dismiss();
     setCurrentIndex(index);
     setTimeout(() => {
-      altTextDrawerRef.current?.openSheet();
+      if (
+        altTextDrawerRef.current &&
+        typeof altTextDrawerRef.current.openSheet === "function"
+      ) {
+        altTextDrawerRef.current.openSheet();
+      }
     }, 150);
   };
 
-  /**
-   * Save the alt text for the currently selected image.
-   * @param {string} altText - The alt text to save.
-   */
   const saveAltText = (altText: string) => {
     if (currentIndex !== null) {
       setSelectedImages((prevImages) =>
         prevImages.map((image, i) =>
-          i === currentIndex ? { ...image, altText } : image
-        )
+          i === currentIndex ? { ...image, altText } : image,
+        ),
       );
       setCurrentIndex(null);
     }
   };
 
-  /**
-   * Imperative handle to open or close the bottom sheet from an external ref.
-   */
   useImperativeHandle(ref, () => ({
     openSheet() {
-      sheetRef.current?.expand();
-      setTimeout(() => {
-        inputRef.current?.focus();
-      }, 300);
+      if (sheetRef.current && typeof sheetRef.current.expand === "function") {
+        sheetRef.current.expand();
+        setTimeout(() => {
+          if (
+            inputRef.current &&
+            typeof inputRef.current.focus === "function"
+          ) {
+            inputRef.current.focus();
+          }
+        }, 300);
+      }
     },
     closeSheet() {
-      sheetRef.current?.close();
-      setTimeout(() => {
-        Keyboard.dismiss();
-      }, 100);
+      if (sheetRef.current && typeof sheetRef.current.close === "function") {
+        sheetRef.current.close();
+        setTimeout(() => {
+          Keyboard.dismiss();
+        }, 100);
+      }
     },
   }));
 
-  /**
-   * Close the bottom sheet and dismiss the keyboard.
-   */
   const handleClose = () => {
-    sheetRef.current?.close();
-    setTimeout(() => {
-      Keyboard.dismiss();
-    }, 200);
+    if (sheetRef.current && typeof sheetRef.current.close === "function") {
+      sheetRef.current.close();
+      setTimeout(() => {
+        Keyboard.dismiss();
+      }, 200);
+    }
   };
 
-  /**
-   * Handles posting the reply or status. It includes the selected images or polls
-   * and sends the data to the Mastodon API.
-   */
   const handlePost = async () => {
     try {
-      const mediaIds =
-        pollData.options.length === 0
-          ? selectedImages
-              .map((image) => image.id)
-              .filter((id): id is string => id !== undefined)
-          : [];
+      if (!statusText.trim()) {
+        throw new Error("Cannot post a blank status.");
+      }
+
+      const mediaIds = selectedImages.map((img) => img.id).filter((id) => !!id);
 
       const payload: any = {
         status: statusText,
-        media_ids: mediaIds,
-        poll:
-          pollData.options.length > 0
-            ? {
-                options: pollData.options,
-                expires_in: pollData.duration,
-                multiple: false,
-                hide_totals: false,
-              }
-            : undefined,
       };
+
+      if (mediaIds.length > 0) {
+        payload.media_ids = mediaIds;
+      }
+
+      if (pollData.options.length > 0 && pollData.duration) {
+        payload.poll = {
+          options: pollData.options,
+          expires_in: pollData.duration,
+          multiple: false,
+          hide_totals: false,
+        };
+      }
+
+      console.log("Post payload:", payload);
 
       if (statusId) {
         await replyToStatus({
@@ -206,10 +165,11 @@ const ReplyDrawer = forwardRef<any, ReplyDrawerProps>(({ statusId }, ref) => {
 
       console.log("Post submitted successfully");
       setStatusText("");
-      if (sheetRef.current) {
+      if (sheetRef.current && typeof sheetRef.current.close === "function") {
         sheetRef.current.close();
       }
     } catch (error) {
+      console.error("Request error details:", error?.response?.data);
       console.error("Failed to post:", error);
     } finally {
       setTimeout(() => {
@@ -218,10 +178,6 @@ const ReplyDrawer = forwardRef<any, ReplyDrawerProps>(({ statusId }, ref) => {
     }
   };
 
-  /**
-   * Updates the poll data whenever changes are made in the PollComponent.
-   * @param {object} newPollData - The updated poll options and duration.
-   */
   const handlePollDataChange = (newPollData: {
     options: string[];
     duration: number | undefined;
@@ -229,9 +185,6 @@ const ReplyDrawer = forwardRef<any, ReplyDrawerProps>(({ statusId }, ref) => {
     setPollData(newPollData);
   };
 
-  /**
-   * Toggles the visibility of the poll component in the drawer.
-   */
   const togglePoll = () => {
     setShowPoll((prev) => !prev);
   };
@@ -282,9 +235,7 @@ const ReplyDrawer = forwardRef<any, ReplyDrawerProps>(({ statusId }, ref) => {
               />
             </View>
             {showPoll && (
-              <PollComponent
-                onPollDataChange={handlePollDataChange} // Pass the handler to update poll data
-              />
+              <PollComponent onPollDataChange={handlePollDataChange} />
             )}
           </View>
           {selectedImages.length > 0 && (
@@ -349,7 +300,7 @@ const ReplyDrawer = forwardRef<any, ReplyDrawerProps>(({ statusId }, ref) => {
         </View>
       </BottomSheet>
 
-      {currentIndex !== null && (
+      {currentIndex !== null && selectedImages[currentIndex] && (
         <AltTextDrawer
           ref={altTextDrawerRef}
           image={selectedImages[currentIndex]}

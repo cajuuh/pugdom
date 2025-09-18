@@ -21,14 +21,21 @@ import TootScreen from "../../screens/TootScreen/TootScreen";
 
 const HomeStack = createStackNavigator();
 
-const HomeStackNavigator: React.FC = () => {
+const Tab = createBottomTabNavigator<BottomTabParamList>();
+
+// Refactor: Pass replyDrawerRef down to HomeScreen via HomeStackNavigator
+const HomeStackNavigator: React.FC<{
+  replyDrawerRef: React.RefObject<any>;
+}> = ({ replyDrawerRef }) => {
   return (
     <HomeStack.Navigator
       screenOptions={{
         headerShown: false,
       }}
     >
-      <HomeStack.Screen name="HomeScreen" component={HomeScreen} />
+      <HomeStack.Screen name="HomeScreen">
+        {(props) => <HomeScreen {...props} replyDrawerRef={replyDrawerRef} />}
+      </HomeStack.Screen>
       <HomeStack.Screen name="TootScreen" component={TootScreen} />
     </HomeStack.Navigator>
   );
@@ -44,7 +51,7 @@ const TabArr: Array<{
     route: "Home",
     label: "Home",
     icon: "HomeIcon",
-    component: HomeStackNavigator, // Pass the HomeStackNavigator here
+    component: HomeStackNavigator, // This will be wrapped below with ref
   },
   {
     route: "Search",
@@ -66,21 +73,11 @@ const TabArr: Array<{
   },
 ];
 
-const Tab = createBottomTabNavigator<BottomTabParamList>();
-
 const TabNavigation: React.FC = () => {
-  const [currentRoute, setCurrentRoute] = useState("");
   const navigation =
     useNavigation<BottomTabNavigationProp<BottomTabParamList>>();
-  const homeScreenRef = useRef<HomeScreenRef>(null);
-  const { replyStatusId } = useAppContext();
   const replyDrawerRef = useRef<any>(null);
-
-  const handleNavigation = (route: keyof BottomTabParamList) => {
-    setCurrentRoute(route);
-    navigation.navigate(route as any);
-  };
-
+  const { replyStatusId } = useAppContext();
   const theme = useTheme();
 
   return (
@@ -97,38 +94,78 @@ const TabNavigation: React.FC = () => {
             headerShown: false,
           }}
         >
-          {TabArr.map((item, index) => (
-            <Tab.Screen
-              key={index}
-              name={item.route}
-              component={item.component}
-              options={{
-                tabBarStyle: {
-                  height: 60,
-                  position: "relative",
-                  marginHorizontal: 16,
-                  bottom: 2,
-                  paddingBottom: 0,
-                  borderTopWidth: 0,
-                  borderRadius: 20,
-                  backgroundColor: theme.tabNavigationColor,
-                  justifyContent: "center",
-                  alignItems: "center",
-                },
-                tabBarShowLabel: false,
-                tabBarButton: (props) => (
-                  <TabButton
-                    {...props}
-                    item={item}
-                    onPress={() => handleNavigation(item.route)}
-                    accessibilityState={
-                      props.accessibilityState as { selected: boolean }
-                    }
-                  />
-                ),
-              }}
-            />
-          ))}
+          {TabArr.map((item, index) => {
+            // Special case: Home tab passes replyDrawerRef
+            if (item.route === "Home") {
+              return (
+                <Tab.Screen
+                  key={index}
+                  name={item.route}
+                  children={() => (
+                    <HomeStackNavigator replyDrawerRef={replyDrawerRef} />
+                  )}
+                  options={{
+                    tabBarStyle: {
+                      height: 60,
+                      position: "relative",
+                      marginHorizontal: 16,
+                      bottom: 2,
+                      paddingBottom: 0,
+                      borderTopWidth: 0,
+                      borderRadius: 20,
+                      backgroundColor: theme.tabNavigationColor,
+                      justifyContent: "center",
+                      alignItems: "center",
+                    },
+                    tabBarShowLabel: false,
+                    tabBarButton: (props) => (
+                      <TabButton
+                        {...props}
+                        item={item}
+                        onPress={() => navigation.navigate(item.route)}
+                        accessibilityState={
+                          props.accessibilityState as { selected: boolean }
+                        }
+                      />
+                    ),
+                  }}
+                />
+              );
+            } else {
+              return (
+                <Tab.Screen
+                  key={index}
+                  name={item.route}
+                  component={item.component}
+                  options={{
+                    tabBarStyle: {
+                      height: 60,
+                      position: "relative",
+                      marginHorizontal: 16,
+                      bottom: 2,
+                      paddingBottom: 0,
+                      borderTopWidth: 0,
+                      borderRadius: 20,
+                      backgroundColor: theme.tabNavigationColor,
+                      justifyContent: "center",
+                      alignItems: "center",
+                    },
+                    tabBarShowLabel: false,
+                    tabBarButton: (props) => (
+                      <TabButton
+                        {...props}
+                        item={item}
+                        onPress={() => navigation.navigate(item.route)}
+                        accessibilityState={
+                          props.accessibilityState as { selected: boolean }
+                        }
+                      />
+                    ),
+                  }}
+                />
+              );
+            }
+          })}
         </Tab.Navigator>
         <ReplyDrawer ref={replyDrawerRef} statusId={replyStatusId} />
       </SafeAreaView>
