@@ -2,13 +2,13 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import * as AuthSession from "expo-auth-session";
 import React, { useCallback, useEffect, useRef, useState } from "react";
-import { ActivityIndicator, View } from "react-native";
+import { ActivityIndicator, View, Image } from "react-native";
 import PugButton from "../../components/Button/Button";
 import { PugText } from "../../components/Text/Text";
 import { useAppContext } from "../../context/AppContext";
 import { getToken, getUserInfo } from "../../services/authService";
 import { RootStackParamList } from "../types";
-import { Container, StyledInput } from "./styles/ServerScreen.style";
+import { Container, StyledInput, LogoImage } from "./styles/ServerScreen.style";
 import { config } from "../../config";
 
 type Props = NativeStackScreenProps<RootStackParamList, "Server">;
@@ -21,6 +21,9 @@ const ServerScreen: React.FC<Props> = ({ navigation }) => {
   const authEndpointRef = useRef(authEndpoint);
   const { setAppParam } = useAppContext();
   const [isAuthEndpointSet, setIsAuthEndpointSet] = useState(false);
+
+  const redirectUri = AuthSession.makeRedirectUri({ scheme: "pugdom" });
+  console.log("Redirect URI:", redirectUri);
 
   const [request, response, promptAsync] = AuthSession.useAuthRequest(
     {
@@ -37,7 +40,7 @@ const ServerScreen: React.FC<Props> = ({ navigation }) => {
         !server.startsWith("http://") && !server.startsWith("https://")
           ? "https://" + server + "/oauth/authorize"
           : server + "/oauth/authorize",
-    }
+    },
   );
 
   const handleSave = useCallback(async () => {
@@ -95,7 +98,7 @@ const ServerScreen: React.FC<Props> = ({ navigation }) => {
             // Save to AsyncStorage
             await AsyncStorage.setItem(
               "userInfo",
-              JSON.stringify(fullUserInfo)
+              JSON.stringify(fullUserInfo),
             );
 
             // Update AppContext
@@ -131,11 +134,24 @@ const ServerScreen: React.FC<Props> = ({ navigation }) => {
 
   return (
     <Container>
-      <PugText>Set Mastodon Server</PugText>
+      {/* Add logo image */}
+      <LogoImage
+        source={require("../../assets/images/pugdomLogo.png")}
+        resizeMode="contain"
+        accessibilityLabel="App Logo"
+      />
+      <PugText style={{ fontSize: 24, fontWeight: "bold", marginBottom: 16 }}>
+        Welcome to Pugdom
+      </PugText>
+      <PugText style={{ marginBottom: 24 }}>
+        Enter your Mastodon server to continue
+      </PugText>
       <StyledInput
         value={server}
-        placeholder="Enter your Mastodon server URL"
+        placeholder="mastodon.social"
         onChangeText={(text) => setServer(text)}
+        autoCapitalize="none"
+        autoCorrect={false}
       />
       <PugButton
         title="Sign in"
@@ -148,6 +164,7 @@ const ServerScreen: React.FC<Props> = ({ navigation }) => {
             }
           });
         }}
+        style={{ marginTop: 8, marginBottom: 16 }}
       />
     </Container>
   );

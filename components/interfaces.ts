@@ -137,9 +137,19 @@ export interface InstanceInfo {
 }
 
 export interface PostParams {
-  statusId?: string;
-  statusText: string;
+  status: string;
   mediaIds?: string[];
+  pollData?: {
+    options: string[];
+    duration: number;
+    multiple?: boolean;
+    hideTotals?: boolean;
+  };
+  inReplyToId?: string;
+  visibility?: "public" | "unlisted" | "private" | "direct";
+  sensitive?: boolean;
+  spoilerText?: string;
+  language?: string;
 }
 
 export interface PollDrawerProps {
@@ -179,21 +189,30 @@ export interface AppContextProps {
 }
 
 export interface ThemeType {
-  backgroundColor: string;
-  textColor: string;
-  buttonTextColor: string;
-  primaryColor: string;
-  secondaryColor: string;
-  reblogPillColor: string;
-  tabNavigationColor: string;
-  tabNavigationGradient: string[];
-  notificationsIcon: string;
-  replyDrawerBackgroundColor: string;
-  placeholderTextColor: string;
-  drawerHandleColor: string;
-  activeButtonColor: string;
-  attention: string;
-  secondaryColor50opacity: string;
-  noAltTextColor: string;
-  modalBackground: string;
+  backgroundColor: string;              // App background
+  textColor: string;                    // Main text color
+  buttonTextColor: string;              // Button text color
+  primaryColor: string;                 // Brand/main accent color
+  secondaryColor: string;               // Button background color
+  secondaryColor50opacity: string;      // Secondary color with opacity
+  reblogPillColor: string;              // Reblog/boost pill color
+  tabNavigationColor: string;           // Tab bar color
+  tabNavigationGradient: string[];      // Tab bar gradient colors
+  notificationsIcon: string;            // Notification icon color
+  replyDrawerBackgroundColor: string;   // Reply drawer background
+  placeholderTextColor: string;         // Input placeholder color
+  drawerHandleColor: string;            // Drawer handle color
+  activeButtonColor: string;            // Active button state color
+  attention: string;                    // Attention/warning color
+  noAltTextColor: string;               // For images without alt text
+  modalBackground: string;              // Modal background color
+  shadowColor?: string;                 // Shadow/elevation color
+  borderColor?: string;                 // Input/button border color
+  errorColor?: string;                  // Error message color
+  successColor?: string;                // Success message color
+  disabledColor?: string;               // Disabled state color
+  cardBackgroundColor?: string;         // Card container background
+  linkColor?: string;                   // Link/interactive text color
+  surfaceColor?: string;                // Surface/modal/sheet color
+  iconColor?: string;                   // Icon color
 }
