@@ -20,7 +20,7 @@ const HomeScreen = forwardRef<
   HomeScreenProps,
   { replyDrawerRef: React.RefObject<any> }
 >(({ replyDrawerRef, ...props }, ref) => {
-  let newContentCount = 0;
+  const newContentCount = useRef(0);
   const isFocused = useIsFocused();
   const theme = useTheme();
   const { appParams, setReplyStatus } = useAppContext();
@@ -45,11 +45,11 @@ const HomeScreen = forwardRef<
 
   useEffect(() => {
     if (hasNewContent) {
-      newContentCount++;
-      if (newContentCount > 5) {
+      newContentCount.current++;
+      if (newContentCount.current > 5) {
         console.log("New content detected, showing banner...");
         bannerRef.current?.showBanner();
-        newContentCount = 0;
+        newContentCount.current = 0;
       }
     }
   }, [hasNewContent]);
