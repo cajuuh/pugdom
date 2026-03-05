@@ -58,30 +58,38 @@ const ActionBar: React.FC<ActionBarProps> = ({
         { backgroundColor: theme.backgroundColor },
       ]}
     >
-      <TouchableOpacity style={styles.actionButton} onPress={handleImagePicker}>
+      <TouchableOpacity style={styles.actionButton} onPress={handleImagePicker} accessibilityLabel="Add image" accessibilityRole="button">
         <CustomIcon name="PhotoIcon" size={24} color={theme.textColor} />
       </TouchableOpacity>
       <TouchableOpacity
         style={styles.actionButton}
         onPress={() => console.log("Add GIF")}
+        accessibilityLabel="Add GIF"
+        accessibilityRole="button"
       >
         <PugText style={{ color: theme.textColor }}>GIF</PugText>
       </TouchableOpacity>
       <TouchableOpacity
         style={styles.actionButton}
         onPress={() => console.log("Add Mention")}
+        accessibilityLabel="Add Mention"
+        accessibilityRole="button"
       >
         <CustomIcon name="AtSymbolIcon" size={24} color={theme.textColor} />
       </TouchableOpacity>
       <TouchableOpacity
         style={styles.actionButton}
         onPress={() => console.log("Add Hashtag")}
+        accessibilityLabel="Add Hashtag"
+        accessibilityRole="button"
       >
         <CustomIcon name="HashtagIcon" size={24} color={theme.textColor} />
       </TouchableOpacity>
       <TouchableOpacity
         style={styles.actionButton}
         onPress={() => console.log("Toggle Content Warning")}
+        accessibilityLabel="Toggle Content Warning"
+        accessibilityRole="button"
       >
         <CustomIcon
           name="ExclamationTriangleIcon"
@@ -89,7 +97,7 @@ const ActionBar: React.FC<ActionBarProps> = ({
           color={theme.textColor}
         />
       </TouchableOpacity>
-      <TouchableOpacity style={styles.actionButton} onPress={openPoll}>
+      <TouchableOpacity style={styles.actionButton} onPress={openPoll} accessibilityLabel="Create poll" accessibilityRole="button">
         <CustomIcon name="ChartBarIcon" size={24} color={theme.textColor} />
       </TouchableOpacity>
     </View>
