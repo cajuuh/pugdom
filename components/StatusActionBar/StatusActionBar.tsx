@@ -50,6 +50,8 @@ const StatusActionBar: React.FC<StatusActionBarProps> = ({
           <TouchableOpacity
             onPress={() => onReplyPress(statusId)}
             style={styles.icon}
+            accessibilityLabel="Reply"
+            accessibilityRole="button"
           >
             <CustomIcon
               name="ChatBubbleOvalLeftIcon"
@@ -57,7 +59,7 @@ const StatusActionBar: React.FC<StatusActionBarProps> = ({
               color={"#aaa"}
             />
           </TouchableOpacity>
-          <TouchableOpacity onPress={handleFavorite} style={styles.icon}>
+          <TouchableOpacity onPress={handleFavorite} style={styles.icon} accessibilityLabel={isFavorited ? "Unfavorite" : "Favorite"} accessibilityRole="button">
             <CustomIcon
               name="HeartIcon"
               solid={isFavorited}
@@ -65,7 +67,7 @@ const StatusActionBar: React.FC<StatusActionBarProps> = ({
               color={isFavorited ? "#E0245E" : "#aaa"}
             />
           </TouchableOpacity>
-          <TouchableOpacity onPress={handleReblog} style={styles.icon}>
+          <TouchableOpacity onPress={handleReblog} style={styles.icon} accessibilityLabel={isReblogged ? "Undo reblog" : "Reblog"} accessibilityRole="button">
             <CustomIcon
               name="ArrowPathIcon"
               solid={isReblogged}
@@ -73,7 +75,7 @@ const StatusActionBar: React.FC<StatusActionBarProps> = ({
               color={isReblogged ? "#1DA1F2" : "#aaa"}
             />
           </TouchableOpacity>
-          <TouchableOpacity onPress={handleBookmark}>
+          <TouchableOpacity onPress={handleBookmark} accessibilityLabel={isBookmarked ? "Remove bookmark" : "Bookmark"} accessibilityRole="button">
             <CustomIcon
               name="BookmarkIcon"
               solid={isBookmarked}
@@ -82,7 +84,7 @@ const StatusActionBar: React.FC<StatusActionBarProps> = ({
             />
           </TouchableOpacity>
         </View>
-        <TouchableOpacity onPress={() => console.log("More options pressed")}>
+        <TouchableOpacity onPress={() => console.log("More options pressed")} accessibilityLabel="More options" accessibilityRole="button">
           <CustomIcon name="EllipsisHorizontalIcon" size={22} color="#aaa" />
         </TouchableOpacity>
       </View>
