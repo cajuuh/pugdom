@@ -1,0 +1,1 @@
+## 2024-03-24 - Add ARIA Labels to StatusActionBar Icons\n**Learning:** Icon-only buttons in React Native require accessibilityLabel, accessibilityRole, and accessibilityState (like checked or selected) to be usable by screen readers.\n**Action:** Add accessibility props to TouchableOpacity components wrapping icons, particularly in action bars.
