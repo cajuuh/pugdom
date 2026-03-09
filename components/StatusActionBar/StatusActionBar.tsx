@@ -50,6 +50,9 @@ const StatusActionBar: React.FC<StatusActionBarProps> = ({
           <TouchableOpacity
             onPress={() => onReplyPress(statusId)}
             style={styles.icon}
+            accessibilityRole="button"
+            accessibilityLabel="Reply"
+            accessibilityHint="Opens reply drawer"
           >
             <CustomIcon
               name="ChatBubbleOvalLeftIcon"
@@ -57,7 +60,13 @@ const StatusActionBar: React.FC<StatusActionBarProps> = ({
               color={"#aaa"}
             />
           </TouchableOpacity>
-          <TouchableOpacity onPress={handleFavorite} style={styles.icon}>
+          <TouchableOpacity
+            onPress={handleFavorite}
+            style={styles.icon}
+            accessibilityRole="button"
+            accessibilityLabel={isFavorited ? "Undo favorite" : "Favorite"}
+            accessibilityState={{ checked: isFavorited }}
+          >
             <CustomIcon
               name="HeartIcon"
               solid={isFavorited}
@@ -65,7 +74,13 @@ const StatusActionBar: React.FC<StatusActionBarProps> = ({
               color={isFavorited ? "#E0245E" : "#aaa"}
             />
           </TouchableOpacity>
-          <TouchableOpacity onPress={handleReblog} style={styles.icon}>
+          <TouchableOpacity
+            onPress={handleReblog}
+            style={styles.icon}
+            accessibilityRole="button"
+            accessibilityLabel={isReblogged ? "Undo reblog" : "Reblog"}
+            accessibilityState={{ checked: isReblogged }}
+          >
             <CustomIcon
               name="ArrowPathIcon"
               solid={isReblogged}
@@ -73,7 +88,12 @@ const StatusActionBar: React.FC<StatusActionBarProps> = ({
               color={isReblogged ? "#1DA1F2" : "#aaa"}
             />
           </TouchableOpacity>
-          <TouchableOpacity onPress={handleBookmark}>
+          <TouchableOpacity
+            onPress={handleBookmark}
+            accessibilityRole="button"
+            accessibilityLabel={isBookmarked ? "Remove bookmark" : "Bookmark"}
+            accessibilityState={{ checked: isBookmarked }}
+          >
             <CustomIcon
               name="BookmarkIcon"
               solid={isBookmarked}
@@ -82,7 +102,11 @@ const StatusActionBar: React.FC<StatusActionBarProps> = ({
             />
           </TouchableOpacity>
         </View>
-        <TouchableOpacity onPress={() => console.log("More options pressed")}>
+        <TouchableOpacity
+          onPress={() => console.log("More options pressed")}
+          accessibilityRole="button"
+          accessibilityLabel="More options"
+        >
           <CustomIcon name="EllipsisHorizontalIcon" size={22} color="#aaa" />
         </TouchableOpacity>
       </View>
